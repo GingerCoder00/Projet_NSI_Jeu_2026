@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import QUIT
 from random import randint
 from PIL import Image
+import os
 from ui_tools import *
 
 pygame.init()
@@ -15,6 +16,8 @@ class Game:
         self.Long = self.screen_taille.current_w # On récupère la longueur de l'écran
         self.larg = self.screen_taille.current_h # On récupère la hauteur de l'écran
 
+        self.BASE_DIR = os.path.dirname(__file__)
+
         self.screen = pygame.display.set_mode((self.Long, self.larg)) # On initialise l'écran avec les dimensions préalablement récupérer
         pygame.display.set_caption("Let's Smash Up The Earth") # On donne un nom à la fenêtre
 
@@ -24,7 +27,8 @@ class Game:
         self.nbr_tour = 0
 
         # Gestion du texte et importation de la police
-        self.font = pygame.font.Font("font/sans_sherif.otf", 20)
+        FONT_PATH = os.path.join(self.BASE_DIR, "font", "sans_sherif.otf")
+        self.font = pygame.font.Font(FONT_PATH, 20)
 
         # Active et désactive la boucle de jeu
         self.running = True
@@ -38,10 +42,13 @@ class Game:
         }
 
         # Gestion des types de cases
+        CASES_E_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_eau", "sprite_eau_")
+        CASES_H_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_herbe", "sprite_herbe_")
+        CASES_F_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_foret", "sprite_foret_")
         self.type_cases = {
-            (0,0,255) : [f"sprite_eau/sprite_eau_{i}.png" for i in range(4)],
-            (0,255,0) : [f"sprite_herbe/sprite_herbe_{i}.png" for i in range(4)],
-            (0,50,0) : [f"sprite_foret/sprite_foret_{i}.png" for i in range(4)],
+            (0,0,255) : [f"{CASES_E_PATH}{i}.png" for i in range(4)],
+            (0,255,0) : [f"{CASES_H_PATH}{i}.png" for i in range(4)],
+            (0,50,0) : [f"{CASES_F_PATH}{i}.png" for i in range(4)],
             "Case ETDB" : "",
             "Case brulee" : "",
             "Terre inutilisable": "",
@@ -131,7 +138,8 @@ class Game:
         return int(self.Long * ratio_long * ratio_font)
     
     def color_pixel_map(self, fichier:str, x:int, y:int):
-        img = Image.open(fichier).convert("RGBA")  # RGBA recommandé
+        IMG_PATH = os.path.join(self.BASE_DIR, fichier)
+        img = Image.open(IMG_PATH).convert("RGBA")  # RGBA recommandé
         pixels = img.load()
 
         # Lire un pixel
