@@ -19,14 +19,14 @@ class Hub:
 
         self.screen = pygame.display.set_mode((self.Long, self.larg)) # On initialise l'écran avec les dimensions préalablement récupérer
         pygame.display.set_caption("Let's Smash Up The Earth") # On donne un nom à la fenêtre
-        BASE_DIR = os.path.dirname(__file__)
+        self.BASE_DIR = os.path.dirname(__file__)
 
         # Gestion du temps
         self.start_time = pygame.time.get_ticks()  # Temps de départ après l'initialisation de pygame
         self.clock = pygame.time.Clock() # Initialisation de l'horloge interne du jeu
 
         # Gestion du texte et importation de la police
-        FONT_PATH = os.path.join(BASE_DIR, "font", "font_retro.ttf")
+        FONT_PATH = os.path.join(self.BASE_DIR, "font", "font_retro.ttf")
         self.font = pygame.font.Font(FONT_PATH, 20)
 
         # Gestion des ratios de chaques objets graphiques pour la responsive
@@ -77,19 +77,19 @@ class Hub:
         self.sous_plan = 0
 
         # Importation des sprites complémentaires
-        WALL_PATH = os.path.join(BASE_DIR, "sprite", "wallpaper5_v2", "wall2_")
+        WALL_PATH = os.path.join(self.BASE_DIR, "sprite", "wallpaper5_v2", "wall2_")
         self.background = [pygame.image.load(f"{WALL_PATH}{i}.png").convert() for i in range(7)] # Importation des 7 frames
         self.background = [pygame.transform.scale(elt, (self.Long, self.larg)) for elt in self.background] # Convertion des frames pour l'écran
-        LOGO_PATH = os.path.join(BASE_DIR, "sprite", "logo_jeu1.png")
+        LOGO_PATH = os.path.join(self.BASE_DIR, "sprite", "logo_jeu1.png")
         self.logo = pygame.image.load(LOGO_PATH).convert_alpha() # Importation du logo
         self.logo = pygame.transform.scale(self.logo, (self.Long * self.ratio_objet["Logo_jeu"][2], self.Long * self.ratio_objet["Logo_jeu"][3]) )# Convertion du logo
 
         # Gestion des bruitages et de la musique
-        self.son_off_on = ["son_on_off/son_on.png", "son_on_off/son_off.png"]
+        self.son_off_on = ["son_on_off\son_on.png", "son_on_off\son_off.png"]
         #self.flag_son = True # Permet de ne pas lancer le son en boucle et de vérifier si il est bien lancé
         self.son_actif = 0 # A comme rôle un indice dans le tableau self.son_off_on
 
-        self.music_off_on = ["music_on_off/music_on.png", "music_on_off/music_off.png"]
+        self.music_off_on = ["music_on_off\music_on.png", "music_on_off\music_off.png"]
         #self.flag_music = True # Pareil que pour les sons
         self.music_actif = 0 # A comme rôle un indice dans le tableau self.music_off_on
         self.current_music = None
@@ -193,8 +193,9 @@ class Hub:
         if self.current_music == fichier:
             return  # La musique est déjà en train de jouer
 
+        MUSIC_PATH = os.path.join(self.BASE_DIR, fichier)
         pygame.mixer.music.stop()
-        pygame.mixer.music.load(fichier)
+        pygame.mixer.music.load(MUSIC_PATH)
         pygame.mixer.music.set_volume(volume)
         pygame.mixer.music.play(-1)
 
@@ -258,7 +259,8 @@ class Hub:
         if self.setting_UI[1]["Couper_Son"].mouse_is_click():  # On vérifie si le png de bruitage est bien cliqué
             self.son_actif = (self.son_actif + 1) % 2  # On change l'indice de sprite (le modulo permet de rester entre 0 et 1)
 
-            self.setting_UI[1]["Couper_Son"].img_base = pygame.image.load(f"sprite/{self.son_off_on[self.son_actif]}").convert_alpha()  # On modifie le sprite dans la classe
+            IMG_PATH = os.path.join(self.BASE_DIR, "sprite", f"{self.son_off_on[self.son_actif]}")
+            self.setting_UI[1]["Couper_Son"].img_base = pygame.image.load(IMG_PATH).convert_alpha()  # On modifie le sprite dans la classe
 
             if self.son_actif == 1:  # Ici si le son est coupé on réduit le volume pour tout les objets admettant des bruitages
                 for boutons in self.dico_UI_interact.values():
@@ -282,7 +284,8 @@ class Hub:
         if self.setting_UI[1]["Couper_Music"].mouse_is_click(): # On vérifie si le png de la musique
             self.music_actif = (self.music_actif + 1) % 2 # On change l'indice de sprite (le modulo permet de rester entre 0 et 1)
 
-            self.setting_UI[1]["Couper_Music"].img_base = pygame.image.load(f"sprite/{self.music_off_on[self.music_actif]}").convert_alpha()  # On modifie le sprite dans la classe
+            IMG_PATH = os.path.join(self.BASE_DIR, "sprite", f"{self.music_off_on[self.music_actif]}")
+            self.setting_UI[1]["Couper_Music"].img_base = pygame.image.load(IMG_PATH).convert_alpha()  # On modifie le sprite dans la classe
 
             if self.music_actif == 1: # Ici si la musique est coupé on met en pause la musique
                 pygame.mixer.music.pause()

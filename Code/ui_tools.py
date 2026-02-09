@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import QUIT
 from random import randint
 import math
+import os
 
 pygame.init()
 pygame.font.init()
@@ -13,6 +14,7 @@ class UI_Bouton:
 
         # Variable Affichage
         self.screen = screen
+        BASE_DIR = os.path.dirname(__file__)
         self.normal_color = color
         self.reverse_color = tuple(255 - elt for elt in color)
         self.color = self.normal_color
@@ -21,7 +23,8 @@ class UI_Bouton:
         self.color_contour = color_contour
         self.contour = pygame.Rect(taille_rect[0] - taille_contour, taille_rect[1] - taille_contour, taille_rect[2] + taille_contour * 2, taille_rect[3] + taille_contour * 2)
         self.text = text
-        self.font = pygame.font.Font("font/font_retro.ttf", taille_font)
+        FONT_PATH = os.path.join(BASE_DIR, "font", "font_retro.ttf")
+        self.font = pygame.font.Font(FONT_PATH, taille_font)
         self.bord_rad = border_radius
         self.ampli_inf = ampli_inflate
         self.flag_inflate = False
@@ -29,9 +32,9 @@ class UI_Bouton:
 
         # Paramètre bruitage
         self.volume = volume_son
-        self.hover_sound = pygame.mixer.Sound("sound/click.wav")
-        
-        self.click_sound = pygame.mixer.Sound("sound/click2.wav")
+        SOUND_PATH = os.path.join(BASE_DIR, "sound", "click")
+        self.hover_sound = pygame.mixer.Sound(f"{SOUND_PATH}.wav")
+        self.click_sound = pygame.mixer.Sound(f"{SOUND_PATH}2.wav")
         
         self.flag_hover_sound = False
 
@@ -137,6 +140,7 @@ class UI_screen:
 class UI_PNG:
     def __init__(self, screen, fichier:str, dimension:tuple, ampli_inflate:int, volume_son:float, hover_on:bool = True):
         self.screen = screen
+        BASE_DIR = os.path.dirname(__file__)
         self.x, self.y, self.L, self.l = dimension
         self.true_x = self.x
         self.true_y = self.y
@@ -145,14 +149,15 @@ class UI_PNG:
         self.ampli_inf = ampli_inflate
         self.hover_on = hover_on
         self.flag_inflate = False
-        self.img_base = pygame.image.load(f"sprite/{fichier}").convert_alpha()
+        IMG_PATH = os.path.join(BASE_DIR, "sprite", fichier)
+        self.img_base = pygame.image.load(IMG_PATH).convert_alpha()
         self.rect = pygame.Rect(self.true_x, self.true_y, self.true_L, self.true_l)
 
         # Paramètre bruitage
         self.volume = volume_son
-        self.hover_sound = pygame.mixer.Sound("sound/click.wav")
-        
-        self.click_sound = pygame.mixer.Sound("sound/click2.wav")
+        SOUND_PATH = os.path.join(BASE_DIR, "sound", "click")
+        self.hover_sound = pygame.mixer.Sound(f"{SOUND_PATH}.wav")
+        self.click_sound = pygame.mixer.Sound(f"{SOUND_PATH}2.wav")
         
         self.flag_hover_sound = False
 
@@ -213,7 +218,7 @@ class InputText:
         self.font = pygame.font.Font(None, taille_font)
         self.text = text
         self.last_message = ""
-        self.txt_surface = self.font.render(text, True, pygame.Color('white'))
+        self.txt_surface = self.font.render(text, True, (255,255,255))
         self.active = False
 
     def handle_event(self, event):
@@ -255,15 +260,17 @@ class InputText:
             self.handle_event(event)
 
 class Texte:
-    def __init__(self, screen, position_texte:tuple, size_texte:int, color:tuple, text:str, sin_effect:bool = False, font_type:str = None):
+    def __init__(self, screen, position_texte:tuple, size_texte:int, color:tuple, text:str, sin_effect:bool = False, font_type:str = "font/sans_sherif.otf"):
         self.screen = screen
+        BASE_DIR = os.path.dirname(__file__)
         self.x, self.y = position_texte
         self.font_size = size_texte
         self.text = text
         self.color = color
         self.font_type = font_type
         self.clock = pygame.time.Clock()
-        self.font = pygame.font.Font(self.font_type, self.font_size)
+        FONT_PATH = os.path.join(BASE_DIR, font_type)
+        self.font = pygame.font.Font(FONT_PATH, self.font_size)
         self.sin_effect = sin_effect
 
     def create(self):
