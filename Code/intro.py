@@ -1,5 +1,6 @@
 
 import pygame
+import os
 
 pygame.init()
 pygame.mixer.init()
@@ -19,17 +20,21 @@ class Intro:
         self.start_time = pygame.time.get_ticks()  # temps de départ
         self.clock = pygame.time.Clock()
         
+        BASE_DIR = os.path.dirname(__file__)
+        LOGO_PATH = os.path.join(BASE_DIR, "sprite", logo)
 
-        self.logo = pygame.image.load(f"sprite/{logo}").convert_alpha()
+        self.logo = pygame.image.load(LOGO_PATH).convert_alpha()
         self.logo = pygame.transform.scale(self.logo, (self.Long * 0.80, self.Long * 0.80))
         self.logo_rect = self.logo.get_rect(center = (self.Long//2, self.larg //2))
 
         self.opacite_logo = 0
         self.logo.set_alpha(self.opacite_logo)
 
-        self.sound_intro = pygame.mixer.Sound("sound/intro.wav")
+        MUSIC1_PATH = os.path.join(BASE_DIR, "sound", "intro.wav")
+        MUSIC2_PATH = os.path.join(BASE_DIR, "sound", "intro2.wav")
+        self.sound_intro = pygame.mixer.Sound(MUSIC1_PATH)
         self.sound_intro.set_volume(0.6)
-        self.sound_intro2 = pygame.mixer.Sound("sound/intro2.wav")
+        self.sound_intro2 = pygame.mixer.Sound(MUSIC2_PATH)
         self.sound_intro2.set_volume(0.05)
         self.flag_intro = False
         self.flag_intro2 = True
