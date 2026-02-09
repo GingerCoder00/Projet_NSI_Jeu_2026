@@ -1,4 +1,5 @@
 import pygame
+import os
 from pygame.locals import QUIT
 from random import randint
 from ui_tools import *
@@ -18,13 +19,15 @@ class Hub:
 
         self.screen = pygame.display.set_mode((self.Long, self.larg)) # On initialise l'écran avec les dimensions préalablement récupérer
         pygame.display.set_caption("Let's Smash Up The Earth") # On donne un nom à la fenêtre
+        BASE_DIR = os.path.dirname(__file__)
 
         # Gestion du temps
         self.start_time = pygame.time.get_ticks()  # Temps de départ après l'initialisation de pygame
         self.clock = pygame.time.Clock() # Initialisation de l'horloge interne du jeu
 
         # Gestion du texte et importation de la police
-        self.font = pygame.font.Font("font/font_retro.ttf", 20)
+        FONT_PATH = os.path.join(BASE_DIR, "font", "font_retro.ttf")
+        self.font = pygame.font.Font(FONT_PATH, 20)
 
         # Gestion des ratios de chaques objets graphiques pour la responsive
         self.ratio_objet = {
@@ -74,9 +77,11 @@ class Hub:
         self.sous_plan = 0
 
         # Importation des sprites complémentaires
-        self.background = [pygame.image.load(f"sprite/wallpaper5_v2/wall2_{i}.png").convert() for i in range(7)] # Importation des 7 frames
+        WALL_PATH = os.path.join(BASE_DIR, "sprite", "wallpaper5_v2", "wall2_")
+        self.background = [pygame.image.load(f"{WALL_PATH}{i}.png").convert() for i in range(7)] # Importation des 7 frames
         self.background = [pygame.transform.scale(elt, (self.Long, self.larg)) for elt in self.background] # Convertion des frames pour l'écran
-        self.logo = pygame.image.load(f"sprite/logo_jeu1.png").convert_alpha() # Importation du logo
+        LOGO_PATH = os.path.join(BASE_DIR, "sprite", "logo_jeu1.png")
+        self.logo = pygame.image.load(LOGO_PATH).convert_alpha() # Importation du logo
         self.logo = pygame.transform.scale(self.logo, (self.Long * self.ratio_objet["Logo_jeu"][2], self.Long * self.ratio_objet["Logo_jeu"][3]) )# Convertion du logo
 
         # Gestion des bruitages et de la musique
