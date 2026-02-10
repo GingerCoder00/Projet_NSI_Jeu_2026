@@ -44,12 +44,13 @@ class Game:
         # Gestion des types de cases
         CASES_E_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_eau", "sprite_eau_")
         CASES_H_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_herbe", "sprite_herbe_")
-        CASES_F_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_foret", "sprite_foret_")
+        CASES_Fo_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_foret", "sprite_foret_")
+        CASES_Fe_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_feu", "sprite_feu_")
         self.type_cases = {
             (0,0,255) : [f"{CASES_E_PATH}{i}.png" for i in range(4)],
             (0,255,0) : [f"{CASES_H_PATH}{i}.png" for i in range(4)],
-            (0,50,0) : [f"{CASES_F_PATH}{i}.png" for i in range(4)],
-            "Case ETDB" : "",
+            (0,50,0) : [f"{CASES_Fo_PATH}{i}.png" for i in range(4)],
+            "Case ETDB" : [f"{CASES_Fe_PATH}{i}.png" for i in range(5)],
             "Case brulee" : "",
             "Terre inutilisable": "",
         }
@@ -93,6 +94,13 @@ class Game:
             },
         }
 
+        # Gestion des éléments en animations
+        self_dico_UI_anim = {
+            0:{
+
+            }
+        }
+
         
 
     def resp(self, ratio_x:float, ratio_y:float, ratio_long:float, ratio_larg:float):
@@ -114,6 +122,13 @@ class Game:
                 color = self.color_pixel_map("sprite/map.png", colonnes, lignes)
                 self.dico_UI_interact[0][index] = UI_PNG(self.screen, self.type_cases[color][randint(0,3)], (x, y, self.case_Long, self.case_larg), 5, 0.03)
                 index += 1
+
+    def ajout_feu(self, x, y):
+        '''
+        Cette méthode ajoute du feu sur la map aux coordonnées x et y
+        '''
+        self_dico_UI_anim[0][len(self_dico_UI_anim[0])] = UI_PNG(self.screen, self.type_cases["Case ETDB"][randint(0,4)], (x, y, self.case_Long, self.case_larg), 0, 0)
+
     
     def resp_cases(self, ratio_x:float, ratio_y:float, ratio_long:float, ratio_larg:float):
         '''Méthode qui gère la responsive des cases sur la grille'''
