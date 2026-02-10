@@ -95,7 +95,7 @@ class Game:
         }
 
         # Gestion des éléments en animations
-        self_dico_UI_anim = {
+        self.dico_UI_anim = {
             0:{
 
             }
@@ -112,6 +112,11 @@ class Game:
         l = self.larg * ratio_larg
         return (x, y, L, l)
     
+    def placement_grille(self, colonne:int, ligne:int):
+        x = self.zone_x + self.marge + ligne * (self.case_Long + self.marge)
+        y = self.zone_y + self.marge +  colonne * (self.case_larg + self.marge)
+        return x, y
+    
     def crea_cases(self):
         # Création des cases
         index = 0
@@ -123,12 +128,12 @@ class Game:
                 self.dico_UI_interact[0][index] = UI_PNG(self.screen, self.type_cases[color][randint(0,3)], (x, y, self.case_Long, self.case_larg), 5, 0.03)
                 index += 1
 
-    def ajout_feu(self, x, y):
+    def ajout_feu(self, ligne, colonne):
         '''
         Cette méthode ajoute du feu sur la map aux coordonnées x et y
         '''
-        self_dico_UI_anim[0][len(self_dico_UI_anim[0])] = UI_PNG(self.screen, self.type_cases["Case ETDB"][randint(0,4)], (x, y, self.case_Long, self.case_larg), 0, 0)
-
+        x, y= self.placement_grille(colonne, ligne)
+        self.dico_UI_anim[0][len(self.dico_UI_anim[0])] = UI_PNG(self.screen, self.type_cases["Case ETDB"][randint(0,4)], (x, y, self.case_Long, self.case_larg), 0, 0)
     
     def resp_cases(self, ratio_x:float, ratio_y:float, ratio_long:float, ratio_larg:float):
         '''Méthode qui gère la responsive des cases sur la grille'''
@@ -186,6 +191,7 @@ class Game:
         son fonctionnement
         '''
         self.crea_cases()
+        self.ajout_feu(2,14)
         while self.running:
             self.keys = pygame.key.get_pressed()  # On récupère les touches enclenchées
             self.clock.tick(60)  # On paramètre le tick soit les fps max de la boucle (ici 60fps)
@@ -206,7 +212,10 @@ class Game:
             interfaces.update()  
 
         for cases in self.dico_UI_interact[self.plan].values():
-            cases.update()   
+            cases.update()  
+
+        for anim in self.dico_UI_anim[self.plan].values():
+            anim.update()   
 
         self.stats()  # On gère l'affichage des stats
 
