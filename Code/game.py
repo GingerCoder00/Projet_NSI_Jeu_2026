@@ -42,15 +42,15 @@ class Game:
         }
 
         # Gestion des types de cases
-        CASES_E_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_eau", "sprite_eau_")
-        CASES_H_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_herbe", "sprite_herbe_")
-        CASES_Fo_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_foret", "sprite_foret_")
-        CASES_Fe_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_feu", "sprite_feu_")
+        self.CASES_E_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_eau", "sprite_eau_")
+        self.CASES_H_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_herbe", "sprite_herbe_")
+        self.CASES_Fo_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_foret", "sprite_foret_")
+        self.CASES_Fe_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_feu", "sprite_feu_")
         self.type_cases = {
-            (0,0,255) : [f"{CASES_E_PATH}{i}.png" for i in range(4)],
-            (0,255,0) : [f"{CASES_H_PATH}{i}.png" for i in range(4)],
-            (0,50,0) : [f"{CASES_Fo_PATH}{i}.png" for i in range(4)],
-            "Case ETDB" : [f"{CASES_Fe_PATH}{i}.png" for i in range(5)],
+            (0,0,255) : [f"{self.CASES_E_PATH}{i}.png" for i in range(4)],
+            (0,255,0) : [f"{self.CASES_H_PATH}{i}.png" for i in range(4)],
+            (0,50,0) : [f"{self.CASES_Fo_PATH}{i}.png" for i in range(4)],
+            "Case ETDB" : [f"{self.CASES_Fe_PATH}{i}.png" for i in range(5)],
             "Case brulee" : "",
             "Terre inutilisable": "",
         }
@@ -122,19 +122,42 @@ class Game:
         index = 0
         for lignes in range(self.lignes):
             for colonnes in range(self.colonnes):
-                x = self.zone_x + self.marge + colonnes * (self.case_Long + self.marge)
-                y = self.zone_y + self.marge + lignes * (self.case_larg + self.marge)
+                x, y = self.placement_grille(lignes, colonnes)
                 color = self.color_pixel_map("sprite/map.png", colonnes, lignes)
                 self.dico_UI_interact[0][index] = UI_PNG(self.screen, self.type_cases[color][randint(0,3)], (x, y, self.case_Long, self.case_larg), 5, 0.03)
                 index += 1
 
     def ajout_feu(self, ligne, colonne):
-        '''
-        Cette méthode ajoute du feu sur la map aux coordonnées x et y
-        '''
-        x, y= self.placement_grille(colonne, ligne)
-        self.dico_UI_anim[0][len(self.dico_UI_anim[0])] = UI_PNG(self.screen, self.type_cases["Case ETDB"][randint(0,4)], (x, y, self.case_Long, self.case_larg), 0, 0)
-    
+        x, y = self.placement_grille(colonne, ligne)
+
+        flamme = UI_PNG(
+            self.screen,
+            self.type_cases["Case ETDB"][0],
+            (x, y, self.case_Long, self.case_larg),
+            5, 0
+        )
+
+        flamme.frame = 0
+        flamme.last_update = pygame.time.get_ticks()
+
+        self.dico_UI_anim[0][len(self.dico_UI_anim[0])] = flamme
+
+
+    def anim_feu(self):
+        FRAME_DELAY = 120  # ms
+        now = pygame.time.get_ticks()
+
+        for flamme in self.dico_UI_anim[self.plan].values():
+            if now - flamme.last_update >= FRAME_DELAY:
+                flamme.frame = (flamme.frame + 1) % len(self.type_cases["Case ETDB"])
+                flamme.last_update = now
+
+                # Mise à jour DU CŒUR de l'image affichée
+                flamme.IMG_PATH = self.type_cases["Case ETDB"][flamme.frame]
+                flamme.img_base = pygame.image.load(
+                    flamme.IMG_PATH
+                ).convert_alpha()
+
     def resp_cases(self, ratio_x:float, ratio_y:float, ratio_long:float, ratio_larg:float):
         '''Méthode qui gère la responsive des cases sur la grille'''
         # On convertit tout les éléments par rapport à un ratio et à la taille de la zone des cases
@@ -191,7 +214,10 @@ class Game:
         son fonctionnement
         '''
         self.crea_cases()
+        self.ajout_feu(2,2)
         self.ajout_feu(2,14)
+        self.ajout_feu(14,10)
+        self.ajout_feu(6,7)
         while self.running:
             self.keys = pygame.key.get_pressed()  # On récupère les touches enclenchées
             self.clock.tick(60)  # On paramètre le tick soit les fps max de la boucle (ici 60fps)
@@ -215,7 +241,9 @@ class Game:
             cases.update()  
 
         for anim in self.dico_UI_anim[self.plan].values():
-            anim.update()   
+            anim.update()  
+
+        self.anim_feu() 
 
         self.stats()  # On gère l'affichage des stats
 
