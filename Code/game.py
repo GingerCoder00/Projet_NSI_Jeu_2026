@@ -59,7 +59,7 @@ class Game:
         self.nbr_foret = 0
 
         # Variable affichage
-        # num plan : {0:grille, 1:?}
+        # Num plan : {0:grille, 1:?}
         self.plan = 0
 
         # Gestion du nombre de cases
