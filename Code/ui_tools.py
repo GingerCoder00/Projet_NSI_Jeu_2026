@@ -149,8 +149,8 @@ class UI_PNG:
         self.ampli_inf = ampli_inflate
         self.hover_on = hover_on
         self.flag_inflate = False
-        IMG_PATH = os.path.join(BASE_DIR, "sprite", fichier)
-        self.img_base = pygame.image.load(IMG_PATH).convert_alpha()
+        self.IMG_PATH = os.path.join(BASE_DIR, "sprite", fichier)
+        self.img_base = pygame.image.load(self.IMG_PATH).convert_alpha()
         self.rect = pygame.Rect(self.true_x, self.true_y, self.true_L, self.true_l)
 
         # Paramètre bruitage
