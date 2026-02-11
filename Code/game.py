@@ -24,7 +24,7 @@ class Game:
         # Gestion du temps
         self.start_time = pygame.time.get_ticks()  # Temps de départ après l'initialisation de pygame
         self.clock = pygame.time.Clock() # Initialisation de l'horloge interne du jeu
-        self.nbr_tour = 0
+        self.temps_ecoule = (pygame.time.get_ticks() - self.start_time)/1000 # Temps écoulé en secondes
 
         # Gestion du texte et importation de la police
         FONT_PATH = os.path.join(self.BASE_DIR, "font", "sans_sherif.otf")
@@ -38,7 +38,7 @@ class Game:
             "Rect_bouton": (0.01, 0.01, 0.75, 0.75),
             "Rect_jauge": (0.775, 0.01, 0.214, 0.975),
             "Rect_stats": (0.01, 0.789, 0.75, 0.1975),
-            "Texte_nbr_Tour": (0.782, 0.06, 0.06),
+            "Texte_temps_chrono": (0.782, 0.06, 0.06),
         }
 
         # Gestion des types de cases
@@ -83,7 +83,7 @@ class Game:
                 "Rect_bouton" : UI_screen(self.screen, (88, 41, 0), (255,255,255), self.rect_zone, taille_contour = 6, border_radius = 12, pulse = False),
                 "Rect_jauge" : UI_screen(self.screen, (0, 86, 27), (255,255,255), self.resp(self.ratio_objet["Rect_jauge"][0], self.ratio_objet["Rect_jauge"][1], self.ratio_objet["Rect_jauge"][2], self.ratio_objet["Rect_jauge"][3]), taille_contour = 6, border_radius = 12, pulse = False),
                 "Rect_stats" : UI_screen(self.screen, (0, 86, 27), (255,255,255), self.resp(self.ratio_objet["Rect_stats"][0], self.ratio_objet["Rect_stats"][1], self.ratio_objet["Rect_stats"][2], self.ratio_objet["Rect_stats"][3]), taille_contour = 6, border_radius = 12, pulse = False),
-                "Texte_nbr_Tour" : Texte(self.screen, self.resp_text(self.ratio_objet["Texte_nbr_Tour"][0], self.ratio_objet["Texte_nbr_Tour"][1]), self.resp_font(self.ratio_objet["Texte_nbr_Tour"][0], self.ratio_objet["Texte_nbr_Tour"][2]), (0,0,0), f"Tour n°{self.nbr_tour}", font_type = "font/pixellari.ttf")
+                "Texte_temps_chrono" : Texte(self.screen, self.resp_text(self.ratio_objet["Texte_temps_chrono"][0], self.ratio_objet["Texte_temps_chrono"][1]), self.resp_font(self.ratio_objet["Texte_temps_chrono"][0], self.ratio_objet["Texte_temps_chrono"][2]), (0,0,0), f"Temps de {self.temps_ecoule}", font_type = "font/pixellari.ttf")
             },
         }
 
@@ -196,6 +196,9 @@ class Game:
                 if event.type == pygame.QUIT:
                     self.running = False  # Ceci arrête la boucle principal
 
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        self.running = False  # Ceci arrête la boucle principal
     def stats(self):
         '''
         Cette méthode permet de gérer l'affichage des stats de performance et de test
