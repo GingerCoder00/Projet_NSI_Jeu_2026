@@ -85,12 +85,10 @@ class Hub:
         self.logo = pygame.transform.scale(self.logo, (int(self.Long * self.ratio_objet["Logo_jeu"][2]), int(self.Long * self.ratio_objet["Logo_jeu"][3])) )# Convertion du logo
 
         # Gestion des bruitages et de la musique
-        self.son_off_on = ["son_on_off\son_on.png", "son_on_off\son_off.png"]
-        #self.flag_son = True # Permet de ne pas lancer le son en boucle et de vérifier si il est bien lancé
+        self.son_off_on = ["son_on_off/son_on.png", "son_on_off/son_off.png"]
         self.son_actif = 0 # A comme rôle un indice dans le tableau self.son_off_on
 
-        self.music_off_on = ["music_on_off\music_on.png", "music_on_off\music_off.png"]
-        #self.flag_music = True # Pareil que pour les sons
+        self.music_off_on = ["music_on_off/music_on.png", "music_on_off/music_off.png"]
         self.music_actif = 0 # A comme rôle un indice dans le tableau self.music_off_on
         self.current_music = None
 
