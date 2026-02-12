@@ -82,7 +82,7 @@ class Hub:
         self.background = [pygame.transform.scale(elt, (self.Long, self.larg)) for elt in self.background] # Convertion des frames pour l'écran
         LOGO_PATH = os.path.join(self.BASE_DIR, "sprite", "logo_jeu1.png")
         self.logo = pygame.image.load(LOGO_PATH).convert_alpha() # Importation du logo
-        self.logo = pygame.transform.scale(self.logo, (self.Long * self.ratio_objet["Logo_jeu"][2], self.Long * self.ratio_objet["Logo_jeu"][3]) )# Convertion du logo
+        self.logo = pygame.transform.scale(self.logo, (int(self.Long * self.ratio_objet["Logo_jeu"][2]), int(self.Long * self.ratio_objet["Logo_jeu"][3])) )# Convertion du logo
 
         # Gestion des bruitages et de la musique
         self.son_off_on = ["son_on_off\son_on.png", "son_on_off\son_off.png"]

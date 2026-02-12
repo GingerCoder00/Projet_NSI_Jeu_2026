@@ -24,7 +24,7 @@ class Intro:
         LOGO_PATH = os.path.join(BASE_DIR, "sprite", logo)
 
         self.logo = pygame.image.load(LOGO_PATH).convert_alpha()
-        self.logo = pygame.transform.scale(self.logo, (self.Long * 0.80, self.Long * 0.80))
+        self.logo = pygame.transform.scale(self.logo, (int(self.Long * 0.80), int(self.Long * 0.80)))
         self.logo_rect = self.logo.get_rect(center = (self.Long//2, self.larg //2))
 
         self.opacite_logo = 0
