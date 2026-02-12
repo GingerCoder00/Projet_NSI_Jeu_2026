@@ -46,13 +46,16 @@ class Game:
         self.CASES_H_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_herbe", "sprite_herbe_")
         self.CASES_Fo_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_foret", "sprite_foret_")
         self.CASES_Fe_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_feu", "sprite_feu_")
+        self.CASES_P_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_pollue", "sprite_pollue_")
+        self.CASES_In_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_condamne", "sprite_condamne_")
         self.type_cases = {
             (0,0,255) : [f"{self.CASES_E_PATH}{i}.png" for i in range(4)],
             (0,255,0) : [f"{self.CASES_H_PATH}{i}.png" for i in range(4)],
             (0,50,0) : [f"{self.CASES_Fo_PATH}{i}.png" for i in range(4)],
             "Case ETDB" : [f"{self.CASES_Fe_PATH}{i}.png" for i in range(5)],
+            "Case pollue" : [f"{self.CASES_P_PATH}{i}.png" for i in range(3)],
             "Case brulee" : "",
-            "Terre inutilisable": "",
+            "Terre inutilisable": [f"{self.CASES_In_PATH}{i}.png" for i in range(7)],
         }
         self.nbr_eau = 0
         self.nbr_herbe = 0
@@ -97,7 +100,12 @@ class Game:
         # Gestion des éléments en animations
         self.dico_UI_anim = {
             0:{
-
+                "Flamme" : {
+                },
+                "Croix" : {
+                },
+                "Poubelle" : {
+                },
             }
         }
 
@@ -140,14 +148,14 @@ class Game:
         flamme.frame = 0
         flamme.last_update = pygame.time.get_ticks()
 
-        self.dico_UI_anim[0][len(self.dico_UI_anim[0])] = flamme
+        self.dico_UI_anim[0]["Flamme"][len(self.dico_UI_anim[0]["Flamme"])] = flamme
 
 
     def anim_feu(self):
         FRAME_DELAY = 120  # ms
         now = pygame.time.get_ticks()
 
-        for flamme in self.dico_UI_anim[self.plan].values():
+        for flamme in self.dico_UI_anim[self.plan]["Flamme"].values():
             if now - flamme.last_update >= FRAME_DELAY:
                 flamme.frame = (flamme.frame + 1) % len(self.type_cases["Case ETDB"])
                 flamme.last_update = now
@@ -156,6 +164,37 @@ class Game:
                 flamme.IMG_PATH = self.type_cases["Case ETDB"][flamme.frame]
                 flamme.img_base = pygame.image.load(
                     flamme.IMG_PATH
+                ).convert_alpha()
+
+    def ajout_condamne(self, ligne, colonne):
+        x, y = self.placement_grille(colonne, ligne)
+
+        croix = UI_PNG(
+            self.screen,
+            self.type_cases["Terre inutilisable"][0],
+            (x, y, self.case_Long, self.case_larg),
+            5, 0
+        )
+
+        croix.frame = 0
+        croix.last_update = pygame.time.get_ticks()
+
+        self.dico_UI_anim[0]["Croix"][len(self.dico_UI_anim[0]["Croix"])] = croix
+
+
+    def anim_condamne(self):
+        FRAME_DELAY = 120  # ms
+        now = pygame.time.get_ticks()
+
+        for croix in self.dico_UI_anim[self.plan]["Croix"].values():
+            if now - croix.last_update >= FRAME_DELAY:
+                croix.frame = (croix.frame + 1) % len(self.type_cases["Terre inutilisable"])
+                croix.last_update = now
+
+                # Mise à jour DU CŒUR de l'image affichée
+                croix.IMG_PATH = self.type_cases["Terre inutilisable"][croix.frame]
+                croix.img_base = pygame.image.load(
+                    croix.IMG_PATH
                 ).convert_alpha()
 
     def resp_cases(self, ratio_x:float, ratio_y:float, ratio_long:float, ratio_larg:float):
@@ -218,9 +257,9 @@ class Game:
         '''
         self.crea_cases()
         self.ajout_feu(2,2)
-        self.ajout_feu(2,14)
-        self.ajout_feu(14,10)
         self.ajout_feu(6,7)
+        self.ajout_condamne(8,7)
+        self.ajout_condamne(10,7)
         while self.running:
             self.keys = pygame.key.get_pressed()  # On récupère les touches enclenchées
             self.clock.tick(60)  # On paramètre le tick soit les fps max de la boucle (ici 60fps)
@@ -243,10 +282,12 @@ class Game:
         for cases in self.dico_UI_interact[self.plan].values():
             cases.update()  
 
-        for anim in self.dico_UI_anim[self.plan].values():
-            anim.update()  
+        for anims in self.dico_UI_anim[self.plan].values():
+            for anim in anims.values():
+                anim.update()  
 
         self.anim_feu() 
+        self.anim_condamne() 
 
         self.stats()  # On gère l'affichage des stats
 
