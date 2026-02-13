@@ -5,7 +5,7 @@ import os
 pygame.init()
 
 class Jauge:
-    def __init__(self, screen, fichier:str, dimension:tuple, ampli_inflate:int, volume_son:float, niv, hover_on:bool = True):
+    def __init__(self, screen, fichier:str, dimension:tuple, ampli_inflate:int, volume_son:float, frame:int, compl_zero:str = "", hover_on:bool = True):
         self.screen = screen
         BASE_DIR = os.path.dirname(__file__)
         self.x, self.y, self.L, self.l = dimension
@@ -13,10 +13,12 @@ class Jauge:
         self.true_y = self.y
         self.true_L = self.L
         self.true_l = self.l
+        self.frame = frame
+        self.compl_zero = compl_zero
         self.ampli_inf = ampli_inflate
         self.hover_on = hover_on
         self.flag_inflate = False
-        self.IMG_PATH = os.path.join(BASE_DIR, "sprite", fichier)
+        self.IMG_PATH = os.path.join(BASE_DIR, "sprite", f"{fichier}{self.compl_zero}{self.frame}.png")
         self.img_base = pygame.image.load(self.IMG_PATH).convert_alpha()
         self.rect = pygame.Rect(self.true_x, self.true_y, self.true_L, self.true_l)
 

@@ -4,6 +4,7 @@ from random import randint
 from PIL import Image
 import os
 from ui_tools import *
+from jauge import *
 
 pygame.init()
 pygame.mixer.init()
@@ -38,7 +39,14 @@ class Game:
             "Rect_bouton": (0.01, 0.01, 0.75, 0.75),
             "Rect_jauge": (0.775, 0.01, 0.214, 0.975),
             "Rect_stats": (0.01, 0.789, 0.75, 0.1975),
-            "Texte_temps_chrono": (0.782, 0.06, 0.06),
+            "Texte_temps_chrono": (0.82, 0.05, 0.06),
+            "Jauge_pollution": (0.791, 0.17, 0.039, 0.25),
+            "Jauge_bio": (0.86, 0.17, 0.039, 0.25),
+            "Jauge_niv_ocean": (0.93, 0.17, 0.039, 0.25),
+            "Jauge_social": (0.791, 0.45, 0.039, 0.25),
+            "Jauge_temp": (0.86, 0.45, 0.039, 0.25),
+            "Jauge_nourriture": (0.93, 0.45, 0.039, 0.25),
+            "Jauge_total": (0.78, 0.75, 0.205, 0.07),
         }
 
         # Gestion des types de cases
@@ -86,7 +94,7 @@ class Game:
                 "Rect_bouton" : UI_screen(self.screen, (88, 41, 0), (255,255,255), self.rect_zone, taille_contour = 6, border_radius = 12, pulse = False),
                 "Rect_jauge" : UI_screen(self.screen, (0, 86, 27), (255,255,255), self.resp(self.ratio_objet["Rect_jauge"][0], self.ratio_objet["Rect_jauge"][1], self.ratio_objet["Rect_jauge"][2], self.ratio_objet["Rect_jauge"][3]), taille_contour = 6, border_radius = 12, pulse = False),
                 "Rect_stats" : UI_screen(self.screen, (0, 86, 27), (255,255,255), self.resp(self.ratio_objet["Rect_stats"][0], self.ratio_objet["Rect_stats"][1], self.ratio_objet["Rect_stats"][2], self.ratio_objet["Rect_stats"][3]), taille_contour = 6, border_radius = 12, pulse = False),
-                "Texte_temps_chrono" : Texte(self.screen, self.resp_text(self.ratio_objet["Texte_temps_chrono"][0], self.ratio_objet["Texte_temps_chrono"][1]), self.resp_font(self.ratio_objet["Texte_temps_chrono"][0], self.ratio_objet["Texte_temps_chrono"][2]), (0,0,0), f"Temps de {self.temps_ecoule}", font_type = "font/pixellari.ttf")
+                "Texte_temps_chrono" : Texte(self.screen, self.resp_text(self.ratio_objet["Texte_temps_chrono"][0], self.ratio_objet["Texte_temps_chrono"][1]), self.resp_font(self.ratio_objet["Texte_temps_chrono"][0], self.ratio_objet["Texte_temps_chrono"][2]), (0,0,0), "00.00", font_type = "font/pixellari.ttf")
             },
         }
 
@@ -97,6 +105,14 @@ class Game:
             },
         }
 
+        self.JAUGE_POLLUTION_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_jauge_pollution", "sprite_jauge_pollution_")
+        self.JAUGE_BIO_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_jauge_biodiversite", "sprite_jauge_biodiversite_")
+        self.JAUGE_NIV_OCEAN_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_jauge_niv_ocean", "sprite_jauge_niv_ocean_")
+        self.JAUGE_NOURRITURE_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_jauge_nourriture", "sprite_jauge_nourriture_")
+        self.JAUGE_SOCIAL_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_jauge_social", "sprite_jauge_social_")
+        self.JAUGE_TEMP_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_jauge_temp", "sprite_jauge_temp_")
+        self.JAUGE_TOTAL_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_jauge_total", "sprite_jauge_total_")
+
         # Gestion des éléments en animations
         self.dico_UI_anim = {
             0:{
@@ -105,6 +121,15 @@ class Game:
                 "Croix" : {
                 },
                 "Poubelle" : {
+                },
+                "Jauge" : {
+                    "Jauge_pollution" : Jauge(self.screen, self.JAUGE_POLLUTION_PATH, self.resp(self.ratio_objet["Jauge_pollution"][0], self.ratio_objet["Jauge_pollution"][1], self.ratio_objet["Jauge_pollution"][2], self.ratio_objet["Jauge_pollution"][3]), 5, 0.03, 2),
+                    "Jauge_bio" : Jauge(self.screen, self.JAUGE_BIO_PATH, self.resp(self.ratio_objet["Jauge_bio"][0], self.ratio_objet["Jauge_bio"][1], self.ratio_objet["Jauge_bio"][2], self.ratio_objet["Jauge_bio"][3]), 5, 0.03, 6),
+                    "Jauge_niv_ocean" : Jauge(self.screen, self.JAUGE_NIV_OCEAN_PATH, self.resp(self.ratio_objet["Jauge_niv_ocean"][0], self.ratio_objet["Jauge_niv_ocean"][1], self.ratio_objet["Jauge_niv_ocean"][2], self.ratio_objet["Jauge_niv_ocean"][3]), 5, 0.03, 4),
+                    "Jauge_social" : Jauge(self.screen, self.JAUGE_SOCIAL_PATH, self.resp(self.ratio_objet["Jauge_social"][0], self.ratio_objet["Jauge_social"][1], self.ratio_objet["Jauge_social"][2], self.ratio_objet["Jauge_social"][3]), 5, 0.03, 3),
+                    "Jauge_temp" : Jauge(self.screen, self.JAUGE_TEMP_PATH, self.resp(self.ratio_objet["Jauge_temp"][0], self.ratio_objet["Jauge_temp"][1], self.ratio_objet["Jauge_temp"][2], self.ratio_objet["Jauge_temp"][3]), 5, 0.03, 5),
+                    "Jauge_nourriture" : Jauge(self.screen, self.JAUGE_NOURRITURE_PATH, self.resp(self.ratio_objet["Jauge_nourriture"][0], self.ratio_objet["Jauge_nourriture"][1], self.ratio_objet["Jauge_nourriture"][2], self.ratio_objet["Jauge_nourriture"][3]), 5, 0.03, 6),
+                    "Jauge_total" : Jauge(self.screen, self.JAUGE_TOTAL_PATH, self.resp(self.ratio_objet["Jauge_total"][0], self.ratio_objet["Jauge_total"][1], self.ratio_objet["Jauge_total"][2], self.ratio_objet["Jauge_total"][3]), 5, 0.03, 0, "0"),
                 },
             }
         }
