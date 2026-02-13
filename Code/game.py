@@ -123,13 +123,13 @@ class Game:
                 "Poubelle" : {
                 },
                 "Jauge" : {
-                    "Jauge_pollution" : Jauge(self.screen, self.JAUGE_POLLUTION_PATH, self.resp(self.ratio_objet["Jauge_pollution"][0], self.ratio_objet["Jauge_pollution"][1], self.ratio_objet["Jauge_pollution"][2], self.ratio_objet["Jauge_pollution"][3]), 5, 0.03, 2),
-                    "Jauge_bio" : Jauge(self.screen, self.JAUGE_BIO_PATH, self.resp(self.ratio_objet["Jauge_bio"][0], self.ratio_objet["Jauge_bio"][1], self.ratio_objet["Jauge_bio"][2], self.ratio_objet["Jauge_bio"][3]), 5, 0.03, 6),
-                    "Jauge_niv_ocean" : Jauge(self.screen, self.JAUGE_NIV_OCEAN_PATH, self.resp(self.ratio_objet["Jauge_niv_ocean"][0], self.ratio_objet["Jauge_niv_ocean"][1], self.ratio_objet["Jauge_niv_ocean"][2], self.ratio_objet["Jauge_niv_ocean"][3]), 5, 0.03, 4),
-                    "Jauge_social" : Jauge(self.screen, self.JAUGE_SOCIAL_PATH, self.resp(self.ratio_objet["Jauge_social"][0], self.ratio_objet["Jauge_social"][1], self.ratio_objet["Jauge_social"][2], self.ratio_objet["Jauge_social"][3]), 5, 0.03, 3),
-                    "Jauge_temp" : Jauge(self.screen, self.JAUGE_TEMP_PATH, self.resp(self.ratio_objet["Jauge_temp"][0], self.ratio_objet["Jauge_temp"][1], self.ratio_objet["Jauge_temp"][2], self.ratio_objet["Jauge_temp"][3]), 5, 0.03, 5),
-                    "Jauge_nourriture" : Jauge(self.screen, self.JAUGE_NOURRITURE_PATH, self.resp(self.ratio_objet["Jauge_nourriture"][0], self.ratio_objet["Jauge_nourriture"][1], self.ratio_objet["Jauge_nourriture"][2], self.ratio_objet["Jauge_nourriture"][3]), 5, 0.03, 6),
-                    "Jauge_total" : Jauge(self.screen, self.JAUGE_TOTAL_PATH, self.resp(self.ratio_objet["Jauge_total"][0], self.ratio_objet["Jauge_total"][1], self.ratio_objet["Jauge_total"][2], self.ratio_objet["Jauge_total"][3]), 5, 0.03, 0, "0"),
+                    "Jauge_pollution" : Jauge(self.screen, self.JAUGE_POLLUTION_PATH, self.resp(self.ratio_objet["Jauge_pollution"][0], self.ratio_objet["Jauge_pollution"][1], self.ratio_objet["Jauge_pollution"][2], self.ratio_objet["Jauge_pollution"][3]), 7, 0.03, 2),
+                    "Jauge_bio" : Jauge(self.screen, self.JAUGE_BIO_PATH, self.resp(self.ratio_objet["Jauge_bio"][0], self.ratio_objet["Jauge_bio"][1], self.ratio_objet["Jauge_bio"][2], self.ratio_objet["Jauge_bio"][3]), 7, 0.03, 6),
+                    "Jauge_niv_ocean" : Jauge(self.screen, self.JAUGE_NIV_OCEAN_PATH, self.resp(self.ratio_objet["Jauge_niv_ocean"][0], self.ratio_objet["Jauge_niv_ocean"][1], self.ratio_objet["Jauge_niv_ocean"][2], self.ratio_objet["Jauge_niv_ocean"][3]), 7, 0.03, 4),
+                    "Jauge_social" : Jauge(self.screen, self.JAUGE_SOCIAL_PATH, self.resp(self.ratio_objet["Jauge_social"][0], self.ratio_objet["Jauge_social"][1], self.ratio_objet["Jauge_social"][2], self.ratio_objet["Jauge_social"][3]), 7, 0.03, 3),
+                    "Jauge_temp" : Jauge(self.screen, self.JAUGE_TEMP_PATH, self.resp(self.ratio_objet["Jauge_temp"][0], self.ratio_objet["Jauge_temp"][1], self.ratio_objet["Jauge_temp"][2], self.ratio_objet["Jauge_temp"][3]), 7, 0.03, 5),
+                    "Jauge_nourriture" : Jauge(self.screen, self.JAUGE_NOURRITURE_PATH, self.resp(self.ratio_objet["Jauge_nourriture"][0], self.ratio_objet["Jauge_nourriture"][1], self.ratio_objet["Jauge_nourriture"][2], self.ratio_objet["Jauge_nourriture"][3]), 7, 0.03, 6),
+                    "Jauge_total" : Jauge(self.screen, self.JAUGE_TOTAL_PATH, self.resp(self.ratio_objet["Jauge_total"][0], self.ratio_objet["Jauge_total"][1], self.ratio_objet["Jauge_total"][2], self.ratio_objet["Jauge_total"][3]), 7, 0.03, 8, "0"),
                 },
             }
         }

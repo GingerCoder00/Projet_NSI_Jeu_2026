@@ -14,11 +14,13 @@ class Jauge:
         self.true_L = self.L
         self.true_l = self.l
         self.frame = frame
+        print(self.frame)
         self.compl_zero = compl_zero
         self.ampli_inf = ampli_inflate
         self.hover_on = hover_on
         self.flag_inflate = False
-        self.IMG_PATH = os.path.join(BASE_DIR, "sprite", f"{fichier}{self.compl_zero}{self.frame}.png")
+        self.IMG_PATH = os.path.join(f"{fichier}{self.compl_zero}{self.frame}.png")
+        print(self.IMG_PATH)
         self.img_base = pygame.image.load(self.IMG_PATH).convert_alpha()
         self.rect = pygame.Rect(self.true_x, self.true_y, self.true_L, self.true_l)
 
