@@ -213,3 +213,152 @@ Tu peux faire un système comme :
 	Bruits d’ambiance
 	Tremblement léger écran
 	Apparition de fissures
+	
+🎭 Le joueur incarne :
+Une méga-corporation type :
+“Global Doom Industries™”
+“Planet Crunch Corp™”
+“UltraGrowth Unlimited™”
+
+Objectif :
+👉 Atteindre 100% de destruction en moins de 10 minutes.
+
+🧨 1️⃣ Système principal : 3 pouvoirs rapides (arcade)
+
+	Le joueur peut switch entre 3 outils :
+
+	🔥 1. Incendie Express
+	Clique → case prend feu
+	Propagation rapide
+	pollution
+	biodiversité
+	Cooldown : 2 secondes
+
+	🏭 2. Méga Usine
+	Transforme herbe/forêt en zone industrielle
+	+++ pollution
+	économie (satire 😏)
+	nourriture
+	Cooldown : 3 secondes
+	
+	💣 3. Chaos Géopolitique
+	Détruit 3 à 5 cases aléatoires
+	stabilité
+	pollution
+	Peut déclencher guerre (si stabilité basse)
+
+	Cooldown : 5 secondes
+
+🌡 2️⃣ Accélération automatique (arcade)
+
+	Toutes les 60 secondes :
+	+5 pollution globale
+	+2 température
+
+	Cooldowns réduits de 10%
+
+	👉 La partie devient plus rapide au fil du temps.
+
+🔥 3️⃣ Événements aléatoires satiriques
+
+	Toutes les 20 secondes → tirage d’événement :
+
+	events = [
+		"Lobby pétrolier boosté",
+		"Accord climatique ignoré",
+		"Crash écologique",
+		"Mega sécheresse",
+		"Scandale greenwashing"
+	]
+
+	Effets rapides :
+	+10 pollution
+	-10 stabilité
+	Forêts brûlent automatiquement
+	5 cases deviennent inutilisables
+	Affiche un texte pixel flashy genre :
+	"🌎 Accord climatique signé !"
+	"... Non on rigole."
+
+🌍 4️⃣ Dynamique des cases (simple et efficace)
+
+	Chaque case a un état :
+	Eau
+	Herbe
+	Forêt
+	Feu
+	Polluée
+	Inutilisable
+	Règles arcade :
+	Feu → après 3 secondes → devient Polluée
+	Polluée → après 5 secondes → Inutilisable
+	Inutilisable → ne rapporte plus rien
+
+⚡ 5️⃣ Système de combo (important pour arcade)
+
+	Si joueur enchaîne 5 actions en 5 secondes :
+	Mode “Capitalisme Sauvage”
+	Pollution x2 pendant 5 secondes
+	Animation rouge écran
+
+🎯 6️⃣ Rythme pour 10 minutes
+
+	0–2 min :
+	Lente montée
+	Le joueur découvre les mécaniques
+
+	2–5 min :
+	Propagation rapide
+	Feux spontanés
+
+	5–8 min :
+	Effondrement visible
+	Tremblement écran
+	Océans montent visuellement
+
+	8–10 min :
+	Chaos total
+	Spawn aléatoire de destruction
+	Explosion finale
+
+🧠 7️⃣ Idée très satirique
+
+	Ajoute une jauge cachée :
+	📈 Croissance Économique
+	Plus elle monte :
+	Pollution monte plus vite
+	Le joueur gagne des “bonus”
+	Texte ironique :
+	📈 PIB MONDIAL EN HAUSSE !
+	🌍 Conditions de vie en baisse...
+
+
+🎨 Style pixel arcade
+
+Shake écran quand stabilité < 30
+Flash rouge quand pollution > 80
+Sons exagérés
+Gros textes pixel humoristiques
+
+🏆 Condition de victoire
+
+Quand jauge totale ≥ 100 :
+Animation explosion
+
+Texte :
+
+🌍 GAME OVER
+Félicitations !
+Vous avez maximisé la croissance.
+
+💡 Pour rendre ça vraiment addictif
+
+Ajoute :
+
+🏅 Score basé sur vitesse
+🏆 Classement “Meilleur destructeur”
+🎖 Succès :
+
+“Pyromane”
+“Magnat du pétrole”
+“Architecte de l’effondrement”
