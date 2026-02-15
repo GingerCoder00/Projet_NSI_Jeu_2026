@@ -26,7 +26,7 @@ class Game:
         # Gestion du temps
         self.start_time = pygame.time.get_ticks()  # Temps de départ après l'initialisation de pygame
         self.clock = pygame.time.Clock() # Initialisation de l'horloge interne du jeu
-        self.temps_ecoule = (pygame.time.get_ticks() - self.start_time)/1000 # Temps écoulé en secondes
+        self.temps_ecoule = 0
 
         # Gestion du texte et importation de la police
         FONT_PATH = os.path.join(self.BASE_DIR, "font", "sans_sherif.otf")
@@ -40,7 +40,7 @@ class Game:
             "Rect_bouton": (0.01, 0.01, 0.75, 0.75),
             "Rect_jauge": (0.775, 0.01, 0.214, 0.975),
             "Rect_stats": (0.01, 0.789, 0.75, 0.1975),
-            "Texte_temps_chrono": (0.82, 0.05, 0.06),
+            "Texte_temps_chrono": (0.842, 0.05, 0.06),
             "Jauge_pollution": (0.791, 0.17, 0.039, 0.25),
             "Jauge_bio": (0.86, 0.17, 0.039, 0.25),
             "Jauge_niv_ocean": (0.93, 0.17, 0.039, 0.25),
@@ -67,9 +67,6 @@ class Game:
             "Terre inutilisable": [f"{self.CASES_In_PATH}{i}.png" for i in range(7)],
         }
         self.data = Data()
-        self.nbr_eau = 0
-        self.nbr_herbe = 0
-        self.nbr_foret = 0
 
         # Variable affichage
         # Num plan : {0:grille, 1:?}
@@ -96,7 +93,7 @@ class Game:
                 "Rect_bouton" : UI_screen(self.screen, (88, 41, 0), (255,255,255), self.rect_zone, taille_contour = 6, border_radius = 12, pulse = False),
                 "Rect_jauge" : UI_screen(self.screen, (0, 86, 27), (255,255,255), self.resp(self.ratio_objet["Rect_jauge"][0], self.ratio_objet["Rect_jauge"][1], self.ratio_objet["Rect_jauge"][2], self.ratio_objet["Rect_jauge"][3]), taille_contour = 6, border_radius = 12, pulse = False),
                 "Rect_stats" : UI_screen(self.screen, (0, 86, 27), (255,255,255), self.resp(self.ratio_objet["Rect_stats"][0], self.ratio_objet["Rect_stats"][1], self.ratio_objet["Rect_stats"][2], self.ratio_objet["Rect_stats"][3]), taille_contour = 6, border_radius = 12, pulse = False),
-                "Texte_temps_chrono" : Texte(self.screen, self.resp_text(self.ratio_objet["Texte_temps_chrono"][0], self.ratio_objet["Texte_temps_chrono"][1]), self.resp_font(self.ratio_objet["Texte_temps_chrono"][0], self.ratio_objet["Texte_temps_chrono"][2]), (0,0,0), "00.00", font_type = "font/pixellari.ttf")
+                "Texte_temps_chrono" : Texte(self.screen, self.resp_text(self.ratio_objet["Texte_temps_chrono"][0], self.ratio_objet["Texte_temps_chrono"][1]), self.resp_font(self.ratio_objet["Texte_temps_chrono"][0], self.ratio_objet["Texte_temps_chrono"][2]), (0,0,0), f"{self.temps_ecoule}", font_type = "font/pixellari.ttf")
             },
         }
 
@@ -125,19 +122,21 @@ class Game:
                 "Poubelle" : {
                 },
                 "Jauge" : {
-                    "Jauge_pollution" : Jauge(self.screen, self.JAUGE_POLLUTION_PATH, self.resp(self.ratio_objet["Jauge_pollution"][0], self.ratio_objet["Jauge_pollution"][1], self.ratio_objet["Jauge_pollution"][2], self.ratio_objet["Jauge_pollution"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.pollution)),
-                    "Jauge_bio" : Jauge(self.screen, self.JAUGE_BIO_PATH, self.resp(self.ratio_objet["Jauge_bio"][0], self.ratio_objet["Jauge_bio"][1], self.ratio_objet["Jauge_bio"][2], self.ratio_objet["Jauge_bio"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.biodiversite)),
-                    "Jauge_niv_ocean" : Jauge(self.screen, self.JAUGE_NIV_OCEAN_PATH, self.resp(self.ratio_objet["Jauge_niv_ocean"][0], self.ratio_objet["Jauge_niv_ocean"][1], self.ratio_objet["Jauge_niv_ocean"][2], self.ratio_objet["Jauge_niv_ocean"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.eau)),
-                    "Jauge_social" : Jauge(self.screen, self.JAUGE_SOCIAL_PATH, self.resp(self.ratio_objet["Jauge_social"][0], self.ratio_objet["Jauge_social"][1], self.ratio_objet["Jauge_social"][2], self.ratio_objet["Jauge_social"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.stabilite)),
-                    "Jauge_temp" : Jauge(self.screen, self.JAUGE_TEMP_PATH, self.resp(self.ratio_objet["Jauge_temp"][0], self.ratio_objet["Jauge_temp"][1], self.ratio_objet["Jauge_temp"][2], self.ratio_objet["Jauge_temp"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.temperature)),
-                    "Jauge_nourriture" : Jauge(self.screen, self.JAUGE_NOURRITURE_PATH, self.resp(self.ratio_objet["Jauge_nourriture"][0], self.ratio_objet["Jauge_nourriture"][1], self.ratio_objet["Jauge_nourriture"][2], self.ratio_objet["Jauge_nourriture"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.profit)),
-                    "Jauge_total" : Jauge(self.screen, self.JAUGE_TOTAL_PATH, self.resp(self.ratio_objet["Jauge_total"][0], self.ratio_objet["Jauge_total"][1], self.ratio_objet["Jauge_total"][2], self.ratio_objet["Jauge_total"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.destruction), "0")
+                    "Jauge_pollution" : Jauge(self.screen, self.JAUGE_POLLUTION_PATH, "pollution", self.resp(self.ratio_objet["Jauge_pollution"][0], self.ratio_objet["Jauge_pollution"][1], self.ratio_objet["Jauge_pollution"][2], self.ratio_objet["Jauge_pollution"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.pollution)),
+                    "Jauge_bio" : Jauge(self.screen, self.JAUGE_BIO_PATH, "biodiversite", self.resp(self.ratio_objet["Jauge_bio"][0], self.ratio_objet["Jauge_bio"][1], self.ratio_objet["Jauge_bio"][2], self.ratio_objet["Jauge_bio"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.biodiversite)),
+                    "Jauge_niv_ocean" : Jauge(self.screen, self.JAUGE_NIV_OCEAN_PATH, "eau", self.resp(self.ratio_objet["Jauge_niv_ocean"][0], self.ratio_objet["Jauge_niv_ocean"][1], self.ratio_objet["Jauge_niv_ocean"][2], self.ratio_objet["Jauge_niv_ocean"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.eau)),
+                    "Jauge_social" : Jauge(self.screen, self.JAUGE_SOCIAL_PATH, "stabilite", self.resp(self.ratio_objet["Jauge_social"][0], self.ratio_objet["Jauge_social"][1], self.ratio_objet["Jauge_social"][2], self.ratio_objet["Jauge_social"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.stabilite)),
+                    "Jauge_temp" : Jauge(self.screen, self.JAUGE_TEMP_PATH, "temperature", self.resp(self.ratio_objet["Jauge_temp"][0], self.ratio_objet["Jauge_temp"][1], self.ratio_objet["Jauge_temp"][2], self.ratio_objet["Jauge_temp"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.temperature)),
+                    "Jauge_nourriture" : Jauge(self.screen, self.JAUGE_NOURRITURE_PATH, "profit", self.resp(self.ratio_objet["Jauge_nourriture"][0], self.ratio_objet["Jauge_nourriture"][1], self.ratio_objet["Jauge_nourriture"][2], self.ratio_objet["Jauge_nourriture"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.profit)),
+                    "Jauge_total" : Jauge(self.screen, self.JAUGE_TOTAL_PATH, "destruction", self.resp(self.ratio_objet["Jauge_total"][0], self.ratio_objet["Jauge_total"][1], self.ratio_objet["Jauge_total"][2], self.ratio_objet["Jauge_total"][3]), 7, 0.03, self.converte_data_into_frame(11, self.data.destruction), "0", nbr_frames = 11)
                 },
             }
         }
 
     def converte_data_into_frame(self, nbr_frame, valeur_reel):
-        return int((valeur_reel / 100) * (nbr_frame - 1))
+        valeur_reel = max(0, min(100, valeur_reel))
+        return round((valeur_reel / 100) * (nbr_frame - 1))
+
 
     def resp(self, ratio_x:float, ratio_y:float, ratio_long:float, ratio_larg:float):
         '''Méthode qui gère la responsive des surfaces comme les boutons, les interfaces ou les champs'''
@@ -178,7 +177,6 @@ class Game:
 
         self.dico_UI_anim[0]["Flamme"][len(self.dico_UI_anim[0]["Flamme"])] = flamme
 
-
     def anim_feu(self):
         FRAME_DELAY = 120  # ms
         now = pygame.time.get_ticks()
@@ -209,7 +207,6 @@ class Game:
 
         self.dico_UI_anim[0]["Croix"][len(self.dico_UI_anim[0]["Croix"])] = croix
 
-
     def anim_condamne(self):
         FRAME_DELAY = 120  # ms
         now = pygame.time.get_ticks()
@@ -239,7 +236,6 @@ class Game:
         poubelle.last_update = pygame.time.get_ticks()
 
         self.dico_UI_anim[0]["Poubelle"][len(self.dico_UI_anim[0]["Poubelle"])] = poubelle
-
 
     def anim_pollue(self):
         FRAME_DELAY = 120  # ms
@@ -302,12 +298,28 @@ class Game:
         Cette méthode permet de gérer l'affichage des stats de performance et de test
         '''
         if self.keys[pygame.K_F1]:
-            self.screen.blit(self.font.render(f"FPS : {self.fps}", True, (0,0,0)), (0,0)) # Numéro plan
-            self.screen.blit(self.font.render(f"Timer : {self.temps_ecoule}", True, (0,0,0)), (0,25)) # Numéro plan
+            self.screen.blit(self.font.render(f"FPS : {self.fps}", True, (0,0,0)), (0,0)) # Nombre FPS
+            self.screen.blit(self.font.render(f"Timer : {self.temps_ecoule}", True, (0,0,0)), (0,25)) # Timer
             self.screen.blit(self.font.render(f"Num de plan : {self.plan}", True, (0,0,0)), (0,50)) # Numéro plan
-            self.screen.blit(self.font.render(f"Nbr cases eau : {self.nbr_eau}", True, (0,0,0)), (0,75)) # Numéro plan
-            self.screen.blit(self.font.render(f"Nbr cases herbe : {self.nbr_herbe}", True, (0,0,0)), (0,100)) # Numéro plan
-            self.screen.blit(self.font.render(f"Nbr cases forêt : {self.nbr_foret}", True, (0,0,0)), (0,125)) # Numéro plan
+            self.screen.blit(self.font.render(f"Taux de pollution : {self.data.pollution}", True, (0,0,0)), (0,75)) # Taux de Pollution
+            self.screen.blit(self.font.render(f"Niveau de température : {self.data.temperature}", True, (0,0,0)), (0,100)) # Niveau de température
+            self.screen.blit(self.font.render(f"Taux d'eau : {self.data.eau}", True, (0,0,0)), (0,125)) # Taux d'eau
+            self.screen.blit(self.font.render(f"Taux de biodiversité : {self.data.biodiversite}", True, (0,0,0)), (0,150)) # Taux de biodiversité
+            self.screen.blit(self.font.render(f"Taux de stabilité : {self.data.stabilite}", True, (0,0,0)), (0,175)) # Taux de stabilité
+            self.screen.blit(self.font.render(f"Taux de profit : {self.data.profit}", True, (0,0,0)), (0,200)) # Taux de profit
+            self.screen.blit(self.font.render(f"Taux de destruction : {self.data.destruction}", True, (0,0,0)), (0,225)) # Taux de destruction
+
+    def modif_chrono(self):
+        self.dico_UI[0]["Texte_temps_chrono"].text = str(round(self.temps_ecoule, 1))
+
+    def modif_jauge(self):
+        for jauge in self.dico_UI_anim[0]["Jauge"].values():
+
+            # On récupère la valeur correspondante dans Data
+            valeur = getattr(self.data, jauge.nom_data)
+
+            # On convertit en frame
+            jauge.set_frame(self.converte_data_into_frame(jauge.nbr_frames, valeur))
 
     def run(self):
         '''
@@ -316,18 +328,23 @@ class Game:
         '''
         self.crea_cases()
         self.ajout_feu(2,2)
-        self.ajout_feu(6,7)
         self.ajout_condamne(8,7)
-        self.ajout_condamne(10,7)
         self.ajout_pollue(16,7)
-        self.ajout_pollue(2,7)
         while self.running:
-            self.keys = pygame.key.get_pressed()  # On récupère les touches enclenchées
-            self.clock.tick(60)  # On paramètre le tick soit les fps max de la boucle (ici 60fps)
-            self.temps_ecoule = (pygame.time.get_ticks() - self.start_time)/1000  # On récupère le temps réel
-            self.fps = int(self.clock.get_fps())  # On récupère les fps en temps réel
-            self.draw()  # On affiche les éléments graphiques
-            self.exit()  # On test si une condition d'arrêt est déclenchée
+
+            diff_entre_frame = self.clock.tick(60) / 1000
+            self.keys = pygame.key.get_pressed()
+
+            self.temps_ecoule += diff_entre_frame
+            self.fps = int(self.clock.get_fps())
+
+            self.data.update_world(diff_entre_frame*100)
+            self.modif_jauge()
+            self.modif_chrono()
+
+            self.draw()
+            self.exit()
+
     
         pygame.quit() # Puis on quitte proprement le jeu
 

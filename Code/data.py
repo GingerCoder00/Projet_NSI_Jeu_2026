@@ -4,7 +4,7 @@ class Data:
         # JAUGES PRINCIPALES
         
         self.pollution = 10
-        self.temperature = 15
+        self.temperature = 25
         self.eau = 100
         self.biodiversite = 100
         self.stabilite = 100
@@ -132,14 +132,19 @@ class Data:
     # CALCUL DESTRUCTION
 
     def update_destruction(self):
-        self.destruction = (
+        base = (
             self.pollution * 0.25 +
-            self.temperature * 0.2 +
-            (100 - self.eau) * 0.15 +
+            self.temperature * 0.25 +
+            (100 - self.eau) * 0.2 +
             (100 - self.biodiversite) * 0.15 +
-            (100 - self.stabilite) * 0.15 +
-            self.profit * 0.1
+            (100 - self.stabilite) * 0.15
         )
+        # Effet d'emballement climatique
+        chaos = (self.pollution * self.temperature) / 200
+        self.destruction = base + chaos
+        self.destruction = max(0, min(100, self.destruction))
+
+
 
     # CLAMP 0-100
 

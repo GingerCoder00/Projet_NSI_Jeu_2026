@@ -5,7 +5,7 @@ import os
 pygame.init()
 
 class Jauge:
-    def __init__(self, screen, fichier:str, dimension:tuple, ampli_inflate:int, volume_son:float, frame:int, compl_zero:str = "", hover_on:bool = True):
+    def __init__(self, screen, fichier:str, nom_data:str, dimension:tuple, ampli_inflate:int, volume_son:float, frame:int, compl_zero:str = "", hover_on:bool = True, nbr_frames = 7):
         self.screen = screen
         BASE_DIR = os.path.dirname(__file__)
         self.x, self.y, self.L, self.l = dimension
@@ -14,13 +14,14 @@ class Jauge:
         self.true_L = self.L
         self.true_l = self.l
         self.frame = frame
-        print(self.frame)
+        self.nom_data = nom_data
+        self.nbr_frames = nbr_frames
         self.compl_zero = compl_zero
         self.ampli_inf = ampli_inflate
         self.hover_on = hover_on
         self.flag_inflate = False
-        self.IMG_PATH = os.path.join(f"{fichier}{self.compl_zero}{self.frame}.png")
-        print(self.IMG_PATH)
+        self.base_path = fichier
+        self.IMG_PATH = os.path.join(f"{self.base_path}{self.compl_zero}{self.frame}.png")
         self.img_base = pygame.image.load(self.IMG_PATH).convert_alpha()
         self.rect = pygame.Rect(self.true_x, self.true_y, self.true_L, self.true_l)
 
@@ -39,6 +40,13 @@ class Jauge:
         self.img = pygame.transform.scale(self.img_base, (int(self.true_L), int(self.true_l)))
         self.rect = pygame.Rect(self.true_x, self.true_y, self.true_L, self.true_l)
         self.screen.blit(self.img, (self.true_x, self.true_y))
+
+    def set_frame(self, new_frame):
+        new_frame = max(0, min(self.nbr_frames - 1, new_frame))
+        if new_frame != self.frame:
+            self.frame = new_frame
+            self.IMG_PATH = os.path.join(f"{self.base_path}{self.compl_zero}{self.frame}.png")
+            self.img_base = pygame.image.load(self.IMG_PATH).convert_alpha()
 
     def mouse_hover(self):
         if self.rect.collidepoint((self.mouse_x, self.mouse_y)):
