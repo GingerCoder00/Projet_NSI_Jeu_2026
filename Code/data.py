@@ -22,7 +22,7 @@ class Data:
         self.coeff_pollution_from_stab = 0.02
         self.coeff_pollution_from_profit = 0.001
 
-        # 💣 POUVOIRS
+        # POUVOIRS
         
         self.pouvoirs = {
             "incendie": {
