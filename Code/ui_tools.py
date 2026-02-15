@@ -288,4 +288,3 @@ class Texte:
         self.create()
         if self.sin_effect:
             self.animation()
-

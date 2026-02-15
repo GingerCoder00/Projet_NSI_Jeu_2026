@@ -5,6 +5,7 @@ from PIL import Image
 import os
 from ui_tools import *
 from jauge import *
+from data import *
 
 pygame.init()
 pygame.mixer.init()
@@ -65,6 +66,7 @@ class Game:
             "Case brulee" : "",
             "Terre inutilisable": [f"{self.CASES_In_PATH}{i}.png" for i in range(7)],
         }
+        self.data = Data()
         self.nbr_eau = 0
         self.nbr_herbe = 0
         self.nbr_foret = 0
@@ -123,18 +125,19 @@ class Game:
                 "Poubelle" : {
                 },
                 "Jauge" : {
-                    "Jauge_pollution" : Jauge(self.screen, self.JAUGE_POLLUTION_PATH, self.resp(self.ratio_objet["Jauge_pollution"][0], self.ratio_objet["Jauge_pollution"][1], self.ratio_objet["Jauge_pollution"][2], self.ratio_objet["Jauge_pollution"][3]), 7, 0.03, 2),
-                    "Jauge_bio" : Jauge(self.screen, self.JAUGE_BIO_PATH, self.resp(self.ratio_objet["Jauge_bio"][0], self.ratio_objet["Jauge_bio"][1], self.ratio_objet["Jauge_bio"][2], self.ratio_objet["Jauge_bio"][3]), 7, 0.03, 6),
-                    "Jauge_niv_ocean" : Jauge(self.screen, self.JAUGE_NIV_OCEAN_PATH, self.resp(self.ratio_objet["Jauge_niv_ocean"][0], self.ratio_objet["Jauge_niv_ocean"][1], self.ratio_objet["Jauge_niv_ocean"][2], self.ratio_objet["Jauge_niv_ocean"][3]), 7, 0.03, 4),
-                    "Jauge_social" : Jauge(self.screen, self.JAUGE_SOCIAL_PATH, self.resp(self.ratio_objet["Jauge_social"][0], self.ratio_objet["Jauge_social"][1], self.ratio_objet["Jauge_social"][2], self.ratio_objet["Jauge_social"][3]), 7, 0.03, 3),
-                    "Jauge_temp" : Jauge(self.screen, self.JAUGE_TEMP_PATH, self.resp(self.ratio_objet["Jauge_temp"][0], self.ratio_objet["Jauge_temp"][1], self.ratio_objet["Jauge_temp"][2], self.ratio_objet["Jauge_temp"][3]), 7, 0.03, 5),
-                    "Jauge_nourriture" : Jauge(self.screen, self.JAUGE_NOURRITURE_PATH, self.resp(self.ratio_objet["Jauge_nourriture"][0], self.ratio_objet["Jauge_nourriture"][1], self.ratio_objet["Jauge_nourriture"][2], self.ratio_objet["Jauge_nourriture"][3]), 7, 0.03, 6),
-                    "Jauge_total" : Jauge(self.screen, self.JAUGE_TOTAL_PATH, self.resp(self.ratio_objet["Jauge_total"][0], self.ratio_objet["Jauge_total"][1], self.ratio_objet["Jauge_total"][2], self.ratio_objet["Jauge_total"][3]), 7, 0.03, 8, "0"),
+                    "Jauge_pollution" : Jauge(self.screen, self.JAUGE_POLLUTION_PATH, self.resp(self.ratio_objet["Jauge_pollution"][0], self.ratio_objet["Jauge_pollution"][1], self.ratio_objet["Jauge_pollution"][2], self.ratio_objet["Jauge_pollution"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.pollution)),
+                    "Jauge_bio" : Jauge(self.screen, self.JAUGE_BIO_PATH, self.resp(self.ratio_objet["Jauge_bio"][0], self.ratio_objet["Jauge_bio"][1], self.ratio_objet["Jauge_bio"][2], self.ratio_objet["Jauge_bio"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.biodiversite)),
+                    "Jauge_niv_ocean" : Jauge(self.screen, self.JAUGE_NIV_OCEAN_PATH, self.resp(self.ratio_objet["Jauge_niv_ocean"][0], self.ratio_objet["Jauge_niv_ocean"][1], self.ratio_objet["Jauge_niv_ocean"][2], self.ratio_objet["Jauge_niv_ocean"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.eau)),
+                    "Jauge_social" : Jauge(self.screen, self.JAUGE_SOCIAL_PATH, self.resp(self.ratio_objet["Jauge_social"][0], self.ratio_objet["Jauge_social"][1], self.ratio_objet["Jauge_social"][2], self.ratio_objet["Jauge_social"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.stabilite)),
+                    "Jauge_temp" : Jauge(self.screen, self.JAUGE_TEMP_PATH, self.resp(self.ratio_objet["Jauge_temp"][0], self.ratio_objet["Jauge_temp"][1], self.ratio_objet["Jauge_temp"][2], self.ratio_objet["Jauge_temp"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.temperature)),
+                    "Jauge_nourriture" : Jauge(self.screen, self.JAUGE_NOURRITURE_PATH, self.resp(self.ratio_objet["Jauge_nourriture"][0], self.ratio_objet["Jauge_nourriture"][1], self.ratio_objet["Jauge_nourriture"][2], self.ratio_objet["Jauge_nourriture"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.profit)),
+                    "Jauge_total" : Jauge(self.screen, self.JAUGE_TOTAL_PATH, self.resp(self.ratio_objet["Jauge_total"][0], self.ratio_objet["Jauge_total"][1], self.ratio_objet["Jauge_total"][2], self.ratio_objet["Jauge_total"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.destruction), "0")
                 },
             }
         }
 
-        
+    def converte_data_into_frame(self, nbr_frame, valeur_reel):
+        return int((valeur_reel / 100) * (nbr_frame - 1))
 
     def resp(self, ratio_x:float, ratio_y:float, ratio_long:float, ratio_larg:float):
         '''Méthode qui gère la responsive des surfaces comme les boutons, les interfaces ou les champs'''
@@ -222,6 +225,37 @@ class Game:
                     croix.IMG_PATH
                 ).convert_alpha()
 
+    def ajout_pollue(self, ligne, colonne):
+        x, y = self.placement_grille(colonne, ligne)
+
+        poubelle = UI_PNG(
+            self.screen,
+            self.type_cases["Case pollue"][0],
+            (x, y, self.case_Long, self.case_larg),
+            5, 0
+        )
+
+        poubelle.frame = 0
+        poubelle.last_update = pygame.time.get_ticks()
+
+        self.dico_UI_anim[0]["Poubelle"][len(self.dico_UI_anim[0]["Poubelle"])] = poubelle
+
+
+    def anim_pollue(self):
+        FRAME_DELAY = 120  # ms
+        now = pygame.time.get_ticks()
+
+        for poubelle in self.dico_UI_anim[self.plan]["Poubelle"].values():
+            if now - poubelle.last_update >= FRAME_DELAY:
+                poubelle.frame = (poubelle.frame + 1) % len(self.type_cases["Case pollue"])
+                poubelle.last_update = now
+
+                # Mise à jour DU CŒUR de l'image affichée
+                poubelle.IMG_PATH = self.type_cases["Case pollue"][poubelle.frame]
+                poubelle.img_base = pygame.image.load(
+                    poubelle.IMG_PATH
+                ).convert_alpha()
+
     def resp_cases(self, ratio_x:float, ratio_y:float, ratio_long:float, ratio_larg:float):
         '''Méthode qui gère la responsive des cases sur la grille'''
         # On convertit tout les éléments par rapport à un ratio et à la taille de la zone des cases
@@ -285,6 +319,8 @@ class Game:
         self.ajout_feu(6,7)
         self.ajout_condamne(8,7)
         self.ajout_condamne(10,7)
+        self.ajout_pollue(16,7)
+        self.ajout_pollue(2,7)
         while self.running:
             self.keys = pygame.key.get_pressed()  # On récupère les touches enclenchées
             self.clock.tick(60)  # On paramètre le tick soit les fps max de la boucle (ici 60fps)
@@ -313,6 +349,7 @@ class Game:
 
         self.anim_feu() 
         self.anim_condamne() 
+        self.anim_pollue()
 
         self.stats()  # On gère l'affichage des stats
 

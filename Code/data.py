@@ -8,7 +8,7 @@ class Data:
         self.eau = 100
         self.biodiversite = 100
         self.stabilite = 100
-        self.profit = 20
+        self.profit = 35
         self.destruction = 0
 
         # PARAMÈTRES MONDE
