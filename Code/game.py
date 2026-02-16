@@ -159,7 +159,7 @@ class Game:
         l = self.larg * ratio_larg
         return (x, y, L, l)
     
-    def placement_grille(self, colonne:int, ligne:int):
+    def placement_grille(self, ligne:int, colonne:int):
         x = self.zone_x + self.marge + ligne * (self.case_Long + self.marge)
         y = self.zone_y + self.marge +  colonne * (self.case_larg + self.marge)
         return x, y
@@ -169,7 +169,7 @@ class Game:
         index = 0
         for lignes in range(self.lignes):
             for colonnes in range(self.colonnes):
-                x, y = self.placement_grille(lignes, colonnes)
+                x, y = self.placement_grille(colonnes, lignes)
                 color = self.color_pixel_map("sprite/map.png", colonnes, lignes)
                 self.dico_UI_interact[0][index] = UI_PNG(self.screen, self.type_cases[color][randint(0,3)], (x, y, self.case_Long, self.case_larg), 5, 0.03)
                 self.grille[lignes][colonnes] = color
@@ -294,7 +294,7 @@ class Game:
         if puissance <= 0:
             return
 
-        if self.grille[ligne][colonne] in ["eau", "feu"]:
+        if self.grille[ligne][colonne] in [(0,0,255), "feu"]:
             return
 
         self.grille[ligne][colonne] = "feu"
@@ -401,7 +401,7 @@ class Game:
         son fonctionnement
         '''
         self.crea_cases()
-        self.propagation_feu(5, 4, self.puissance_feu())
+        self.propagation_feu(6, 4, self.puissance_feu()+20)
         while self.running:
             diff_entre_frame = self.clock.tick(60) / 1000
             self.keys = pygame.key.get_pressed()
@@ -416,8 +416,6 @@ class Game:
 
             self.draw()
             self.exit()
-
-    
         pygame.quit() # Puis on quitte proprement le jeu
 
     def draw(self):
