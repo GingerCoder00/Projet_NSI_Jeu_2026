@@ -115,14 +115,24 @@ class UI_screen:
 
 
     def create(self):
-        self.rect = pygame.Rect(self.x, self.y, self.true_L, self.true_l)
-        self.rect.center = self.centre_rect
+        # On garde le centre dynamique
+        centre_x = self.x + self.L // 2
+        centre_y = self.y + self.l // 2
 
-        self.contour = pygame.Rect(self.x - self.t_cont, self.y - self.t_cont, self.true_L + self.t_cont * 2, self.true_l + self.t_cont * 2)
-        self.contour.center = self.centre_rect
+        self.rect = pygame.Rect(0, 0, self.true_L, self.true_l)
+        self.rect.center = (centre_x, centre_y)
 
-        pygame.draw.rect(self.screen, self.color, self.rect)
-        pygame.draw.rect(self.screen, self.color_contour, self.contour, self.t_cont, self.bord_rad)
+        self.contour = pygame.Rect(
+            0, 0,
+            self.true_L + self.t_cont * 2,
+            self.true_l + self.t_cont * 2
+        )
+        self.contour.center = (centre_x, centre_y)
+
+        pygame.draw.rect(self.screen, self.color, self.rect, border_radius=self.bord_rad - 6)
+        pygame.draw.rect(self.screen, self.color_contour, self.contour, self.t_cont, border_radius=self.bord_rad)
+
+
 
     def animation_pulse(self):
         self.temps = pygame.time.get_ticks() / 1000
@@ -206,9 +216,9 @@ class UI_PNG:
         self.click_sound.set_volume(self.volume * 0.5)
         self.mouse_x, self.mouse_y = pygame.mouse.get_pos()
         self.left_click = pygame.mouse.get_pressed()[0]
-        if self.hover_on:
-            self.mouse_hover()
         self.create()
+        if self.hover_on:
+            self.mouse_hover()  
 
 class InputText:
     def __init__(self, screen, size, taille_font = 60, text=""):

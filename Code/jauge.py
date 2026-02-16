@@ -1,13 +1,15 @@
 import pygame
 from pygame.locals import QUIT
 import os
+from ui_tools import *
 
 pygame.init()
 
 class Jauge:
-    def __init__(self, screen, fichier:str, nom_data:str, dimension:tuple, ampli_inflate:int, volume_son:float, frame:int, compl_zero:str = "", hover_on:bool = True, nbr_frames = 7):
+    def __init__(self, screen, fichier:str, nom_data:str, dimension:tuple, ampli_inflate:int, volume_son:float, frame:int, compl_zero:str = "", hover_on:bool = True, hover_info = True, nbr_frames = 7):
         self.screen = screen
         BASE_DIR = os.path.dirname(__file__)
+        self.hover_info = hover_info
         self.x, self.y, self.L, self.l = dimension
         self.true_x = self.x
         self.true_y = self.y
@@ -19,11 +21,23 @@ class Jauge:
         self.compl_zero = compl_zero
         self.ampli_inf = ampli_inflate
         self.hover_on = hover_on
+
         self.flag_inflate = False
+
+        self.show_info = False
+
+        # Paramètre interaction souris
+        self.mouse_x, self.mouse_y = pygame.mouse.get_pos()
+        self.left_click = pygame.mouse.get_pressed()[0]
+        self.flag_click = False
+
         self.base_path = fichier
         self.IMG_PATH = os.path.join(f"{self.base_path}{self.compl_zero}{self.frame}.png")
         self.img_base = pygame.image.load(self.IMG_PATH).convert_alpha()
         self.rect = pygame.Rect(self.true_x, self.true_y, self.true_L, self.true_l)
+
+        Longueur, largeur = self.screen.get_size()
+        self.info = UI_screen(self.screen, (255,255,255), (0,0,0), (self.mouse_x, self.mouse_y, Longueur * 0.07, largeur * 0.15), 4, 18)
 
         # Paramètre bruitage
         self.volume = volume_son
@@ -31,10 +45,6 @@ class Jauge:
         self.hover_sound = pygame.mixer.Sound(f"{SOUND_PATH}.wav")
         self.flag_hover_sound = False
 
-        # Paramètre interaction souris
-        self.mouse_x, self.mouse_y = pygame.mouse.get_pos()
-        self.left_click = pygame.mouse.get_pressed()[0]
-        self.flag_click = False
 
     def create(self):
         self.img = pygame.transform.scale(self.img_base, (int(self.true_L), int(self.true_l)))
@@ -50,6 +60,7 @@ class Jauge:
 
     def mouse_hover(self):
         if self.rect.collidepoint((self.mouse_x, self.mouse_y)):
+            self.show_info = True
             if not self.flag_inflate:
                 self.true_L += self.ampli_inf
                 self.true_l += self.ampli_inf
@@ -59,7 +70,11 @@ class Jauge:
             if not self.flag_hover_sound:
                 self.hover_sound.play()
                 self.flag_hover_sound = True
+            if self.hover_info:
+                self.info.x = self.mouse_x
+                self.info.y = self.mouse_y
         else:
+            self.show_info = False
             self.flag_hover_sound = False
             if self.flag_inflate:
                 self.true_L -= self.ampli_inf
@@ -72,6 +87,6 @@ class Jauge:
         self.hover_sound.set_volume(self.volume)
         self.mouse_x, self.mouse_y = pygame.mouse.get_pos()
         self.left_click = pygame.mouse.get_pressed()[0]
+        self.create()
         if self.hover_on:
             self.mouse_hover()
-        self.create()

@@ -40,7 +40,9 @@ class Game:
             "Rect_bouton": (0.01, 0.01, 0.75, 0.75),
             "Rect_jauge": (0.775, 0.01, 0.214, 0.975),
             "Rect_stats": (0.01, 0.789, 0.75, 0.1975),
-            "Texte_temps_chrono": (0.842, 0.05, 0.06),
+            "Rect_notif": (0.024, 0.808, 0.38, 0.158),
+            "Rect_power": (0.426, 0.808, 0.32, 0.158),
+            "Texte_temps_chrono": (0.82, 0.05, 0.06),
             "Jauge_pollution": (0.791, 0.17, 0.039, 0.25),
             "Jauge_bio": (0.86, 0.17, 0.039, 0.25),
             "Jauge_niv_ocean": (0.93, 0.17, 0.039, 0.25),
@@ -75,7 +77,7 @@ class Game:
         # Gestion du nombre de cases
         self.lignes = 19
         self.colonnes = 30
-        self.marge = 4  # marge entre les cases
+        self.marge = 3.5  # marge entre les cases
         self.rect_zone = self.resp(
             self.ratio_objet["Rect_bouton"][0],
             self.ratio_objet["Rect_bouton"][1],
@@ -93,6 +95,8 @@ class Game:
                 "Rect_bouton" : UI_screen(self.screen, (88, 41, 0), (255,255,255), self.rect_zone, taille_contour = 6, border_radius = 12, pulse = False),
                 "Rect_jauge" : UI_screen(self.screen, (0, 86, 27), (255,255,255), self.resp(self.ratio_objet["Rect_jauge"][0], self.ratio_objet["Rect_jauge"][1], self.ratio_objet["Rect_jauge"][2], self.ratio_objet["Rect_jauge"][3]), taille_contour = 6, border_radius = 12, pulse = False),
                 "Rect_stats" : UI_screen(self.screen, (0, 86, 27), (255,255,255), self.resp(self.ratio_objet["Rect_stats"][0], self.ratio_objet["Rect_stats"][1], self.ratio_objet["Rect_stats"][2], self.ratio_objet["Rect_stats"][3]), taille_contour = 6, border_radius = 12, pulse = False),
+                "Rect_notif" : UI_screen(self.screen, (0, 100, 127), (255,255,255), self.resp(self.ratio_objet["Rect_notif"][0], self.ratio_objet["Rect_notif"][1], self.ratio_objet["Rect_notif"][2], self.ratio_objet["Rect_notif"][3]), taille_contour = 6, border_radius = 12, pulse = True),
+                "Rect_power" : UI_screen(self.screen, (0, 100, 127), (255,255,255), self.resp(self.ratio_objet["Rect_power"][0], self.ratio_objet["Rect_power"][1], self.ratio_objet["Rect_power"][2], self.ratio_objet["Rect_power"][3]), taille_contour = 6, border_radius = 12, pulse = True),
                 "Texte_temps_chrono" : Texte(self.screen, self.resp_text(self.ratio_objet["Texte_temps_chrono"][0], self.ratio_objet["Texte_temps_chrono"][1]), self.resp_font(self.ratio_objet["Texte_temps_chrono"][0], self.ratio_objet["Texte_temps_chrono"][2]), (0,0,0), f"{self.temps_ecoule}", font_type = "font/pixellari.ttf")
             },
         }
@@ -338,7 +342,7 @@ class Game:
             self.temps_ecoule += diff_entre_frame
             self.fps = int(self.clock.get_fps())
 
-            self.data.update_world(diff_entre_frame*100)
+            self.data.update_world(diff_entre_frame)
             self.modif_jauge()
             self.modif_chrono()
 
@@ -360,9 +364,15 @@ class Game:
         for cases in self.dico_UI_interact[self.plan].values():
             cases.update()  
 
+        # Dessiner toutes les jauges
         for anims in self.dico_UI_anim[self.plan].values():
             for anim in anims.values():
-                anim.update()  
+                anim.update()
+
+        # Puis dessiner les tooltips EN DERNIER
+        for jauge in self.dico_UI_anim[self.plan]["Jauge"].values():
+            if jauge.show_info:
+                jauge.info.update()
 
         self.anim_feu() 
         self.anim_condamne() 
