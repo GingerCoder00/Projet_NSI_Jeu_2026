@@ -96,7 +96,7 @@ class Game:
         self.fire_delay = 1200  # ms entre chaque vague
 
         self.RAIN_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_effet_pluie", "sprite_pluie_")
-        self.sprite_pluie = [pygame.image.load(f"{self.RAIN_PATH}{str(i).zfill(2)}.png").convert() for i in range(19)] # Importation des 19 frames
+        self.sprite_pluie = [pygame.image.load(f"{self.RAIN_PATH}{str(i).zfill(2)}.png").convert() for i in range(23)] # Importation des 23 frames
         self.sprite_pluie = [pygame.transform.scale(elt, (self.zone_L, self.zone_l)) for elt in self.sprite_pluie] # Convertion des frames pour la grille
         self.last_rain_update = pygame.time.get_ticks()
         self.pluie_frame = 0        
@@ -188,7 +188,7 @@ class Game:
             self.last_rain_update = now
 
         image = self.sprite_pluie[self.pluie_frame]
-        image.set_alpha(115)  # Change l'opacité ici
+        image.set_alpha(155)  # Change l'opacité ici
 
         self.screen.blit(image, (self.zone_x, self.zone_y))
             
