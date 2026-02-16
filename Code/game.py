@@ -1,6 +1,6 @@
 import pygame
 from pygame.locals import QUIT
-from random import randint
+from random import randint, random
 from PIL import Image
 import os
 from ui_tools import *
@@ -93,7 +93,7 @@ class Game:
 
         self.file_propagation = []  # [(ligne, colonne, puissance)]
         self.last_fire_update = pygame.time.get_ticks()
-        self.fire_delay = 800  # ms entre chaque vague
+        self.fire_delay = 1200  # ms entre chaque vague
 
         
 
@@ -265,9 +265,29 @@ class Game:
                     poubelle.IMG_PATH
                 ).convert_alpha()
 
+    def proba_propagation(self):
+        """
+        Retourne une probabilité entre 0 et 1
+        dépendante de la température
+        """
+
+        # Base minimale
+        base = 0.15  
+
+        # Influence température (0 → 100)
+        influence = self.data.temperature / 150  
+
+        # Limite max
+        return min(0.85, base + influence)
+    
+    def puissance_feu(self):
+        '''
+        Détermine la profondeur de propagation
+        '''
+        return 4 + int(self.data.temperature / 25)
+
     def propagation_feu(self, ligne, colonne, puissance):
 
-        # Vérification limites
         if not (0 <= ligne < self.lignes and 0 <= colonne < self.colonnes):
             return
 
@@ -277,15 +297,18 @@ class Game:
         if self.grille[ligne][colonne] in ["eau", "feu"]:
             return
 
-        # On marque comme feu
         self.grille[ligne][colonne] = "feu"
         self.ajout_feu(ligne, colonne)
 
-        # On programme les futures récursions
-        self.file_propagation.append((ligne - 1, colonne, puissance - 1))
-        self.file_propagation.append((ligne + 1, colonne, puissance - 1))
-        self.file_propagation.append((ligne, colonne - 1, puissance - 1))
-        self.file_propagation.append((ligne, colonne + 1, puissance - 1))
+        proba = self.proba_propagation()
+
+        directions = [(-1,0),(1,0),(0,-1),(0,1)]
+
+        for dl, dc in directions:
+            if random() < proba:
+                self.file_propagation.append(
+                    (ligne + dl, colonne + dc, puissance - 1)
+                )
 
     def update_propagation_feu(self):
 
@@ -378,7 +401,7 @@ class Game:
         son fonctionnement
         '''
         self.crea_cases()
-        self.propagation_feu(5, 4, 2)
+        self.propagation_feu(5, 4, self.puissance_feu())
         while self.running:
             diff_entre_frame = self.clock.tick(60) / 1000
             self.keys = pygame.key.get_pressed()
