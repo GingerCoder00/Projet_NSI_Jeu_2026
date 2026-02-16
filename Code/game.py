@@ -68,7 +68,7 @@ class Game:
             "Case brulee" : "",
             "Terre inutilisable": [f"{self.CASES_In_PATH}{i}.png" for i in range(7)],
         }
-
+        
         self.data = Data()
 
         # Variable affichage
@@ -95,7 +95,11 @@ class Game:
         self.last_fire_update = pygame.time.get_ticks()
         self.fire_delay = 1200  # ms entre chaque vague
 
-        
+        self.RAIN_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_effet_pluie", "sprite_pluie_")
+        self.sprite_pluie = [pygame.image.load(f"{self.RAIN_PATH}{str(i).zfill(2)}.png").convert() for i in range(19)] # Importation des 19 frames
+        self.sprite_pluie = [pygame.transform.scale(elt, (self.zone_L, self.zone_l)) for elt in self.sprite_pluie] # Convertion des frames pour la grille
+        self.last_rain_update = pygame.time.get_ticks()
+        self.pluie_frame = 0        
 
         # Gestion des éléments graphiques non intéractif
         self.dico_UI = {
@@ -174,6 +178,20 @@ class Game:
                 self.dico_UI_interact[0][index] = UI_PNG(self.screen, self.type_cases[color][randint(0,3)], (x, y, self.case_Long, self.case_larg), 5, 0.03)
                 self.grille[lignes][colonnes] = color
                 index += 1
+
+    def pluie(self):
+        now = pygame.time.get_ticks()
+        rain_delay = 50 # ms
+
+        if now - self.last_rain_update >= rain_delay:
+            self.pluie_frame = (self.pluie_frame + 1) % len(self.sprite_pluie)
+            self.last_rain_update = now
+
+        image = self.sprite_pluie[self.pluie_frame]
+        image.set_alpha(115)  # Change l'opacité ici
+
+        self.screen.blit(image, (self.zone_x, self.zone_y))
+            
 
     def ajout_feu(self, ligne, colonne):
         x, y = self.placement_grille(colonne, ligne)
@@ -401,7 +419,7 @@ class Game:
         son fonctionnement
         '''
         self.crea_cases()
-        self.propagation_feu(6, 4, self.puissance_feu()+20)
+        self.propagation_feu(6, 4, self.puissance_feu())
         while self.running:
             diff_entre_frame = self.clock.tick(60) / 1000
             self.keys = pygame.key.get_pressed()
@@ -443,6 +461,7 @@ class Game:
         self.anim_feu() 
         self.anim_condamne() 
         self.anim_pollue()
+        self.pluie()
 
         self.stats()  # On gère l'affichage des stats
 
