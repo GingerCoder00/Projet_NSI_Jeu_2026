@@ -90,10 +90,10 @@ class Game:
         self.case_larg = (self.zone_l - (self.lignes + 1) * self.marge) / self.lignes
 
         self.grille = [["terre" for i in range(self.colonnes)] for j in range(self.lignes)]
-        
+
         self.file_propagation = []  # [(ligne, colonne, puissance)]
         self.last_fire_update = pygame.time.get_ticks()
-        self.fire_delay = 200  # ms entre chaque vague
+        self.fire_delay = 800  # ms entre chaque vague
 
         
 
@@ -267,31 +267,41 @@ class Game:
 
     def propagation_feu(self, ligne, colonne, puissance):
 
-        # Vérification des limites
+        # Vérification limites
         if not (0 <= ligne < self.lignes and 0 <= colonne < self.colonnes):
             return
 
-        # Condition d'arrêt
         if puissance <= 0:
             return
 
-        # Empêcher de reboucler
-        if self.grille[ligne][colonne] == "eau":
+        if self.grille[ligne][colonne] in ["eau", "feu"]:
             return
 
-        if self.grille[ligne][colonne] == "feu":
-            return
-
-        # On brûle la case
+        # On marque comme feu
         self.grille[ligne][colonne] = "feu"
         self.ajout_feu(ligne, colonne)
 
-        # Propagation dans les 4 directions
-        self.propagation_feu(ligne - 1, colonne, puissance - 1)
-        self.propagation_feu(ligne + 1, colonne, puissance - 1)
-        self.propagation_feu(ligne, colonne - 1, puissance - 1)
-        self.propagation_feu(ligne, colonne + 1, puissance - 1)
+        # On programme les futures récursions
+        self.file_propagation.append((ligne - 1, colonne, puissance - 1))
+        self.file_propagation.append((ligne + 1, colonne, puissance - 1))
+        self.file_propagation.append((ligne, colonne - 1, puissance - 1))
+        self.file_propagation.append((ligne, colonne + 1, puissance - 1))
 
+    def update_propagation_feu(self):
+
+        now = pygame.time.get_ticks()
+
+        if now - self.last_fire_update < self.fire_delay:
+            return
+
+        self.last_fire_update = now
+
+        # On prend une vague complète
+        vague = self.file_propagation.copy()
+        self.file_propagation.clear()
+
+        for ligne, colonne, puissance in vague:
+            self.propagation_feu(ligne, colonne, puissance)
 
     def resp_cases(self, ratio_x:float, ratio_y:float, ratio_long:float, ratio_larg:float):
         '''Méthode qui gère la responsive des cases sur la grille'''
@@ -368,9 +378,8 @@ class Game:
         son fonctionnement
         '''
         self.crea_cases()
-        self.propagation_feu(5, 4, 5)
+        self.propagation_feu(5, 4, 2)
         while self.running:
-
             diff_entre_frame = self.clock.tick(60) / 1000
             self.keys = pygame.key.get_pressed()
 
@@ -378,6 +387,7 @@ class Game:
             self.fps = int(self.clock.get_fps())
 
             self.data.update_world(diff_entre_frame)
+            self.update_propagation_feu()
             self.modif_jauge()
             self.modif_chrono()
 
