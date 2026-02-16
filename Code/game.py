@@ -68,6 +68,7 @@ class Game:
             "Case brulee" : "",
             "Terre inutilisable": [f"{self.CASES_In_PATH}{i}.png" for i in range(7)],
         }
+
         self.data = Data()
 
         # Variable affichage
@@ -87,6 +88,13 @@ class Game:
         self.zone_x, self.zone_y, self.zone_L, self.zone_l = self.rect_zone
         self.case_Long = (self.zone_L - (self.colonnes + 1) * self.marge) / self.colonnes
         self.case_larg = (self.zone_l - (self.lignes + 1) * self.marge) / self.lignes
+
+        self.grille = [["terre" for i in range(self.colonnes)] for j in range(self.lignes)]
+        
+        self.file_propagation = []  # [(ligne, colonne, puissance)]
+        self.last_fire_update = pygame.time.get_ticks()
+        self.fire_delay = 200  # ms entre chaque vague
+
         
 
         # Gestion des éléments graphiques non intéractif
@@ -164,6 +172,7 @@ class Game:
                 x, y = self.placement_grille(lignes, colonnes)
                 color = self.color_pixel_map("sprite/map.png", colonnes, lignes)
                 self.dico_UI_interact[0][index] = UI_PNG(self.screen, self.type_cases[color][randint(0,3)], (x, y, self.case_Long, self.case_larg), 5, 0.03)
+                self.grille[lignes][colonnes] = color
                 index += 1
 
     def ajout_feu(self, ligne, colonne):
@@ -256,6 +265,34 @@ class Game:
                     poubelle.IMG_PATH
                 ).convert_alpha()
 
+    def propagation_feu(self, ligne, colonne, puissance):
+
+        # Vérification des limites
+        if not (0 <= ligne < self.lignes and 0 <= colonne < self.colonnes):
+            return
+
+        # Condition d'arrêt
+        if puissance <= 0:
+            return
+
+        # Empêcher de reboucler
+        if self.grille[ligne][colonne] == "eau":
+            return
+
+        if self.grille[ligne][colonne] == "feu":
+            return
+
+        # On brûle la case
+        self.grille[ligne][colonne] = "feu"
+        self.ajout_feu(ligne, colonne)
+
+        # Propagation dans les 4 directions
+        self.propagation_feu(ligne - 1, colonne, puissance - 1)
+        self.propagation_feu(ligne + 1, colonne, puissance - 1)
+        self.propagation_feu(ligne, colonne - 1, puissance - 1)
+        self.propagation_feu(ligne, colonne + 1, puissance - 1)
+
+
     def resp_cases(self, ratio_x:float, ratio_y:float, ratio_long:float, ratio_larg:float):
         '''Méthode qui gère la responsive des cases sur la grille'''
         # On convertit tout les éléments par rapport à un ratio et à la taille de la zone des cases
@@ -331,9 +368,7 @@ class Game:
         son fonctionnement
         '''
         self.crea_cases()
-        self.ajout_feu(2,2)
-        self.ajout_condamne(8,7)
-        self.ajout_pollue(16,7)
+        self.propagation_feu(5, 4, 5)
         while self.running:
 
             diff_entre_frame = self.clock.tick(60) / 1000
