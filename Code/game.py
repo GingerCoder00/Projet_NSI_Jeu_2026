@@ -1,11 +1,14 @@
 import pygame
-from pygame.locals import QUIT
 from random import randint, random
 from PIL import Image
 import os
 from ui_tools import *
 from jauge import *
 from data import *
+from meteo import *
+from resp_tools import *
+from grille import *
+from dico_info_game import *
 
 pygame.init()
 pygame.mixer.init()
@@ -35,6 +38,8 @@ class Game:
         # Active et désactive la boucle de jeu
         self.running = True
 
+        self.resp = Resp_tools(self.Long, self.larg)
+
         # Gestion des ratios de chaques objets graphiques pour la responsive
         self.ratio_objet = {
             "Rect_bouton": (0.01, 0.01, 0.75, 0.75),
@@ -53,73 +58,22 @@ class Game:
             "Bouton_Feu": (0.45, 0.83, 0.055, 0.08)
         }
 
-        self.num_map = randint(0,3)
+        self.dico_info = Dico_info_Game()
 
-        # Gestion des types de cases
-        self.CASES_E_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_eau", "sprite_eau_")
-        self.CASES_H_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_herbe", "sprite_herbe_")
-        self.CASES_Fo_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_foret/v2", "sprite_foret_")
-        self.CASES_Fe_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_feu", "sprite_feu_")
-        self.CASES_P_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_pollue", "sprite_pollue_")
-        self.CASES_In_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_condamne", "sprite_condamne_")
-        self.type_cases = {
-            (0,0,255) : [f"{self.CASES_E_PATH}{i}.png" for i in range(4)],
-            (0,255,0) : [f"{self.CASES_H_PATH}{i}.png" for i in range(4)],
-            (0,50,0) : [f"{self.CASES_Fo_PATH}{i}.png" for i in range(4)],
-            "Case ETDB" : [f"{self.CASES_Fe_PATH}{i}.png" for i in range(5)],
-            "Case pollue" : [f"{self.CASES_P_PATH}{i}.png" for i in range(3)],
-            "Case brulee" : "",
-            "Terre inutilisable": [f"{self.CASES_In_PATH}{i}.png" for i in range(7)],
-        }
-
-        self.fire_frames = [pygame.image.load(path).convert_alpha() for path in self.type_cases["Case ETDB"]]
-        
-        self.data = Data()
+        self.fire_frames = [pygame.image.load(path).convert_alpha() for path in self.dico_info.type_cases["Case ETDB"]]
 
         # Variable affichage
         # Num plan : {0:grille, 1:?}
         self.plan = 0
 
-        # Gestion du nombre de cases
-        self.lignes = 19
-        self.colonnes = 30
-        self.marge = 3.5  # marge entre les cases
-        self.rect_zone = self.resp(
-            self.ratio_objet["Rect_bouton"][0],
-            self.ratio_objet["Rect_bouton"][1],
-            self.ratio_objet["Rect_bouton"][2],
-            self.ratio_objet["Rect_bouton"][3]
-        )
-        self.zone_x, self.zone_y, self.zone_L, self.zone_l = self.rect_zone
-        self.case_Long = (self.zone_L - (self.colonnes + 1) * self.marge) / self.colonnes
-        self.case_larg = (self.zone_l - (self.lignes + 1) * self.marge) / self.lignes
-
-        self.grille = [["terre" for i in range(self.colonnes)] for j in range(self.lignes)]
-
         self.file_propagation = []  # [(ligne, colonne, puissance)]
         self.last_fire_update = pygame.time.get_ticks()
         self.fire_delay = 1200  # ms entre chaque vague
-
-        self.RAIN_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_effet_pluie", "sprite_pluie_")
-        self.sprite_pluie = [pygame.image.load(f"{self.RAIN_PATH}{str(i).zfill(2)}.png").convert() for i in range(23)] # Importation des 23 frames
-        self.sprite_pluie = [pygame.transform.scale(elt, (self.zone_L, self.zone_l)) for elt in self.sprite_pluie] # Convertion des frames pour la grille
-        self.last_rain_update = pygame.time.get_ticks()
-        self.pluie_frame = 0        
-
+       
         self.BOUTON_FEU_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_bouton_feu", "sprite_bouton_feu_0.png")
         self.bouton_active = False
 
-        # Gestion des éléments graphiques non intéractif
-        self.dico_UI = {
-            0:{
-                "Rect_bouton" : UI_screen(self.screen, (88, 41, 0), (255,255,255), self.rect_zone, taille_contour = 6, border_radius = 12, pulse = False),
-                "Rect_jauge" : UI_screen(self.screen, (0, 86, 27), (255,255,255), self.resp(self.ratio_objet["Rect_jauge"][0], self.ratio_objet["Rect_jauge"][1], self.ratio_objet["Rect_jauge"][2], self.ratio_objet["Rect_jauge"][3]), taille_contour = 6, border_radius = 12, pulse = False),
-                "Rect_stats" : UI_screen(self.screen, (0, 86, 27), (255,255,255), self.resp(self.ratio_objet["Rect_stats"][0], self.ratio_objet["Rect_stats"][1], self.ratio_objet["Rect_stats"][2], self.ratio_objet["Rect_stats"][3]), taille_contour = 6, border_radius = 12, pulse = False),
-                "Rect_notif" : UI_screen(self.screen, (0, 100, 127), (255,255,255), self.resp(self.ratio_objet["Rect_notif"][0], self.ratio_objet["Rect_notif"][1], self.ratio_objet["Rect_notif"][2], self.ratio_objet["Rect_notif"][3]), taille_contour = 6, border_radius = 12, pulse = True),
-                "Rect_power" : UI_screen(self.screen, (0, 100, 127), (255,255,255), self.resp(self.ratio_objet["Rect_power"][0], self.ratio_objet["Rect_power"][1], self.ratio_objet["Rect_power"][2], self.ratio_objet["Rect_power"][3]), taille_contour = 6, border_radius = 12, pulse = True),
-                "Texte_temps_chrono" : Texte(self.screen, self.resp_text(self.ratio_objet["Texte_temps_chrono"][0], self.ratio_objet["Texte_temps_chrono"][1]), self.resp_font(self.ratio_objet["Texte_temps_chrono"][0], self.ratio_objet["Texte_temps_chrono"][2]), (0,0,0), f"{self.temps_ecoule}", font_type = "font/pixellari.ttf")
-            },
-        }
+        self.data = Data()
 
         # Gestion des éléments intéractifs
         self.dico_UI_interact = {
@@ -128,8 +82,23 @@ class Game:
 
                 },
                 "Bouton" : {
-                    "Bouton_Feu" : UI_PNG(self.screen, self.BOUTON_FEU_PATH, self.resp(self.ratio_objet["Bouton_Feu"][0], self.ratio_objet["Bouton_Feu"][1], self.ratio_objet["Bouton_Feu"][2], self.ratio_objet["Bouton_Feu"][3]), 12, 0.03) 
+                    "Bouton_Feu" : UI_PNG(self.screen, self.BOUTON_FEU_PATH, self.resp.resp(self.ratio_objet["Bouton_Feu"][0], self.ratio_objet["Bouton_Feu"][1], self.ratio_objet["Bouton_Feu"][2], self.ratio_objet["Bouton_Feu"][3]), 12, 0.03) 
                 },
+            },
+        }
+
+        self.grille = Grille(self.screen, 19, 30, 3.5, self.resp.resp(self.ratio_objet["Rect_bouton"][0], self.ratio_objet["Rect_bouton"][1], self.ratio_objet["Rect_bouton"][2], self.ratio_objet["Rect_bouton"][3]), self.dico_UI_interact)
+        self.meteo = Meteo(self.screen, self.grille.zone_x, self.grille.zone_y, self.grille.zone_L, self.grille.zone_l)
+
+        # Gestion des éléments graphiques non intéractif
+        self.dico_UI = {
+            0:{
+                "Rect_bouton" : UI_screen(self.screen, (88, 41, 0), (255,255,255), self.grille.rect_zone, taille_contour = 6, border_radius = 12, pulse = False),
+                "Rect_jauge" : UI_screen(self.screen, (0, 86, 27), (255,255,255), self.resp.resp(self.ratio_objet["Rect_jauge"][0], self.ratio_objet["Rect_jauge"][1], self.ratio_objet["Rect_jauge"][2], self.ratio_objet["Rect_jauge"][3]), taille_contour = 6, border_radius = 12, pulse = False),
+                "Rect_stats" : UI_screen(self.screen, (0, 86, 27), (255,255,255), self.resp.resp(self.ratio_objet["Rect_stats"][0], self.ratio_objet["Rect_stats"][1], self.ratio_objet["Rect_stats"][2], self.ratio_objet["Rect_stats"][3]), taille_contour = 6, border_radius = 12, pulse = False),
+                "Rect_notif" : UI_screen(self.screen, (0, 100, 127), (255,255,255), self.resp.resp(self.ratio_objet["Rect_notif"][0], self.ratio_objet["Rect_notif"][1], self.ratio_objet["Rect_notif"][2], self.ratio_objet["Rect_notif"][3]), taille_contour = 6, border_radius = 12, pulse = True),
+                "Rect_power" : UI_screen(self.screen, (0, 100, 127), (255,255,255), self.resp.resp(self.ratio_objet["Rect_power"][0], self.ratio_objet["Rect_power"][1], self.ratio_objet["Rect_power"][2], self.ratio_objet["Rect_power"][3]), taille_contour = 6, border_radius = 12, pulse = True),
+                "Texte_temps_chrono" : Texte(self.screen, self.resp.resp_text(self.ratio_objet["Texte_temps_chrono"][0], self.ratio_objet["Texte_temps_chrono"][1]), self.resp.resp_font(self.ratio_objet["Texte_temps_chrono"][0], self.ratio_objet["Texte_temps_chrono"][2]), (0,0,0), f"{self.temps_ecoule}", font_type = "font/pixellari.ttf")
             },
         }
 
@@ -151,13 +120,13 @@ class Game:
                 "Poubelle" : {
                 },
                 "Jauge" : {
-                    "Jauge_pollution" : Jauge(self.screen, self.JAUGE_POLLUTION_PATH, "pollution", self.resp(self.ratio_objet["Jauge_pollution"][0], self.ratio_objet["Jauge_pollution"][1], self.ratio_objet["Jauge_pollution"][2], self.ratio_objet["Jauge_pollution"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.pollution)),
-                    "Jauge_bio" : Jauge(self.screen, self.JAUGE_BIO_PATH, "biodiversite", self.resp(self.ratio_objet["Jauge_bio"][0], self.ratio_objet["Jauge_bio"][1], self.ratio_objet["Jauge_bio"][2], self.ratio_objet["Jauge_bio"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.biodiversite)),
-                    "Jauge_niv_ocean" : Jauge(self.screen, self.JAUGE_NIV_OCEAN_PATH, "eau", self.resp(self.ratio_objet["Jauge_niv_ocean"][0], self.ratio_objet["Jauge_niv_ocean"][1], self.ratio_objet["Jauge_niv_ocean"][2], self.ratio_objet["Jauge_niv_ocean"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.eau)),
-                    "Jauge_social" : Jauge(self.screen, self.JAUGE_SOCIAL_PATH, "stabilite", self.resp(self.ratio_objet["Jauge_social"][0], self.ratio_objet["Jauge_social"][1], self.ratio_objet["Jauge_social"][2], self.ratio_objet["Jauge_social"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.stabilite)),
-                    "Jauge_temp" : Jauge(self.screen, self.JAUGE_TEMP_PATH, "temperature", self.resp(self.ratio_objet["Jauge_temp"][0], self.ratio_objet["Jauge_temp"][1], self.ratio_objet["Jauge_temp"][2], self.ratio_objet["Jauge_temp"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.temperature)),
-                    "Jauge_nourriture" : Jauge(self.screen, self.JAUGE_NOURRITURE_PATH, "profit", self.resp(self.ratio_objet["Jauge_nourriture"][0], self.ratio_objet["Jauge_nourriture"][1], self.ratio_objet["Jauge_nourriture"][2], self.ratio_objet["Jauge_nourriture"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.profit)),
-                    "Jauge_total" : Jauge(self.screen, self.JAUGE_TOTAL_PATH, "destruction", self.resp(self.ratio_objet["Jauge_total"][0], self.ratio_objet["Jauge_total"][1], self.ratio_objet["Jauge_total"][2], self.ratio_objet["Jauge_total"][3]), 7, 0.03, self.converte_data_into_frame(11, self.data.destruction), "0", nbr_frames = 11)
+                    "Jauge_pollution" : Jauge(self.screen, self.JAUGE_POLLUTION_PATH, "pollution", self.resp.resp(self.ratio_objet["Jauge_pollution"][0], self.ratio_objet["Jauge_pollution"][1], self.ratio_objet["Jauge_pollution"][2], self.ratio_objet["Jauge_pollution"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.pollution)),
+                    "Jauge_bio" : Jauge(self.screen, self.JAUGE_BIO_PATH, "biodiversite", self.resp.resp(self.ratio_objet["Jauge_bio"][0], self.ratio_objet["Jauge_bio"][1], self.ratio_objet["Jauge_bio"][2], self.ratio_objet["Jauge_bio"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.biodiversite)),
+                    "Jauge_niv_ocean" : Jauge(self.screen, self.JAUGE_NIV_OCEAN_PATH, "eau", self.resp.resp(self.ratio_objet["Jauge_niv_ocean"][0], self.ratio_objet["Jauge_niv_ocean"][1], self.ratio_objet["Jauge_niv_ocean"][2], self.ratio_objet["Jauge_niv_ocean"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.eau)),
+                    "Jauge_social" : Jauge(self.screen, self.JAUGE_SOCIAL_PATH, "stabilite", self.resp.resp(self.ratio_objet["Jauge_social"][0], self.ratio_objet["Jauge_social"][1], self.ratio_objet["Jauge_social"][2], self.ratio_objet["Jauge_social"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.stabilite)),
+                    "Jauge_temp" : Jauge(self.screen, self.JAUGE_TEMP_PATH, "temperature", self.resp.resp(self.ratio_objet["Jauge_temp"][0], self.ratio_objet["Jauge_temp"][1], self.ratio_objet["Jauge_temp"][2], self.ratio_objet["Jauge_temp"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.temperature)),
+                    "Jauge_nourriture" : Jauge(self.screen, self.JAUGE_NOURRITURE_PATH, "profit", self.resp.resp(self.ratio_objet["Jauge_nourriture"][0], self.ratio_objet["Jauge_nourriture"][1], self.ratio_objet["Jauge_nourriture"][2], self.ratio_objet["Jauge_nourriture"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.profit)),
+                    "Jauge_total" : Jauge(self.screen, self.JAUGE_TOTAL_PATH, "destruction", self.resp.resp(self.ratio_objet["Jauge_total"][0], self.ratio_objet["Jauge_total"][1], self.ratio_objet["Jauge_total"][2], self.ratio_objet["Jauge_total"][3]), 7, 0.03, self.converte_data_into_frame(11, self.data.destruction), "0", nbr_frames = 11)
                 },
             }
         }
@@ -166,54 +135,13 @@ class Game:
         valeur_reel = max(0, min(100, valeur_reel))
         return round((valeur_reel / 100) * (nbr_frame - 1))
 
-
-    def resp(self, ratio_x:float, ratio_y:float, ratio_long:float, ratio_larg:float):
-        '''Méthode qui gère la responsive des surfaces comme les boutons, les interfaces ou les champs'''
-        # On convertit tout les éléments par rapport à un ratio et à la taille de l'écran
-        x = self.Long * ratio_x
-        y = self.larg * ratio_y
-        L = self.Long * ratio_long
-        l = self.larg * ratio_larg
-        return (x, y, L, l)
-    
-    def placement_grille(self, ligne:int, colonne:int):
-        x = self.zone_x + self.marge + ligne * (self.case_Long + self.marge)
-        y = self.zone_y + self.marge +  colonne * (self.case_larg + self.marge)
-        return x, y
-    
-    def crea_cases(self):
-        # Création des cases
-        index = 0
-        for lignes in range(self.lignes):
-            for colonnes in range(self.colonnes):
-                x, y = self.placement_grille(colonnes, lignes)
-                self.MAP_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_map", f"map_{self.num_map}.png")
-                color = self.color_pixel_map(self.MAP_PATH, colonnes, lignes)
-                self.dico_UI_interact[0]["Case"][index] = UI_PNG(self.screen, self.type_cases[color][randint(0,3)], (x, y, self.case_Long, self.case_larg), 5, 0.03)
-                self.grille[lignes][colonnes] = color
-                index += 1
-
-    def pluie(self):
-        now = pygame.time.get_ticks()
-        rain_delay = 50 # ms
-
-        if now - self.last_rain_update >= rain_delay:
-            self.pluie_frame = (self.pluie_frame + 1) % len(self.sprite_pluie)
-            self.last_rain_update = now
-
-        image = self.sprite_pluie[self.pluie_frame]
-        image.set_alpha(155)  # Change l'opacité ici
-
-        self.screen.blit(image, (self.zone_x, self.zone_y))
-            
-
     def ajout_feu(self, ligne, colonne):
-        x, y = self.placement_grille(colonne, ligne)
+        x, y = self.grille.placement_grille(colonne, ligne)
 
         flamme = UI_PNG(
             self.screen,
-            self.type_cases["Case ETDB"][0],
-            (x, y, self.case_Long, self.case_larg),
+            self.dico_info.type_cases["Case ETDB"][0],
+            (x, y, self.grille.case_Long, self.grille.case_larg),
             5, 0
         )
 
@@ -228,19 +156,19 @@ class Game:
 
         for flamme in self.dico_UI_anim[self.plan]["Flamme"].values():
             if now - flamme.last_update >= FRAME_DELAY:
-                flamme.frame = (flamme.frame + 1) % len(self.type_cases["Case ETDB"])
+                flamme.frame = (flamme.frame + 1) % len(self.dico_info.type_cases["Case ETDB"])
                 flamme.last_update = now
 
                 # Mise à jour DU CŒUR de l'image affichée
                 flamme.img_base = self.fire_frames[flamme.frame]
 
     def ajout_condamne(self, ligne, colonne):
-        x, y = self.placement_grille(colonne, ligne)
+        x, y = self.grille.placement_grille(colonne, ligne)
 
         croix = UI_PNG(
             self.screen,
-            self.type_cases["Terre inutilisable"][0],
-            (x, y, self.case_Long, self.case_larg),
+            self.dico_info.type_cases["Terre inutilisable"][0],
+            (x, y, self.grille.case_Long, self.grille.case_larg),
             5, 0
         )
 
@@ -255,11 +183,11 @@ class Game:
 
         for croix in self.dico_UI_anim[self.plan]["Croix"].values():
             if now - croix.last_update >= FRAME_DELAY:
-                croix.frame = (croix.frame + 1) % len(self.type_cases["Terre inutilisable"])
+                croix.frame = (croix.frame + 1) % len(self.dico_info.type_cases["Terre inutilisable"])
                 croix.last_update = now
 
                 # Mise à jour DU CŒUR de l'image affichée
-                croix.IMG_PATH = self.type_cases["Terre inutilisable"][croix.frame]
+                croix.IMG_PATH = self.dico_info.type_cases["Terre inutilisable"][croix.frame]
                 croix.img_base = pygame.image.load(
                     croix.IMG_PATH
                 ).convert_alpha()
@@ -269,8 +197,8 @@ class Game:
 
         poubelle = UI_PNG(
             self.screen,
-            self.type_cases["Case pollue"][0],
-            (x, y, self.case_Long, self.case_larg),
+            self.dico_info.type_cases["Case pollue"][0],
+            (x, y, self.grille.case_Long, self.grille.case_larg),
             5, 0
         )
 
@@ -285,11 +213,11 @@ class Game:
 
         for poubelle in self.dico_UI_anim[self.plan]["Poubelle"].values():
             if now - poubelle.last_update >= FRAME_DELAY:
-                poubelle.frame = (poubelle.frame + 1) % len(self.type_cases["Case pollue"])
+                poubelle.frame = (poubelle.frame + 1) % len(self.dico_info.type_cases["Case pollue"])
                 poubelle.last_update = now
 
                 # Mise à jour DU CŒUR de l'image affichée
-                poubelle.IMG_PATH = self.type_cases["Case pollue"][poubelle.frame]
+                poubelle.IMG_PATH = self.dico_info.type_cases["Case pollue"][poubelle.frame]
                 poubelle.img_base = pygame.image.load(
                     poubelle.IMG_PATH
                 ).convert_alpha()
@@ -317,16 +245,16 @@ class Game:
 
     def propagation_feu(self, ligne, colonne, puissance):
 
-        if not (0 <= ligne < self.lignes and 0 <= colonne < self.colonnes):
+        if not (0 <= ligne < self.grille.lignes and 0 <= colonne < self.grille.colonnes):
             return
 
         if puissance <= 0:
             return
 
-        if self.grille[ligne][colonne] in [(0,0,255), "feu"]:
+        if self.grille.grille[ligne][colonne] in [(0,0,255), "feu"]:
             return
 
-        self.grille[ligne][colonne] = "feu"
+        self.grille.grille[ligne][colonne] = "feu"
         self.ajout_feu(ligne, colonne)
 
         proba = self.proba_propagation()
@@ -340,7 +268,6 @@ class Game:
                 )
 
     def update_propagation_feu(self):
-
         now = pygame.time.get_ticks()
 
         if now - self.last_fire_update < self.fire_delay:
@@ -363,28 +290,6 @@ class Game:
         L = self.ratio_objet["Rect_bouton"][0] * ratio_long
         l = self.ratio_objet["Rect_bouton"][1] * ratio_larg
         return (x, y, L, l)
-    
-    def resp_text(self, ratio_x:float, ratio_y:float):
-        '''
-        Méthode qui gère la responsive des positions des textes à partir d'un ratio x et y
-        '''
-        return (self.Long * ratio_x, self.larg * ratio_y)
-    
-    def resp_font(self, ratio_long:float, ratio_font:float):
-        '''
-        Méthode qui gère la responsive des tailles de polices d'écriture en fonction de la 
-        longueur d'une surface
-        '''
-        return int(self.Long * ratio_long * ratio_font)
-    
-    def color_pixel_map(self, fichier:str, x:int, y:int):
-        IMG_PATH = os.path.join(self.BASE_DIR, fichier)
-        img = Image.open(IMG_PATH).convert("RGBA")  # RGBA recommandé
-        pixels = img.load()
-
-        # Lire un pixel
-        r, g, b, a = pixels[x, y]
-        return r,g,b
 
     def exit(self):
         '''Gère la fermeture de la fenêtre'''
@@ -430,7 +335,7 @@ class Game:
         Cette méthode enclenche la boucle principale du menu en appelant toutes les méthodes utiles à 
         son fonctionnement
         '''
-        self.crea_cases()
+        self.grille.crea_cases()
         while self.running:
             diff_entre_frame = self.clock.tick(60) / 1000
             self.keys = pygame.key.get_pressed()
@@ -460,8 +365,8 @@ class Game:
         # Si bouton actif → on attend un clic sur une case
         for index, cases in self.dico_UI_interact[self.plan]["Case"].items():
             if cases.mouse_is_click() and self.data.utiliser_pouvoir("incendie"):
-                ligne = index // self.colonnes
-                colonne = index % self.colonnes
+                ligne = index // self.grille.colonnes
+                colonne = index % self.grille.colonnes
                 self.propagation_feu(ligne, colonne, self.puissance_feu())
                 # Désactivation immédiate après 1 clic
                 self.bouton_active = False
@@ -495,8 +400,7 @@ class Game:
         self.anim_feu() 
         self.anim_condamne() 
         self.anim_pollue()
-        #self.pluie()
-
+        self.meteo.pluie()
         self.stats()  # On gère l'affichage des stats
 
         # Rafraîchissement de l'écran
