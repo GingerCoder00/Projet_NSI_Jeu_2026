@@ -55,7 +55,7 @@ class Game:
         # Gestion des types de cases
         self.CASES_E_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_eau", "sprite_eau_")
         self.CASES_H_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_herbe", "sprite_herbe_")
-        self.CASES_Fo_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_foret", "sprite_foret_")
+        self.CASES_Fo_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_foret/v2", "sprite_foret_")
         self.CASES_Fe_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_feu", "sprite_feu_")
         self.CASES_P_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_pollue", "sprite_pollue_")
         self.CASES_In_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_condamne", "sprite_condamne_")
@@ -461,7 +461,7 @@ class Game:
         self.anim_feu() 
         self.anim_condamne() 
         self.anim_pollue()
-        self.pluie()
+        #self.pluie()
 
         self.stats()  # On gère l'affichage des stats
 
