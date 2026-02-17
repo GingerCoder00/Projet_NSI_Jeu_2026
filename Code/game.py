@@ -174,7 +174,7 @@ class Game:
         for lignes in range(self.lignes):
             for colonnes in range(self.colonnes):
                 x, y = self.placement_grille(colonnes, lignes)
-                color = self.color_pixel_map("sprite/map.png", colonnes, lignes)
+                color = self.color_pixel_map("sprite/map_3.png", colonnes, lignes)
                 self.dico_UI_interact[0][index] = UI_PNG(self.screen, self.type_cases[color][randint(0,3)], (x, y, self.case_Long, self.case_larg), 5, 0.03)
                 self.grille[lignes][colonnes] = color
                 index += 1
