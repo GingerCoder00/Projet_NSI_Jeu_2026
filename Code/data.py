@@ -14,14 +14,15 @@ class Data:
 
         # PARAMÈTRES MONDE
         
-        self.coeff_temp_from_pollution = 0.002
-        self.coeff_eau_from_temp = 0.0015
-        self.coeff_biodiv_from_pollution = 0.001
-        self.coeff_biodiv_from_temp = 0.001
-        self.coeff_stab_from_eau = 0.01
-        self.coeff_stab_from_biodiv = 0.008
-        self.coeff_pollution_from_stab = 0.02
-        self.coeff_profit_from_profit = 0.04
+        self.coeff_temp_from_pollution = 0.0008
+        self.coeff_eau_from_temp = 0.0009
+        self.coeff_biodiv_from_pollution = 0.0005
+        self.coeff_biodiv_from_temp = 0.0006
+        self.coeff_stab_from_eau = 0.007
+        self.coeff_stab_from_biodiv = 0.0022
+        self.coeff_pollution_from_stab = 0.015
+        self.coeff_profit_from_profit = 0.037
+        self.coeff_pollution_from_profit = 0.0006
 
         # POUVOIRS
         
@@ -73,6 +74,8 @@ class Data:
     
     def update_world(self, temps):
 
+        
+
         # Pollution influence température
         self.temperature += self.pollution * self.coeff_temp_from_pollution * temps
 
@@ -99,6 +102,9 @@ class Data:
 
         # Augmentation des profits
         self.profit += self.augmentation_profil * self.coeff_profit_from_profit * temps
+
+        # Profit génère pollution passive
+        self.pollution += self.augmentation_profil * self.coeff_pollution_from_profit * temps
 
         # Clamp des valeurs
         self.clamp_values()

@@ -483,10 +483,11 @@ class Game:
             for anim in anims.values():
                 anim.update()
 
-        # Puis dessiner les tooltips EN DERNIER
+        # Puis dessiner les infos
         for jauge in self.dico_UI_anim[self.plan]["Jauge"].values():
             if jauge.show_info:
                 jauge.info.update()
+                jauge.texte_info.update()
 
         self.anim_feu() 
         self.anim_condamne() 

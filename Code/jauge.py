@@ -37,7 +37,24 @@ class Jauge:
         self.rect = pygame.Rect(self.true_x, self.true_y, self.true_L, self.true_l)
 
         Longueur, largeur = self.screen.get_size()
-        self.info = UI_screen(self.screen, (255,255,255), (0,0,0), (self.mouse_x, self.mouse_y, Longueur * 0.07, largeur * 0.15), 4, 18)
+        Longueur, largeur = self.screen.get_size()
+        self.info = UI_screen(
+            self.screen,
+            (255,255,255),
+            (0,0,0),
+            (self.mouse_x, self.mouse_y, Longueur * 0.12, largeur * 0.25),
+            4, 18
+        )
+
+        # Position initiale du texte (peut être proche de la souris ou dans un coin)
+        self.texte_info = Texte(
+            self.screen,
+            (self.mouse_x + 10, self.mouse_y + 10),
+            int(Longueur * 0.07 * 0.3),  # taille police
+            (0,0,0),
+            f"{self.nom_data}"
+        )
+
 
         # Paramètre bruitage
         self.volume = volume_son
@@ -67,12 +84,17 @@ class Jauge:
                 self.true_x -= self.ampli_inf // 2
                 self.true_y -= self.ampli_inf // 2
                 self.flag_inflate = True
+
             if not self.flag_hover_sound:
                 self.hover_sound.play()
                 self.flag_hover_sound = True
+
             if self.hover_info:
-                self.info.x = self.mouse_x
-                self.info.y = self.mouse_y
+                self.info.x = min(self.mouse_x, self.screen.get_width() - self.info.L)
+                self.info.y = min(self.mouse_y, self.screen.get_height() - self.info.l)
+                self.texte_info.x = self.info.x + 10
+                self.texte_info.y = self.info.y + 10
+
         else:
             self.show_info = False
             self.flag_hover_sound = False
@@ -82,6 +104,8 @@ class Jauge:
                 self.true_x += self.ampli_inf // 2
                 self.true_y += self.ampli_inf // 2
                 self.flag_inflate = False
+
+
 
     def update(self):
         self.hover_sound.set_volume(self.volume)
