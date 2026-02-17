@@ -8,7 +8,8 @@ class Data:
         self.eau = 100
         self.biodiversite = 100
         self.stabilite = 100
-        self.profit = 35
+        self.profit = 0
+        self.augmentation_profil = 20
         self.destruction = 0
 
         # PARAMÈTRES MONDE
@@ -20,7 +21,7 @@ class Data:
         self.coeff_stab_from_eau = 0.01
         self.coeff_stab_from_biodiv = 0.008
         self.coeff_pollution_from_stab = 0.02
-        self.coeff_pollution_from_profit = 0.001
+        self.coeff_profit_from_profit = 0.04
 
         # POUVOIRS
         
@@ -28,42 +29,42 @@ class Data:
             "incendie": {
                 "cout": 10,
                 "effets": {
-                    "pollution": 8,
-                    "biodiversite": -12
+                    "pollution": 4,
+                    "biodiversite": -4
                 }
             },
             "usine": {
                 "cout": 15,
                 "effets": {
-                    "pollution": 15,
-                    "profit": 10
+                    "pollution": 8,
+                    "augmentation_profil": 5
                 }
             },
             "guerre": {
                 "cout": 20,
                 "effets": {
-                    "stabilite": -20,
-                    "pollution": 10
+                    "stabilite": -10,
+                    "pollution": 6
                 }
             },
             "canicule": {
                 "cout": 12,
                 "effets": {
-                    "temperature": 10
+                    "temperature": 8
                 }
             },
             "maree_noire": {
                 "cout": 18,
                 "effets": {
-                    "pollution": 12,
-                    "biodiversite": -15
+                    "pollution": 7,
+                    "biodiversite": -8
                 }
             },
             "desinformation": {
                 "cout": 25,
                 "effets": {
-                    "stabilite": -15,
-                    "profit": 15
+                    "stabilite": -10,
+                    "augmentation_profil": 12
                 }
             }
         }
@@ -96,8 +97,8 @@ class Data:
         if self.stabilite < 30:
             self.pollution += (30 - self.stabilite) * self.coeff_pollution_from_stab * temps
 
-        # Profit génère pollution passive
-        self.pollution += self.profit * self.coeff_pollution_from_profit * temps
+        # Augmentation des profits
+        self.profit += self.augmentation_profil * self.coeff_profit_from_profit * temps
 
         # Clamp des valeurs
         self.clamp_values()

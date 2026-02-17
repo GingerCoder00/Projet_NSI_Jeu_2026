@@ -50,6 +50,7 @@ class Game:
             "Jauge_temp": (0.86, 0.45, 0.039, 0.25),
             "Jauge_nourriture": (0.93, 0.45, 0.039, 0.25),
             "Jauge_total": (0.78, 0.75, 0.205, 0.07),
+            "Bouton_Feu": (0.45, 0.83, 0.055, 0.08)
         }
 
         # Gestion des types de cases
@@ -101,6 +102,9 @@ class Game:
         self.last_rain_update = pygame.time.get_ticks()
         self.pluie_frame = 0        
 
+        self.BOUTON_FEU_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_bouton_feu", "sprite_bouton_feu_0.png")
+        self.bouton_active = False
+
         # Gestion des éléments graphiques non intéractif
         self.dico_UI = {
             0:{
@@ -116,7 +120,12 @@ class Game:
         # Gestion des éléments intéractifs
         self.dico_UI_interact = {
             0:{
-                
+                "Case" : {
+
+                },
+                "Bouton" : {
+                    "Bouton_Feu" : UI_PNG(self.screen, self.BOUTON_FEU_PATH, self.resp(self.ratio_objet["Bouton_Feu"][0], self.ratio_objet["Bouton_Feu"][1], self.ratio_objet["Bouton_Feu"][2], self.ratio_objet["Bouton_Feu"][3]), 12, 0.03) 
+                },
             },
         }
 
@@ -175,7 +184,7 @@ class Game:
             for colonnes in range(self.colonnes):
                 x, y = self.placement_grille(colonnes, lignes)
                 color = self.color_pixel_map("sprite/map.png", colonnes, lignes)
-                self.dico_UI_interact[0][index] = UI_PNG(self.screen, self.type_cases[color][randint(0,3)], (x, y, self.case_Long, self.case_larg), 5, 0.03)
+                self.dico_UI_interact[0]["Case"][index] = UI_PNG(self.screen, self.type_cases[color][randint(0,3)], (x, y, self.case_Long, self.case_larg), 5, 0.03)
                 self.grille[lignes][colonnes] = color
                 index += 1
 
@@ -399,7 +408,8 @@ class Game:
             self.screen.blit(self.font.render(f"Taux de biodiversité : {self.data.biodiversite}", True, (0,0,0)), (0,150)) # Taux de biodiversité
             self.screen.blit(self.font.render(f"Taux de stabilité : {self.data.stabilite}", True, (0,0,0)), (0,175)) # Taux de stabilité
             self.screen.blit(self.font.render(f"Taux de profit : {self.data.profit}", True, (0,0,0)), (0,200)) # Taux de profit
-            self.screen.blit(self.font.render(f"Taux de destruction : {self.data.destruction}", True, (0,0,0)), (0,225)) # Taux de destruction
+            self.screen.blit(self.font.render(f"Taux de d'augmentation de profit : {self.data.augmentation_profil}", True, (0,0,0)), (0,225)) # Taux de d'augmentation de profit
+            self.screen.blit(self.font.render(f"Taux de destruction : {self.data.destruction}", True, (0,0,0)), (0,250)) # Taux de destruction
 
     def modif_chrono(self):
         self.dico_UI[0]["Texte_temps_chrono"].text = str(round(self.temps_ecoule, 1))
@@ -419,7 +429,6 @@ class Game:
         son fonctionnement
         '''
         self.crea_cases()
-        self.propagation_feu(6, 4, self.puissance_feu())
         while self.running:
             diff_entre_frame = self.clock.tick(60) / 1000
             self.keys = pygame.key.get_pressed()
@@ -428,6 +437,7 @@ class Game:
             self.fps = int(self.clock.get_fps())
 
             self.data.update_world(diff_entre_frame)
+            self.handle_event_bouton_feu()
             self.update_propagation_feu()
             self.modif_jauge()
             self.modif_chrono()
@@ -435,6 +445,24 @@ class Game:
             self.draw()
             self.exit()
         pygame.quit() # Puis on quitte proprement le jeu
+
+    def handle_event_bouton_feu(self):
+        # Activation / désactivation du bouton
+        if self.dico_UI_interact[self.plan]["Bouton"]["Bouton_Feu"].mouse_is_click():
+            self.bouton_active = True
+
+        # Si le bouton n'est pas actif, on arrête
+        if not self.bouton_active:
+            return
+
+        # Si bouton actif → on attend un clic sur une case
+        for index, cases in self.dico_UI_interact[self.plan]["Case"].items():
+            if cases.mouse_is_click() and self.data.utiliser_pouvoir("incendie"):
+                ligne = index // self.colonnes
+                colonne = index % self.colonnes
+                self.propagation_feu(ligne, colonne, self.puissance_feu())
+                # Désactivation immédiate après 1 clic
+                self.bouton_active = False
 
     def draw(self):
         '''
@@ -445,8 +473,11 @@ class Game:
         for interfaces in self.dico_UI[self.plan].values():
             interfaces.update()  
 
-        for cases in self.dico_UI_interact[self.plan].values():
-            cases.update()  
+        for cases in self.dico_UI_interact[self.plan]["Case"].values():
+            cases.update() 
+
+        for objet in self.dico_UI_interact[self.plan]["Bouton"].values():
+            objet.update()  
 
         # Dessiner toutes les jauges
         for anims in self.dico_UI_anim[self.plan].values():
