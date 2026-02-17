@@ -55,7 +55,13 @@ class Game:
             "Jauge_temp": (0.86, 0.45, 0.039, 0.25),
             "Jauge_nourriture": (0.93, 0.45, 0.039, 0.25),
             "Jauge_total": (0.78, 0.75, 0.205, 0.07),
-            "Bouton_Feu": (0.45, 0.83, 0.055, 0.08)
+            "Bouton_Feu": (0.44, 0.83, 0.04, 0.067),
+            "Bouton_Usine" : (0.4895, 0.881, 0.04, 0.067),
+            "Bouton_Guerre" : (0.54, 0.83, 0.04, 0.067),
+            "Bouton_Canicule" : (0.59, 0.881, 0.04, 0.067),
+            "Bouton_Maree_Noire" : (0.64, 0.83, 0.04, 0.067),
+            "Bouton_Desinformation" : (0.692, 0.881, 0.04, 0.067),
+        
         }
 
         self.dico_info = Dico_info_Game()
@@ -71,7 +77,18 @@ class Game:
         self.fire_delay = 1200  # ms entre chaque vague
        
         self.BOUTON_FEU_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_bouton_feu", "sprite_bouton_feu_0.png")
-        self.bouton_active = False
+        self.bouton_feu_active = False
+        self.BOUTON_USINE_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_bouton_usine", "sprite_bouton_usine_0.png")
+        self.bouton_usine_active = False
+        self.BOUTON_GUERRE_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_bouton_feu", "sprite_bouton_feu_0.png")
+        self.bouton_guerre_active = False
+        self.BOUTON_CANICULE_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_bouton_usine", "sprite_bouton_usine_0.png")
+        self.bouton_canicule_active = False
+        self.BOUTON_MAREE_NOIRE_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_bouton_feu", "sprite_bouton_feu_0.png")
+        self.bouton_maree_noire_active = False
+        self.BOUTON_DESINFORMATION_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_bouton_usine", "sprite_bouton_usine_0.png")
+        self.bouton_desinformation_active = False
+
 
         self.data = Data()
 
@@ -82,7 +99,12 @@ class Game:
 
                 },
                 "Bouton" : {
-                    "Bouton_Feu" : UI_PNG(self.screen, self.BOUTON_FEU_PATH, self.resp.resp(self.ratio_objet["Bouton_Feu"][0], self.ratio_objet["Bouton_Feu"][1], self.ratio_objet["Bouton_Feu"][2], self.ratio_objet["Bouton_Feu"][3]), 12, 0.03) 
+                    "Bouton_Feu" : UI_PNG(self.screen, self.BOUTON_FEU_PATH, self.resp.resp(self.ratio_objet["Bouton_Feu"][0], self.ratio_objet["Bouton_Feu"][1], self.ratio_objet["Bouton_Feu"][2], self.ratio_objet["Bouton_Feu"][3]), 12, 0.03),
+                    "Bouton_Usine" : UI_PNG(self.screen, self.BOUTON_USINE_PATH, self.resp.resp(self.ratio_objet["Bouton_Usine"][0], self.ratio_objet["Bouton_Usine"][1], self.ratio_objet["Bouton_Usine"][2], self.ratio_objet["Bouton_Usine"][3]), 12, 0.03),
+                    "Bouton_Guerre" : UI_PNG(self.screen, self.BOUTON_FEU_PATH, self.resp.resp(self.ratio_objet["Bouton_Guerre"][0], self.ratio_objet["Bouton_Guerre"][1], self.ratio_objet["Bouton_Guerre"][2], self.ratio_objet["Bouton_Guerre"][3]), 12, 0.03),
+                    "Bouton_Canicule" : UI_PNG(self.screen, self.BOUTON_USINE_PATH, self.resp.resp(self.ratio_objet["Bouton_Canicule"][0], self.ratio_objet["Bouton_Canicule"][1], self.ratio_objet["Bouton_Canicule"][2], self.ratio_objet["Bouton_Canicule"][3]), 12, 0.03),
+                    "Bouton_Maree_Noire" : UI_PNG(self.screen, self.BOUTON_FEU_PATH, self.resp.resp(self.ratio_objet["Bouton_Maree_Noire"][0], self.ratio_objet["Bouton_Maree_Noire"][1], self.ratio_objet["Bouton_Maree_Noire"][2], self.ratio_objet["Bouton_Maree_Noire"][3]), 12, 0.03),
+                    "Bouton_Desinformation" : UI_PNG(self.screen, self.BOUTON_USINE_PATH, self.resp.resp(self.ratio_objet["Bouton_Desinformation"][0], self.ratio_objet["Bouton_Desinformation"][1], self.ratio_objet["Bouton_Desinformation"][2], self.ratio_objet["Bouton_Desinformation"][3]), 12, 0.03),
                 },
             },
         }
@@ -282,15 +304,6 @@ class Game:
         for ligne, colonne, puissance in vague:
             self.propagation_feu(ligne, colonne, puissance)
 
-    def resp_cases(self, ratio_x:float, ratio_y:float, ratio_long:float, ratio_larg:float):
-        '''Méthode qui gère la responsive des cases sur la grille'''
-        # On convertit tout les éléments par rapport à un ratio et à la taille de la zone des cases
-        x = self.ratio_objet["Rect_bouton"][0] * ratio_x
-        y = self.ratio_objet["Rect_bouton"][1] * ratio_y
-        L = self.ratio_objet["Rect_bouton"][0] * ratio_long
-        l = self.ratio_objet["Rect_bouton"][1] * ratio_larg
-        return (x, y, L, l)
-
     def exit(self):
         '''Gère la fermeture de la fenêtre'''
         # On récupère tous les évènements pour vérifier si il y a un événement de type : pygame.QUIT
@@ -319,7 +332,7 @@ class Game:
             self.screen.blit(self.font.render(f"Taux de destruction : {self.data.destruction}", True, (0,0,0)), (0,250)) # Taux de destruction
 
     def modif_chrono(self):
-        self.dico_UI[0]["Texte_temps_chrono"].text = str(round(self.temps_ecoule, 1))
+        self.dico_UI[0]["Texte_temps_chrono"].text = str(round(self.temps_ecoule, 1)).zfill(5)
 
     def modif_jauge(self):
         for jauge in self.dico_UI_anim[0]["Jauge"].values():
@@ -356,10 +369,10 @@ class Game:
     def handle_event_bouton_feu(self):
         # Activation / désactivation du bouton
         if self.dico_UI_interact[self.plan]["Bouton"]["Bouton_Feu"].mouse_is_click():
-            self.bouton_active = True
+            self.bouton_feu_active = True
 
         # Si le bouton n'est pas actif, on arrête
-        if not self.bouton_active:
+        if not self.bouton_feu_active:
             return
 
         # Si bouton actif → on attend un clic sur une case
@@ -369,7 +382,7 @@ class Game:
                 colonne = index % self.grille.colonnes
                 self.propagation_feu(ligne, colonne, self.puissance_feu())
                 # Désactivation immédiate après 1 clic
-                self.bouton_active = False
+                self.bouton_feu_active = False
 
     def draw(self):
         '''
