@@ -69,6 +69,8 @@ class Game:
             "Case brulee" : "",
             "Terre inutilisable": [f"{self.CASES_In_PATH}{i}.png" for i in range(7)],
         }
+
+        self.fire_frames = [pygame.image.load(path).convert_alpha() for path in self.type_cases["Case ETDB"]]
         
         self.data = Data()
 
@@ -183,13 +185,8 @@ class Game:
         for lignes in range(self.lignes):
             for colonnes in range(self.colonnes):
                 x, y = self.placement_grille(colonnes, lignes)
-<<<<<<< HEAD
                 color = self.color_pixel_map("sprite/map.png", colonnes, lignes)
                 self.dico_UI_interact[0]["Case"][index] = UI_PNG(self.screen, self.type_cases[color][randint(0,3)], (x, y, self.case_Long, self.case_larg), 5, 0.03)
-=======
-                color = self.color_pixel_map("sprite/map_3.png", colonnes, lignes)
-                self.dico_UI_interact[0][index] = UI_PNG(self.screen, self.type_cases[color][randint(0,3)], (x, y, self.case_Long, self.case_larg), 5, 0.03)
->>>>>>> 4ffc6455ba60a0982c5b2b156e00acdd35fc82da
                 self.grille[lignes][colonnes] = color
                 index += 1
 
@@ -232,10 +229,7 @@ class Game:
                 flamme.last_update = now
 
                 # Mise à jour DU CŒUR de l'image affichée
-                flamme.IMG_PATH = self.type_cases["Case ETDB"][flamme.frame]
-                flamme.img_base = pygame.image.load(
-                    flamme.IMG_PATH
-                ).convert_alpha()
+                flamme.img_base = self.fire_frames[flamme.frame]
 
     def ajout_condamne(self, ligne, colonne):
         x, y = self.placement_grille(colonne, ligne)
