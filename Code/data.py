@@ -28,7 +28,7 @@ class Data:
         
         self.pouvoirs = {
             "incendie": {
-                "cout": 10,
+                "cout": 12,
                 "effets": {
                     "pollution": 4,
                     "biodiversite": -4
@@ -49,7 +49,7 @@ class Data:
                 }
             },
             "canicule": {
-                "cout": 12,
+                "cout": 14,
                 "effets": {
                     "temperature": 8
                 }
