@@ -400,7 +400,7 @@ class Game:
         self.anim_feu() 
         self.anim_condamne() 
         self.anim_pollue()
-        self.meteo.pluie()
+        #self.meteo.pluie()
         self.stats()  # On gère l'affichage des stats
 
         # Rafraîchissement de l'écran
