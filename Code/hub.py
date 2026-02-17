@@ -1,8 +1,8 @@
 import pygame
 import os
-from pygame.locals import QUIT
 from random import randint
 from ui_tools import *
+from resp_tools import *
 
 pygame.init()
 pygame.mixer.init()
@@ -26,6 +26,7 @@ class Hub:
         self.clock = pygame.time.Clock() # Initialisation de l'horloge interne du jeu
 
         # Gestion du texte et importation de la police
+        self.resp = Resp_tools(self.Long, self.larg)
         FONT_PATH = os.path.join(self.BASE_DIR, "font", "font_retro.ttf")
         self.font = pygame.font.Font(FONT_PATH, 20)
 
@@ -99,23 +100,23 @@ class Hub:
         # Gestion des éléments intéractifs
         self.dico_UI_interact = {
             0:{
-                "Jouer" : UI_Bouton(self.screen, (58, 137, 35), (190, 245, 116), self.resp_font(self.ratio_objet["Jouer"][2], self.ratio_objet["Jouer"][4]), self.resp(self.ratio_objet["Jouer"][0], self.ratio_objet["Jouer"][1], self.ratio_objet["Jouer"][2], self.ratio_objet["Jouer"][3]), "JOUER", 4, 12, 16, 0.05),
-                "Option": UI_Bouton(self.screen, (158, 253, 56), (190, 245, 116), self.resp_font(self.ratio_objet["Option"][2], self.ratio_objet["Option"][4]), self.resp(self.ratio_objet["Option"][0], self.ratio_objet["Option"][1], self.ratio_objet["Option"][2], self.ratio_objet["Option"][3]), "OPTION", 4, 12, 16, 0.05),
-                "Quitter": UI_Bouton(self.screen, (158, 253, 56), (190, 245, 116), self.resp_font(self.ratio_objet["Quitter"][2], self.ratio_objet["Quitter"][4]), self.resp(self.ratio_objet["Quitter"][0], self.ratio_objet["Quitter"][1], self.ratio_objet["Quitter"][2], self.ratio_objet["Quitter"][3]), "QUITTER", 4, 12, 16, 0.05),
-                "Credit": UI_Bouton(self.screen, (212, 115, 212), (0,0,0), self.resp_font(self.ratio_objet["Credit"][2], self.ratio_objet["Credit"][4]), self.resp(self.ratio_objet["Credit"][0], self.ratio_objet["Credit"][1], self.ratio_objet["Credit"][2], self.ratio_objet["Credit"][3]), "CREDIT", 5, 12, 16, 0.05),
-                "Aide": UI_Bouton(self.screen, (255, 215, 0), (0,0,0), self.resp_font(self.ratio_objet["Aide"][2], self.ratio_objet["Aide"][4]), self.resp(self.ratio_objet["Aide"][0], self.ratio_objet["Aide"][1], self.ratio_objet["Aide"][2], self.ratio_objet["Aide"][3]), "?", 5, 12, 16, 0.05)
+                "Jouer" : UI_Bouton(self.screen, (58, 137, 35), (190, 245, 116), self.resp.resp_font(self.ratio_objet["Jouer"][2], self.ratio_objet["Jouer"][4]), self.resp.resp(self.ratio_objet["Jouer"][0], self.ratio_objet["Jouer"][1], self.ratio_objet["Jouer"][2], self.ratio_objet["Jouer"][3]), "JOUER", 4, 12, 16, 0.05),
+                "Option": UI_Bouton(self.screen, (158, 253, 56), (190, 245, 116), self.resp.resp_font(self.ratio_objet["Option"][2], self.ratio_objet["Option"][4]), self.resp.resp(self.ratio_objet["Option"][0], self.ratio_objet["Option"][1], self.ratio_objet["Option"][2], self.ratio_objet["Option"][3]), "OPTION", 4, 12, 16, 0.05),
+                "Quitter": UI_Bouton(self.screen, (158, 253, 56), (190, 245, 116), self.resp.resp_font(self.ratio_objet["Quitter"][2], self.ratio_objet["Quitter"][4]), self.resp.resp(self.ratio_objet["Quitter"][0], self.ratio_objet["Quitter"][1], self.ratio_objet["Quitter"][2], self.ratio_objet["Quitter"][3]), "QUITTER", 4, 12, 16, 0.05),
+                "Credit": UI_Bouton(self.screen, (212, 115, 212), (0,0,0), self.resp.resp_font(self.ratio_objet["Credit"][2], self.ratio_objet["Credit"][4]), self.resp.resp(self.ratio_objet["Credit"][0], self.ratio_objet["Credit"][1], self.ratio_objet["Credit"][2], self.ratio_objet["Credit"][3]), "CREDIT", 5, 12, 16, 0.05),
+                "Aide": UI_Bouton(self.screen, (255, 215, 0), (0,0,0), self.resp.resp_font(self.ratio_objet["Aide"][2], self.ratio_objet["Aide"][4]), self.resp.resp(self.ratio_objet["Aide"][0], self.ratio_objet["Aide"][1], self.ratio_objet["Aide"][2], self.ratio_objet["Aide"][3]), "?", 5, 12, 16, 0.05)
             },
             1:{
-                "Retour1": UI_Bouton(self.screen, (4, 139, 154), (0,0,0), self.resp_font(self.ratio_objet["Retour1"][2], self.ratio_objet["Retour1"][4]), self.resp(self.ratio_objet["Retour1"][0], self.ratio_objet["Retour1"][1], self.ratio_objet["Retour1"][2], self.ratio_objet["Retour1"][3]), "RETOUR", 5, 12, 16, 0.05),
-                "Son": UI_Bouton(self.screen, (23, 167, 232), (0,0,0), self.resp_font(self.ratio_objet["Son"][2], self.ratio_objet["Son"][4]), self.resp(self.ratio_objet["Son"][0], self.ratio_objet["Son"][1], self.ratio_objet["Son"][2], self.ratio_objet["Son"][3]), "SON", 5, 12, 16, 0.05),
-                "Ecran": UI_Bouton(self.screen, (23, 167, 232), (0,0,0), self.resp_font(self.ratio_objet["Ecran"][2], self.ratio_objet["Ecran"][4]), self.resp(self.ratio_objet["Ecran"][0], self.ratio_objet["Ecran"][1], self.ratio_objet["Ecran"][2], self.ratio_objet["Ecran"][3]), "ECRAN", 5, 12, 16, 0.05),
-                "Secret": UI_Bouton(self.screen, (23, 167, 232), (0,0,0), self.resp_font(self.ratio_objet["Secret"][2], self.ratio_objet["Secret"][4]), self.resp(self.ratio_objet["Secret"][0], self.ratio_objet["Secret"][1], self.ratio_objet["Secret"][2], self.ratio_objet["Secret"][3]), "<SECRET>", 5, 12, 16, 0.05),
+                "Retour1": UI_Bouton(self.screen, (4, 139, 154), (0,0,0), self.resp.resp_font(self.ratio_objet["Retour1"][2], self.ratio_objet["Retour1"][4]), self.resp.resp(self.ratio_objet["Retour1"][0], self.ratio_objet["Retour1"][1], self.ratio_objet["Retour1"][2], self.ratio_objet["Retour1"][3]), "RETOUR", 5, 12, 16, 0.05),
+                "Son": UI_Bouton(self.screen, (23, 167, 232), (0,0,0), self.resp.resp_font(self.ratio_objet["Son"][2], self.ratio_objet["Son"][4]), self.resp.resp(self.ratio_objet["Son"][0], self.ratio_objet["Son"][1], self.ratio_objet["Son"][2], self.ratio_objet["Son"][3]), "SON", 5, 12, 16, 0.05),
+                "Ecran": UI_Bouton(self.screen, (23, 167, 232), (0,0,0), self.resp.resp_font(self.ratio_objet["Ecran"][2], self.ratio_objet["Ecran"][4]), self.resp.resp(self.ratio_objet["Ecran"][0], self.ratio_objet["Ecran"][1], self.ratio_objet["Ecran"][2], self.ratio_objet["Ecran"][3]), "ECRAN", 5, 12, 16, 0.05),
+                "Secret": UI_Bouton(self.screen, (23, 167, 232), (0,0,0), self.resp.resp_font(self.ratio_objet["Secret"][2], self.ratio_objet["Secret"][4]), self.resp.resp(self.ratio_objet["Secret"][0], self.ratio_objet["Secret"][1], self.ratio_objet["Secret"][2], self.ratio_objet["Secret"][3]), "<SECRET>", 5, 12, 16, 0.05),
             },
             2:{
-                "Retour2": UI_Bouton(self.screen, (163,204,92), (0,0,0), self.resp_font(self.ratio_objet["Retour2"][2], self.ratio_objet["Retour2"][4]), self.resp(self.ratio_objet["Retour2"][0], self.ratio_objet["Retour2"][1], self.ratio_objet["Retour2"][2], self.ratio_objet["Retour2"][3]), "RETOUR", 5, 12, 16, 0.05),
+                "Retour2": UI_Bouton(self.screen, (163,204,92), (0,0,0), self.resp.resp_font(self.ratio_objet["Retour2"][2], self.ratio_objet["Retour2"][4]), self.resp.resp(self.ratio_objet["Retour2"][0], self.ratio_objet["Retour2"][1], self.ratio_objet["Retour2"][2], self.ratio_objet["Retour2"][3]), "RETOUR", 5, 12, 16, 0.05),
             },
             3:{
-                "Retour3": UI_Bouton(self.screen, (227,159,30), (0,0,0), self.resp_font(self.ratio_objet["Retour3"][2], self.ratio_objet["Retour3"][4]), self.resp(self.ratio_objet["Retour3"][0], self.ratio_objet["Retour3"][1], self.ratio_objet["Retour3"][2], self.ratio_objet["Retour3"][3]), "RETOUR", 5, 12, 16, 0.05),
+                "Retour3": UI_Bouton(self.screen, (227,159,30), (0,0,0), self.resp.resp_font(self.ratio_objet["Retour3"][2], self.ratio_objet["Retour3"][4]), self.resp.resp(self.ratio_objet["Retour3"][0], self.ratio_objet["Retour3"][1], self.ratio_objet["Retour3"][2], self.ratio_objet["Retour3"][3]), "RETOUR", 5, 12, 16, 0.05),
             },
             4:{
             },
@@ -126,23 +127,23 @@ class Hub:
             0:{
             },
             1:{
-            "rect_settings" : UI_screen(self.screen, (16,52,166), (255,255,255), self.resp(self.ratio_objet["Settings"][0], self.ratio_objet["Settings"][1], self.ratio_objet["Settings"][2], self.ratio_objet["Settings"][3]), taille_contour = 6, border_radius = 12),
-            "rect_settings_select" : UI_screen(self.screen, (237,189,178), (0,0,0), self.resp(self.ratio_objet["Settings_select"][0], self.ratio_objet["Settings_select"][1], self.ratio_objet["Settings_select"][2], self.ratio_objet["Settings_select"][3]), taille_contour = 4, border_radius = 12),
-            "rect_settings_modif" : UI_screen(self.screen, (237,189,178), (0,0,0), self.resp(self.ratio_objet["Settings_modif"][0], self.ratio_objet["Settings_modif"][1], self.ratio_objet["Settings_modif"][2], self.ratio_objet["Settings_modif"][3]), taille_contour = 4, border_radius = 12),
-            "Text_setting" : Texte(self.screen, self.resp_text(self.ratio_objet["Text_setting"][0], self.ratio_objet["Text_setting"][1]), self.resp_font(self.ratio_objet["Text_setting"][0], self.ratio_objet["Text_setting"][2]), (255,255,255), "SETTINGS", font_type = "font/font_retro.ttf")
+            "rect_settings" : UI_screen(self.screen, (16,52,166), (255,255,255), self.resp.resp(self.ratio_objet["Settings"][0], self.ratio_objet["Settings"][1], self.ratio_objet["Settings"][2], self.ratio_objet["Settings"][3]), taille_contour = 6, border_radius = 12),
+            "rect_settings_select" : UI_screen(self.screen, (237,189,178), (0,0,0), self.resp.resp(self.ratio_objet["Settings_select"][0], self.ratio_objet["Settings_select"][1], self.ratio_objet["Settings_select"][2], self.ratio_objet["Settings_select"][3]), taille_contour = 4, border_radius = 12),
+            "rect_settings_modif" : UI_screen(self.screen, (237,189,178), (0,0,0), self.resp.resp(self.ratio_objet["Settings_modif"][0], self.ratio_objet["Settings_modif"][1], self.ratio_objet["Settings_modif"][2], self.ratio_objet["Settings_modif"][3]), taille_contour = 4, border_radius = 12),
+            "Text_setting" : Texte(self.screen, self.resp.resp_text(self.ratio_objet["Text_setting"][0], self.ratio_objet["Text_setting"][1]), self.resp.resp_font(self.ratio_objet["Text_setting"][0], self.ratio_objet["Text_setting"][2]), (255,255,255), "SETTINGS", font_type = "font/font_retro.ttf")
             },
             2:{
-            "rect_credit" : UI_screen(self.screen, (87,250,233), (250,87,103), self.resp(self.ratio_objet["Rect_Credit"][0], self.ratio_objet["Rect_Credit"][1], self.ratio_objet["Rect_Credit"][2], self.ratio_objet["Rect_Credit"][3]), taille_contour = 6, border_radius = 12),
-            "Text_credit" : Texte(self.screen, self.resp_text(self.ratio_objet["Text_credit"][0], self.ratio_objet["Text_credit"][1]), self.resp_font(self.ratio_objet["Text_credit"][0], self.ratio_objet["Text_credit"][2]), (255,255,255), "CREDIT", font_type = "font/font_retro.ttf"),
+            "rect_credit" : UI_screen(self.screen, (87,250,233), (250,87,103), self.resp.resp(self.ratio_objet["Rect_Credit"][0], self.ratio_objet["Rect_Credit"][1], self.ratio_objet["Rect_Credit"][2], self.ratio_objet["Rect_Credit"][3]), taille_contour = 6, border_radius = 12),
+            "Text_credit" : Texte(self.screen, self.resp.resp_text(self.ratio_objet["Text_credit"][0], self.ratio_objet["Text_credit"][1]), self.resp.resp_font(self.ratio_objet["Text_credit"][0], self.ratio_objet["Text_credit"][2]), (255,255,255), "CREDIT", font_type = "font/font_retro.ttf"),
             },
             3:{
-            "rect_aide" : UI_screen(self.screen, (235,199,21), (21,57,235), self.resp(self.ratio_objet["Rect_Aide"][0], self.ratio_objet["Rect_Aide"][1], self.ratio_objet["Rect_Aide"][2], self.ratio_objet["Rect_Aide"][3]), taille_contour = 6, border_radius = 12),
-            "rect_aide_bloc" : UI_screen(self.screen, (237, 169, 33), (237, 169, 33), self.resp(self.ratio_objet["Rect_Aide_Bloc"][0], self.ratio_objet["Settings"][1], self.ratio_objet["Rect_Aide_Bloc"][2], self.ratio_objet["Rect_Aide_Bloc"][3]), taille_contour= 5, border_radius = 12),
-            "Text_aide" : Texte(self.screen, self.resp_text(self.ratio_objet["Text_aide"][0], self.ratio_objet["Text_aide"][1]), self.resp_font(self.ratio_objet["Text_aide"][0], self.ratio_objet["Text_aide"][2]), (255,255,255), "AIDE", font_type = "font/font_retro.ttf"),
-            "Text_bloc_aide" : Texte(self.screen, self.resp_text(self.ratio_objet["Text_bloc_aide"][0], self.ratio_objet["Text_bloc_aide"][1]), self.resp_font(self.ratio_objet["Text_bloc_aide"][0], self.ratio_objet["Text_bloc_aide"][2]), (255,255,255), "Voici un texte", font_type = "font/font_retro.ttf"),
+            "rect_aide" : UI_screen(self.screen, (235,199,21), (21,57,235), self.resp.resp(self.ratio_objet["Rect_Aide"][0], self.ratio_objet["Rect_Aide"][1], self.ratio_objet["Rect_Aide"][2], self.ratio_objet["Rect_Aide"][3]), taille_contour = 6, border_radius = 12),
+            "rect_aide_bloc" : UI_screen(self.screen, (237, 169, 33), (237, 169, 33), self.resp.resp(self.ratio_objet["Rect_Aide_Bloc"][0], self.ratio_objet["Settings"][1], self.ratio_objet["Rect_Aide_Bloc"][2], self.ratio_objet["Rect_Aide_Bloc"][3]), taille_contour= 5, border_radius = 12),
+            "Text_aide" : Texte(self.screen, self.resp.resp_text(self.ratio_objet["Text_aide"][0], self.ratio_objet["Text_aide"][1]), self.resp.resp_font(self.ratio_objet["Text_aide"][0], self.ratio_objet["Text_aide"][2]), (255,255,255), "AIDE", font_type = "font/font_retro.ttf"),
+            "Text_bloc_aide" : Texte(self.screen, self.resp.resp_text(self.ratio_objet["Text_bloc_aide"][0], self.ratio_objet["Text_bloc_aide"][1]), self.resp.resp_font(self.ratio_objet["Text_bloc_aide"][0], self.ratio_objet["Text_bloc_aide"][2]), (255,255,255), "Voici un texte", font_type = "font/font_retro.ttf"),
             },
             4:{
-            "Texte_secret" : Texte(self.screen, self.resp_text(self.ratio_objet["Text_secret"][0], self.ratio_objet["Text_secret"][1]), self.resp_font(self.ratio_objet["Text_secret"][0], self.ratio_objet["Text_secret"][2]), (24, 255, 3), "Tu ne devrais pas etre ici...", font_type = "font/font_retro.ttf")
+            "Texte_secret" : Texte(self.screen, self.resp.resp_text(self.ratio_objet["Text_secret"][0], self.ratio_objet["Text_secret"][1]), self.resp.resp_font(self.ratio_objet["Text_secret"][0], self.ratio_objet["Text_secret"][2]), (24, 255, 3), "Tu ne devrais pas etre ici...", font_type = "font/font_retro.ttf")
             },
         }
 
@@ -151,13 +152,13 @@ class Hub:
             0:{
             },
             1:{
-            "Couper_Son": UI_PNG(self.screen, self.son_off_on[self.son_actif], self.resp(self.ratio_objet["Couper_Son"][0], self.ratio_objet["Couper_Son"][1], self.ratio_objet["Couper_Son"][2], self.ratio_objet["Couper_Son"][3]), 15, 0.05),
-            "Couper_Music": UI_PNG(self.screen, self.music_off_on[self.music_actif], self.resp(self.ratio_objet["Couper_Music"][0], self.ratio_objet["Couper_Music"][1], self.ratio_objet["Couper_Music"][2], self.ratio_objet["Couper_Music"][3]), 15, 0.05),
+            "Couper_Son": UI_PNG(self.screen, self.son_off_on[self.son_actif], self.resp.resp(self.ratio_objet["Couper_Son"][0], self.ratio_objet["Couper_Son"][1], self.ratio_objet["Couper_Son"][2], self.ratio_objet["Couper_Son"][3]), 15, 0.05),
+            "Couper_Music": UI_PNG(self.screen, self.music_off_on[self.music_actif], self.resp.resp(self.ratio_objet["Couper_Music"][0], self.ratio_objet["Couper_Music"][1], self.ratio_objet["Couper_Music"][2], self.ratio_objet["Couper_Music"][3]), 15, 0.05),
             },
             2:{
             },
             3:{
-            "Secret": InputText(self.screen, self.resp(self.ratio_objet["Champ_secret"][0], self.ratio_objet["Champ_secret"][1], self.ratio_objet["Champ_secret"][2], self.ratio_objet["Champ_secret"][3]))
+            "Secret": InputText(self.screen, self.resp.resp(self.ratio_objet["Champ_secret"][0], self.ratio_objet["Champ_secret"][1], self.ratio_objet["Champ_secret"][2], self.ratio_objet["Champ_secret"][3]))
             },
             4:{
             },
@@ -227,28 +228,6 @@ class Hub:
 
         if self.dico_UI_interact[1]["Secret"].mouse_is_click():
             self.sous_plan = 3
-
-    def resp(self, ratio_x:float, ratio_y:float, ratio_long:float, ratio_larg:float):
-        '''Méthode qui gère la responsive des surfaces comme les boutons, les interfaces ou les champs'''
-        # On convertit tout les éléments par rapport à un ratio et à la taille de l'écran
-        x = self.Long * ratio_x
-        y = self.larg * ratio_y
-        L = self.Long * ratio_long
-        l = self.larg * ratio_larg
-        return (x, y, L, l)
-
-    def resp_font(self, ratio_long:float, ratio_font:float):
-        '''
-        Méthode qui gère la responsive des tailles de polices d'écriture en fonction de la 
-        longueur d'une surface
-        '''
-        return int(self.Long * ratio_long * ratio_font)
-
-    def resp_text(self, ratio_x:float, ratio_y:float):
-        '''
-        Méthode qui gère la responsive des positions des textes à partir d'un ratio x et y
-        '''
-        return (self.Long * ratio_x, self.larg * ratio_y)
 
     def couper_son(self):
         '''
