@@ -14,10 +14,7 @@ class Flamme:
         self.plan_ref = plan_ref  # référence vers le plan du jeu
 
         self.dico_info = Dico_info_Game()
-        self.fire_frames = [
-            pygame.image.load(path).convert_alpha()
-            for path in self.dico_info.type_cases["Case ETDB"]
-        ]
+        self.fire_frames = [pygame.image.load(path).convert_alpha() for path in self.dico_info.type_cases["Case ETDB"]]
 
         self.file_propagation = []
         self.last_fire_update = pygame.time.get_ticks()
@@ -28,12 +25,7 @@ class Flamme:
     def ajout_feu(self, ligne, colonne):
         x, y = self.grille.placement_grille(colonne, ligne)
 
-        flamme = UI_PNG(
-            self.screen,
-            self.dico_info.type_cases["Case ETDB"][0],
-            (x, y, self.grille.case_Long, self.grille.case_larg),
-            5, 0
-        )
+        flamme = UI_PNG(self.screen, self.dico_info.type_cases["Case ETDB"][0], (x, y, self.grille.case_Long, self.grille.case_larg), 5, 0)
 
         flamme.frame = 0
         flamme.last_update = pygame.time.get_ticks()
@@ -44,11 +36,11 @@ class Flamme:
         self.nbr_flammes_spawn += 1
 
     def anim_feu(self):
-        FRAME_DELAY = 110  # ms
+        frame_delay = 105  # ms
         now = pygame.time.get_ticks()
 
         for flamme in self.dico_UI_anim[self.plan_ref()]["Flamme"].values():
-            if now - flamme.last_update >= FRAME_DELAY:
+            if now - flamme.last_update >= frame_delay:
                 flamme.frame = (flamme.frame + 1) % len(self.dico_info.type_cases["Case ETDB"])
                 flamme.last_update = now
 
@@ -76,9 +68,6 @@ class Flamme:
         return 3 + int(self.data.temperature / 25)
 
     def propagation_feu(self, ligne, colonne, puissance):
-        if not (0 <= ligne < self.grille.lignes and 0 <= colonne < self.grille.colonnes):
-            return
-
         if puissance <= 0:
             return
 

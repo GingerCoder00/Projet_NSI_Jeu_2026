@@ -38,30 +38,16 @@ class Jauge:
 
         Longueur, largeur = self.screen.get_size()
         Longueur, largeur = self.screen.get_size()
-        self.info = UI_screen(
-            self.screen,
-            (255,255,255),
-            (0,0,0),
-            (self.mouse_x, self.mouse_y, Longueur * 0.12, largeur * 0.25),
-            4, 18
-        )
+        self.info = UI_screen(self.screen, (255,255,255), (0,0,0), (self.mouse_x, self.mouse_y, Longueur * 0.12, largeur * 0.25), 4, 18)
 
         # Position initiale du texte (peut être proche de la souris ou dans un coin)
-        self.texte_info = Texte(
-            self.screen,
-            (self.mouse_x + 10, self.mouse_y + 10),
-            int(Longueur * 0.07 * 0.3),  # taille police
-            (0,0,0),
-            f"{self.nom_data}"
-        )
-
+        self.texte_info = Texte(self.screen, (self.mouse_x + 10, self.mouse_y + 10), int(Longueur * 0.07 * 0.3), (0,0,0), f"{self.nom_data}")
 
         # Paramètre bruitage
         self.volume = volume_son
         SOUND_PATH = os.path.join(BASE_DIR, "sound", "click")
         self.hover_sound = pygame.mixer.Sound(f"{SOUND_PATH}.wav")
         self.flag_hover_sound = False
-
 
     def create(self):
         self.img = pygame.transform.scale(self.img_base, (int(self.true_L), int(self.true_l)))
@@ -104,8 +90,6 @@ class Jauge:
                 self.true_x += self.ampli_inf // 2
                 self.true_y += self.ampli_inf // 2
                 self.flag_inflate = False
-
-
 
     def update(self):
         self.hover_sound.set_volume(self.volume)
