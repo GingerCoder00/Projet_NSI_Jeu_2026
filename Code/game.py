@@ -451,6 +451,7 @@ class Game:
 
             self.draw()
             self.exit()
+            
 
         if not self.return_main_menu:
             pygame.quit() # Puis on quitte proprement le jeu
