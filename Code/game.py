@@ -55,13 +55,18 @@ class Game:
             "Jauge_temp": (0.86, 0.45, 0.039, 0.25),
             "Jauge_nourriture": (0.93, 0.45, 0.039, 0.25),
             "Jauge_total": (0.78, 0.75, 0.205, 0.07),
-            "Bouton_Feu": (0.44, 0.83, 0.04, 0.067),
-            "Bouton_Usine" : (0.4895, 0.881, 0.04, 0.067),
-            "Bouton_Guerre" : (0.54, 0.83, 0.04, 0.067),
-            "Bouton_Canicule" : (0.59, 0.881, 0.04, 0.067),
-            "Bouton_Maree_Noire" : (0.64, 0.83, 0.04, 0.067),
-            "Bouton_Desinformation" : (0.692, 0.881, 0.04, 0.067),
-        
+            "Bouton_Feu": (0.434, 0.821, 0.047, 0.083),
+            "Bouton_Usine" : (0.4844, 0.873, 0.047, 0.083),
+            "Bouton_Guerre" : (0.5356, 0.821, 0.047, 0.083),
+            "Bouton_Canicule" : (0.5875, 0.873, 0.047, 0.083),
+            "Bouton_Maree_Noire" : (0.6389, 0.821, 0.047, 0.083),
+            "Bouton_Desinformation" : (0.691, 0.873, 0.047, 0.083),
+            "Bouton_Continuer" : (0.375, 0.07, 0.25, 0.15, 0.15),
+            "Bouton_Option" : (0.375, 0.25, 0.25, 0.15, 0.18),
+            "Bouton_Succes" : (0.375, 0.43, 0.25, 0.15, 0.18),
+            "Bouton_Menu_Principal" : (0.375, 0.61, 0.25, 0.15, 0.1),
+            "Bouton_Quitter" : (0.375, 0.79, 0.25, 0.15, 0.18),
+            "Rect_Pause" : (0.3, 0.04, 0.4, 0.93),
         }
 
         self.dico_info = Dico_info_Game()
@@ -78,15 +83,15 @@ class Game:
        
         self.BOUTON_FEU_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_bouton_feu", "sprite_bouton_feu_0.png")
         self.bouton_feu_active = False
-        self.BOUTON_USINE_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_bouton_usine", "sprite_bouton_usine_0.png")
+        self.BOUTON_USINE_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_bouton_feu", "sprite_bouton_feu_0.png")
         self.bouton_usine_active = False
         self.BOUTON_GUERRE_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_bouton_feu", "sprite_bouton_feu_0.png")
         self.bouton_guerre_active = False
-        self.BOUTON_CANICULE_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_bouton_usine", "sprite_bouton_usine_0.png")
+        self.BOUTON_CANICULE_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_bouton_feu", "sprite_bouton_feu_0.png")
         self.bouton_canicule_active = False
         self.BOUTON_MAREE_NOIRE_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_bouton_feu", "sprite_bouton_feu_0.png")
         self.bouton_maree_noire_active = False
-        self.BOUTON_DESINFORMATION_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_bouton_usine", "sprite_bouton_usine_0.png")
+        self.BOUTON_DESINFORMATION_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_bouton_feu", "sprite_bouton_feu_0.png")
         self.bouton_desinformation_active = False
 
 
@@ -99,14 +104,32 @@ class Game:
 
                 },
                 "Bouton" : {
-                    "Bouton_Feu" : UI_PNG(self.screen, self.BOUTON_FEU_PATH, self.resp.resp(self.ratio_objet["Bouton_Feu"][0], self.ratio_objet["Bouton_Feu"][1], self.ratio_objet["Bouton_Feu"][2], self.ratio_objet["Bouton_Feu"][3]), 12, 0.03),
-                    "Bouton_Usine" : UI_PNG(self.screen, self.BOUTON_USINE_PATH, self.resp.resp(self.ratio_objet["Bouton_Usine"][0], self.ratio_objet["Bouton_Usine"][1], self.ratio_objet["Bouton_Usine"][2], self.ratio_objet["Bouton_Usine"][3]), 12, 0.03),
-                    "Bouton_Guerre" : UI_PNG(self.screen, self.BOUTON_FEU_PATH, self.resp.resp(self.ratio_objet["Bouton_Guerre"][0], self.ratio_objet["Bouton_Guerre"][1], self.ratio_objet["Bouton_Guerre"][2], self.ratio_objet["Bouton_Guerre"][3]), 12, 0.03),
-                    "Bouton_Canicule" : UI_PNG(self.screen, self.BOUTON_USINE_PATH, self.resp.resp(self.ratio_objet["Bouton_Canicule"][0], self.ratio_objet["Bouton_Canicule"][1], self.ratio_objet["Bouton_Canicule"][2], self.ratio_objet["Bouton_Canicule"][3]), 12, 0.03),
-                    "Bouton_Maree_Noire" : UI_PNG(self.screen, self.BOUTON_FEU_PATH, self.resp.resp(self.ratio_objet["Bouton_Maree_Noire"][0], self.ratio_objet["Bouton_Maree_Noire"][1], self.ratio_objet["Bouton_Maree_Noire"][2], self.ratio_objet["Bouton_Maree_Noire"][3]), 12, 0.03),
-                    "Bouton_Desinformation" : UI_PNG(self.screen, self.BOUTON_USINE_PATH, self.resp.resp(self.ratio_objet["Bouton_Desinformation"][0], self.ratio_objet["Bouton_Desinformation"][1], self.ratio_objet["Bouton_Desinformation"][2], self.ratio_objet["Bouton_Desinformation"][3]), 12, 0.03),
+                    "Bouton_Feu" : UI_PNG(self.screen, self.BOUTON_FEU_PATH, self.resp.resp(self.ratio_objet["Bouton_Feu"][0], self.ratio_objet["Bouton_Feu"][1], self.ratio_objet["Bouton_Feu"][2], self.ratio_objet["Bouton_Feu"][3]), 6, 0.03),
+                    "Bouton_Usine" : UI_PNG(self.screen, self.BOUTON_USINE_PATH, self.resp.resp(self.ratio_objet["Bouton_Usine"][0], self.ratio_objet["Bouton_Usine"][1], self.ratio_objet["Bouton_Usine"][2], self.ratio_objet["Bouton_Usine"][3]), 6, 0.03),
+                    "Bouton_Guerre" : UI_PNG(self.screen, self.BOUTON_FEU_PATH, self.resp.resp(self.ratio_objet["Bouton_Guerre"][0], self.ratio_objet["Bouton_Guerre"][1], self.ratio_objet["Bouton_Guerre"][2], self.ratio_objet["Bouton_Guerre"][3]), 6, 0.03),
+                    "Bouton_Canicule" : UI_PNG(self.screen, self.BOUTON_USINE_PATH, self.resp.resp(self.ratio_objet["Bouton_Canicule"][0], self.ratio_objet["Bouton_Canicule"][1], self.ratio_objet["Bouton_Canicule"][2], self.ratio_objet["Bouton_Canicule"][3]), 6, 0.03),
+                    "Bouton_Maree_Noire" : UI_PNG(self.screen, self.BOUTON_FEU_PATH, self.resp.resp(self.ratio_objet["Bouton_Maree_Noire"][0], self.ratio_objet["Bouton_Maree_Noire"][1], self.ratio_objet["Bouton_Maree_Noire"][2], self.ratio_objet["Bouton_Maree_Noire"][3]), 6, 0.03),
+                    "Bouton_Desinformation" : UI_PNG(self.screen, self.BOUTON_USINE_PATH, self.resp.resp(self.ratio_objet["Bouton_Desinformation"][0], self.ratio_objet["Bouton_Desinformation"][1], self.ratio_objet["Bouton_Desinformation"][2], self.ratio_objet["Bouton_Desinformation"][3]), 6, 0.03),
                 },
             },
+            1:{
+                "Case" : {
+
+                },
+                "Bouton" : {
+                    "Bouton_Feu" : UI_PNG(self.screen, self.BOUTON_FEU_PATH, self.resp.resp(self.ratio_objet["Bouton_Feu"][0], self.ratio_objet["Bouton_Feu"][1], self.ratio_objet["Bouton_Feu"][2], self.ratio_objet["Bouton_Feu"][3]), 6, 0.03),
+                    "Bouton_Usine" : UI_PNG(self.screen, self.BOUTON_USINE_PATH, self.resp.resp(self.ratio_objet["Bouton_Usine"][0], self.ratio_objet["Bouton_Usine"][1], self.ratio_objet["Bouton_Usine"][2], self.ratio_objet["Bouton_Usine"][3]), 6, 0.03),
+                    "Bouton_Guerre" : UI_PNG(self.screen, self.BOUTON_FEU_PATH, self.resp.resp(self.ratio_objet["Bouton_Guerre"][0], self.ratio_objet["Bouton_Guerre"][1], self.ratio_objet["Bouton_Guerre"][2], self.ratio_objet["Bouton_Guerre"][3]), 6, 0.03),
+                    "Bouton_Canicule" : UI_PNG(self.screen, self.BOUTON_USINE_PATH, self.resp.resp(self.ratio_objet["Bouton_Canicule"][0], self.ratio_objet["Bouton_Canicule"][1], self.ratio_objet["Bouton_Canicule"][2], self.ratio_objet["Bouton_Canicule"][3]), 6, 0.03),
+                    "Bouton_Maree_Noire" : UI_PNG(self.screen, self.BOUTON_FEU_PATH, self.resp.resp(self.ratio_objet["Bouton_Maree_Noire"][0], self.ratio_objet["Bouton_Maree_Noire"][1], self.ratio_objet["Bouton_Maree_Noire"][2], self.ratio_objet["Bouton_Maree_Noire"][3]), 6, 0.03),
+                    "Bouton_Desinformation" : UI_PNG(self.screen, self.BOUTON_USINE_PATH, self.resp.resp(self.ratio_objet["Bouton_Desinformation"][0], self.ratio_objet["Bouton_Desinformation"][1], self.ratio_objet["Bouton_Desinformation"][2], self.ratio_objet["Bouton_Desinformation"][3]), 6, 0.03),
+                    "Bouton_Continuer" : UI_Bouton(self.screen, (158, 253, 56), (0,0,0), self.resp.resp_font(self.ratio_objet["Bouton_Continuer"][2], self.ratio_objet["Bouton_Continuer"][4]), self.resp.resp(self.ratio_objet["Bouton_Continuer"][0], self.ratio_objet["Bouton_Continuer"][1], self.ratio_objet["Bouton_Continuer"][2], self.ratio_objet["Bouton_Continuer"][3]), "CONTINUER", 4, 12, 16, 0.05),
+                    "Bouton_Option" : UI_Bouton(self.screen, (158, 253, 56), (0,0,0), self.resp.resp_font(self.ratio_objet["Bouton_Option"][2], self.ratio_objet["Bouton_Option"][4]), self.resp.resp(self.ratio_objet["Bouton_Option"][0], self.ratio_objet["Bouton_Option"][1], self.ratio_objet["Bouton_Option"][2], self.ratio_objet["Bouton_Option"][3]), "OPTION", 4, 12, 16, 0.05),
+                    "Bouton_Succes" : UI_Bouton(self.screen, (158, 253, 56), (0,0,0), self.resp.resp_font(self.ratio_objet["Bouton_Succes"][2], self.ratio_objet["Bouton_Succes"][4]), self.resp.resp(self.ratio_objet["Bouton_Succes"][0], self.ratio_objet["Bouton_Succes"][1], self.ratio_objet["Bouton_Succes"][2], self.ratio_objet["Bouton_Succes"][3]), "SUCCES", 4, 12, 16, 0.05),
+                    "Bouton_Menu_Principal" : UI_Bouton(self.screen, (158, 253, 56), (0,0,0), self.resp.resp_font(self.ratio_objet["Bouton_Menu_Principal"][2], self.ratio_objet["Bouton_Menu_Principal"][4]), self.resp.resp(self.ratio_objet["Bouton_Menu_Principal"][0], self.ratio_objet["Bouton_Menu_Principal"][1], self.ratio_objet["Bouton_Menu_Principal"][2], self.ratio_objet["Bouton_Menu_Principal"][3]), "MENU PRINCIPAL", 4, 12, 16, 0.05),
+                    "Bouton_Quitter" : UI_Bouton(self.screen, (158, 253, 56), (0,0,0), self.resp.resp_font(self.ratio_objet["Bouton_Quitter"][2], self.ratio_objet["Bouton_Quitter"][4]), self.resp.resp(self.ratio_objet["Bouton_Quitter"][0], self.ratio_objet["Bouton_Quitter"][1], self.ratio_objet["Bouton_Quitter"][2], self.ratio_objet["Bouton_Quitter"][3]), "QUITTER", 4, 12, 16, 0.05),
+                },
+            }
         }
 
         self.grille = Grille(self.screen, 19, 30, 3.5, self.resp.resp(self.ratio_objet["Rect_bouton"][0], self.ratio_objet["Rect_bouton"][1], self.ratio_objet["Rect_bouton"][2], self.ratio_objet["Rect_bouton"][3]), self.dico_UI_interact)
@@ -122,6 +145,15 @@ class Game:
                 "Rect_power" : UI_screen(self.screen, (0, 100, 127), (255,255,255), self.resp.resp(self.ratio_objet["Rect_power"][0], self.ratio_objet["Rect_power"][1], self.ratio_objet["Rect_power"][2], self.ratio_objet["Rect_power"][3]), taille_contour = 6, border_radius = 12, pulse = True),
                 "Texte_temps_chrono" : Texte(self.screen, self.resp.resp_text(self.ratio_objet["Texte_temps_chrono"][0], self.ratio_objet["Texte_temps_chrono"][1]), self.resp.resp_font(self.ratio_objet["Texte_temps_chrono"][0], self.ratio_objet["Texte_temps_chrono"][2]), (0,0,0), f"{self.temps_ecoule}", font_type = "font/pixellari.ttf")
             },
+            1:{
+                "Rect_bouton" : UI_screen(self.screen, (88, 41, 0), (255,255,255), self.grille.rect_zone, taille_contour = 6, border_radius = 12, pulse = False),
+                "Rect_jauge" : UI_screen(self.screen, (0, 86, 27), (255,255,255), self.resp.resp(self.ratio_objet["Rect_jauge"][0], self.ratio_objet["Rect_jauge"][1], self.ratio_objet["Rect_jauge"][2], self.ratio_objet["Rect_jauge"][3]), taille_contour = 6, border_radius = 12, pulse = False),
+                "Rect_stats" : UI_screen(self.screen, (0, 86, 27), (255,255,255), self.resp.resp(self.ratio_objet["Rect_stats"][0], self.ratio_objet["Rect_stats"][1], self.ratio_objet["Rect_stats"][2], self.ratio_objet["Rect_stats"][3]), taille_contour = 6, border_radius = 12, pulse = False),
+                "Rect_notif" : UI_screen(self.screen, (0, 100, 127), (255,255,255), self.resp.resp(self.ratio_objet["Rect_notif"][0], self.ratio_objet["Rect_notif"][1], self.ratio_objet["Rect_notif"][2], self.ratio_objet["Rect_notif"][3]), taille_contour = 6, border_radius = 12, pulse = True),
+                "Rect_power" : UI_screen(self.screen, (0, 100, 127), (255,255,255), self.resp.resp(self.ratio_objet["Rect_power"][0], self.ratio_objet["Rect_power"][1], self.ratio_objet["Rect_power"][2], self.ratio_objet["Rect_power"][3]), taille_contour = 6, border_radius = 12, pulse = True),
+                "Texte_temps_chrono" : Texte(self.screen, self.resp.resp_text(self.ratio_objet["Texte_temps_chrono"][0], self.ratio_objet["Texte_temps_chrono"][1]), self.resp.resp_font(self.ratio_objet["Texte_temps_chrono"][0], self.ratio_objet["Texte_temps_chrono"][2]), (0,0,0), f"{self.temps_ecoule}", font_type = "font/pixellari.ttf"),
+                "Rect_Pause" : UI_screen(self.screen, (0, 100, 127), (255,255,255), self.resp.resp(self.ratio_objet["Rect_Pause"][0], self.ratio_objet["Rect_Pause"][1], self.ratio_objet["Rect_Pause"][2], self.ratio_objet["Rect_Pause"][3]), taille_contour = 6, border_radius = 12, pulse = True),
+            },
         }
 
         self.JAUGE_POLLUTION_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_jauge_pollution", "sprite_jauge_pollution_")
@@ -135,6 +167,23 @@ class Game:
         # Gestion des éléments en animations
         self.dico_UI_anim = {
             0:{
+                "Flamme" : {
+                },
+                "Croix" : {
+                },
+                "Poubelle" : {
+                },
+                "Jauge" : {
+                    "Jauge_pollution" : Jauge(self.screen, self.JAUGE_POLLUTION_PATH, "pollution", self.resp.resp(self.ratio_objet["Jauge_pollution"][0], self.ratio_objet["Jauge_pollution"][1], self.ratio_objet["Jauge_pollution"][2], self.ratio_objet["Jauge_pollution"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.pollution)),
+                    "Jauge_bio" : Jauge(self.screen, self.JAUGE_BIO_PATH, "biodiversite", self.resp.resp(self.ratio_objet["Jauge_bio"][0], self.ratio_objet["Jauge_bio"][1], self.ratio_objet["Jauge_bio"][2], self.ratio_objet["Jauge_bio"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.biodiversite)),
+                    "Jauge_niv_ocean" : Jauge(self.screen, self.JAUGE_NIV_OCEAN_PATH, "eau", self.resp.resp(self.ratio_objet["Jauge_niv_ocean"][0], self.ratio_objet["Jauge_niv_ocean"][1], self.ratio_objet["Jauge_niv_ocean"][2], self.ratio_objet["Jauge_niv_ocean"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.eau)),
+                    "Jauge_social" : Jauge(self.screen, self.JAUGE_SOCIAL_PATH, "stabilite", self.resp.resp(self.ratio_objet["Jauge_social"][0], self.ratio_objet["Jauge_social"][1], self.ratio_objet["Jauge_social"][2], self.ratio_objet["Jauge_social"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.stabilite)),
+                    "Jauge_temp" : Jauge(self.screen, self.JAUGE_TEMP_PATH, "temperature", self.resp.resp(self.ratio_objet["Jauge_temp"][0], self.ratio_objet["Jauge_temp"][1], self.ratio_objet["Jauge_temp"][2], self.ratio_objet["Jauge_temp"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.temperature)),
+                    "Jauge_nourriture" : Jauge(self.screen, self.JAUGE_NOURRITURE_PATH, "profit", self.resp.resp(self.ratio_objet["Jauge_nourriture"][0], self.ratio_objet["Jauge_nourriture"][1], self.ratio_objet["Jauge_nourriture"][2], self.ratio_objet["Jauge_nourriture"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.profit)),
+                    "Jauge_total" : Jauge(self.screen, self.JAUGE_TOTAL_PATH, "destruction", self.resp.resp(self.ratio_objet["Jauge_total"][0], self.ratio_objet["Jauge_total"][1], self.ratio_objet["Jauge_total"][2], self.ratio_objet["Jauge_total"][3]), 7, 0.03, self.converte_data_into_frame(11, self.data.destruction), "0", nbr_frames = 11)
+                },
+            },
+            1:{
                 "Flamme" : {
                 },
                 "Croix" : {
@@ -213,6 +262,14 @@ class Game:
                 croix.img_base = pygame.image.load(
                     croix.IMG_PATH
                 ).convert_alpha()
+
+    def move_plan(self):
+
+        if self.keys[pygame.K_ESCAPE]:
+            self.plan = 1  # Ceci arrête la boucle principal
+        
+        if self.dico_UI_interact[1]["Bouton"]["Bouton_Continuer"].mouse_is_click():
+            self.plan = 0
 
     def ajout_pollue(self, ligne, colonne):
         x, y = self.placement_grille(colonne, ligne)
@@ -311,9 +368,6 @@ class Game:
                 if event.type == pygame.QUIT:
                     self.running = False  # Ceci arrête la boucle principal
 
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        self.running = False  # Ceci arrête la boucle principal
     def stats(self):
         '''
         Cette méthode permet de gérer l'affichage des stats de performance et de test
@@ -361,6 +415,7 @@ class Game:
             self.update_propagation_feu()
             self.modif_jauge()
             self.modif_chrono()
+            self.move_plan()
 
             self.draw()
             self.exit()
