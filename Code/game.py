@@ -71,7 +71,6 @@ class Game:
         }
 
         self.dico_info = Dico_info_Game()
-        self.flamme = Flamme()
 
         # Variable affichage
         # Num plan : {0:grille, 1:?}
@@ -149,6 +148,7 @@ class Game:
         self.grille = Grille(self.screen, 19, 30, 3.5, self.resp.resp(self.ratio_objet["Rect_bouton"][0], self.ratio_objet["Rect_bouton"][1], self.ratio_objet["Rect_bouton"][2], self.ratio_objet["Rect_bouton"][3]), self.dico_UI_interact)
         self.meteo = Meteo(self.screen, self.grille.zone_x, self.grille.zone_y, self.grille.zone_L, self.grille.zone_l)
 
+
         # Gestion des éléments graphiques non intéractif
         self.dico_UI = {
             0:{
@@ -181,6 +181,7 @@ class Game:
         self.dico_UI_anim = {
             0:{
                 "Flamme" : {
+                
                 },
                 "Croix" : {
                 },
@@ -214,6 +215,9 @@ class Game:
                 },
             }
         }
+
+        self.flamme = Flamme(self.screen, self.grille, self.data, self.dico_UI_anim, lambda: self.plan) # On utilise lambda car le plan change dynamiquement
+
 
     def converte_data_into_frame(self, nbr_frame, valeur_reel):
         valeur_reel = max(0, min(100, valeur_reel))

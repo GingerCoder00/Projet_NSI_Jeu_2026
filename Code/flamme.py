@@ -6,13 +6,22 @@ from grille import *
 from dico_info_game import *
 
 class Flamme:
-    def __init__(self):
-        self.dico_info = Dico_info_Game()
-        self.fire_frames = [pygame.image.load(path).convert_alpha() for path in self.dico_info.type_cases["Case ETDB"]]
+    def __init__(self, screen, grille, data, dico_UI_anim, plan_ref):
+        self.screen = screen
+        self.grille = grille
+        self.data = data
+        self.dico_UI_anim = dico_UI_anim
+        self.plan_ref = plan_ref  # référence vers le plan du jeu
 
-        self.file_propagation = []  # [(ligne, colonne, puissance)]
+        self.dico_info = Dico_info_Game()
+        self.fire_frames = [
+            pygame.image.load(path).convert_alpha()
+            for path in self.dico_info.type_cases["Case ETDB"]
+        ]
+
+        self.file_propagation = []
         self.last_fire_update = pygame.time.get_ticks()
-        self.fire_delay = 1200  # ms entre chaque vague
+        self.fire_delay = 1200
 
         self.nbr_flammes_spawn = 0
 
@@ -29,15 +38,16 @@ class Flamme:
         flamme.frame = 0
         flamme.last_update = pygame.time.get_ticks()
 
-        self.dico_UI_anim[0]["Flamme"][len(self.dico_UI_anim[0][self.nbr_flammes_spawn])] = flamme
+        plan = self.plan_ref()
+        self.dico_UI_anim[plan]["Flamme"][self.nbr_flammes_spawn] = flamme
 
         self.nbr_flammes_spawn += 1
 
     def anim_feu(self):
-        FRAME_DELAY = 120  # ms
+        FRAME_DELAY = 110  # ms
         now = pygame.time.get_ticks()
 
-        for flamme in self.dico_UI_anim[self.plan]["Flamme"].values():
+        for flamme in self.dico_UI_anim[self.plan_ref()]["Flamme"].values():
             if now - flamme.last_update >= FRAME_DELAY:
                 flamme.frame = (flamme.frame + 1) % len(self.dico_info.type_cases["Case ETDB"])
                 flamme.last_update = now
@@ -50,7 +60,6 @@ class Flamme:
         Retourne une probabilité entre 0 et 1
         dépendante de la température
         """
-
         # Base minimale
         base = 0.15  
 
@@ -58,14 +67,13 @@ class Flamme:
         influence = self.data.temperature / 150  
 
         # Limite max
-    
         return min(0.85, base + influence)
     
     def puissance_feu(self):
         '''
         Détermine la profondeur de propagation
         '''
-        return 4 + int(self.data.temperature / 25)
+        return 3 + int(self.data.temperature / 25)
 
     def propagation_feu(self, ligne, colonne, puissance):
         if not (0 <= ligne < self.grille.lignes and 0 <= colonne < self.grille.colonnes):
@@ -76,34 +84,27 @@ class Flamme:
 
         if self.grille.grille[ligne][colonne] in [(0,0,255), "feu"]:
             return
-
         else:
             self.grille.grille[ligne][colonne] = "feu"
             self.ajout_feu(ligne, colonne)
 
             proba = self.proba_propagation()
 
-            #directions = [(-1,0),(1,0),(0,-1),(0,1)]
-
-            #for dl, dc in directions:
-                #if random() < proba:
-                    #self.file_propagation.append((ligne + dl, colonne + dc, puissance - 1))
-
-            if ligne < 0 and random() < proba:
+            # Haut
+            if ligne > 0 and random() < proba:
                 self.file_propagation.append((ligne - 1, colonne, puissance - 1))
-                self.nbr_flammes_spawn += 1
 
-            if ligne > (self.grille.lignes - 1) and random() < proba:
+            # Bas
+            if ligne < self.grille.lignes - 1 and random() < proba:
                 self.file_propagation.append((ligne + 1, colonne, puissance - 1))
-                self.nbr_flammes_spawn += 1
-            
-            if colonne < 0 and random() < proba:
-                self.file_propagation.append((ligne, colonne - 1, puissance - 1))
-                self.nbr_flammes_spawn += 1
 
-            if colonne > (self.grille.colonnes - 1) and random() < proba:
+            # Gauche
+            if colonne > 0 and random() < proba:
+                self.file_propagation.append((ligne, colonne - 1, puissance - 1))
+
+            # Droite
+            if colonne < self.grille.colonnes - 1 and random() < proba:
                 self.file_propagation.append((ligne, colonne + 1, puissance - 1))
-                self.nbr_flammes_spawn += 1
 
 
     def update_propagation_feu(self):
