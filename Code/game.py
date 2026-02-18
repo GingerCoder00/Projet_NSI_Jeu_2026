@@ -9,6 +9,7 @@ from meteo import *
 from resp_tools import *
 from grille import *
 from dico_info_game import *
+from flamme import *
 
 pygame.init()
 pygame.mixer.init()
@@ -70,8 +71,7 @@ class Game:
         }
 
         self.dico_info = Dico_info_Game()
-
-        self.fire_frames = [pygame.image.load(path).convert_alpha() for path in self.dico_info.type_cases["Case ETDB"]]
+        self.flamme = Flamme()
 
         # Variable affichage
         # Num plan : {0:grille, 1:?}
@@ -81,10 +81,6 @@ class Game:
         self.ecran_noir = pygame.image.load(f"{self.BLACK_SCREEN_PATH}.png").convert()  
         self.ecran_noir = pygame.transform.scale(self.ecran_noir, (self.Long, self.larg)) 
         self.ecran_noir.set_alpha(155)
-
-        self.file_propagation = []  # [(ligne, colonne, puissance)]
-        self.last_fire_update = pygame.time.get_ticks()
-        self.fire_delay = 1200  # ms entre chaque vague
        
         self.BOUTON_FEU_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_bouton_feu", "sprite_bouton_feu_0.png")
         self.bouton_feu_active = False
@@ -223,33 +219,6 @@ class Game:
         valeur_reel = max(0, min(100, valeur_reel))
         return round((valeur_reel / 100) * (nbr_frame - 1))
 
-    def ajout_feu(self, ligne, colonne):
-        x, y = self.grille.placement_grille(colonne, ligne)
-
-        flamme = UI_PNG(
-            self.screen,
-            self.dico_info.type_cases["Case ETDB"][0],
-            (x, y, self.grille.case_Long, self.grille.case_larg),
-            5, 0
-        )
-
-        flamme.frame = 0
-        flamme.last_update = pygame.time.get_ticks()
-
-        self.dico_UI_anim[0]["Flamme"][len(self.dico_UI_anim[0]["Flamme"])] = flamme
-
-    def anim_feu(self):
-        FRAME_DELAY = 120  # ms
-        now = pygame.time.get_ticks()
-
-        for flamme in self.dico_UI_anim[self.plan]["Flamme"].values():
-            if now - flamme.last_update >= FRAME_DELAY:
-                flamme.frame = (flamme.frame + 1) % len(self.dico_info.type_cases["Case ETDB"])
-                flamme.last_update = now
-
-                # Mise à jour DU CŒUR de l'image affichée
-                flamme.img_base = self.fire_frames[flamme.frame]
-
     def ajout_condamne(self, ligne, colonne):
         x, y = self.grille.placement_grille(colonne, ligne)
 
@@ -318,66 +287,6 @@ class Game:
                     poubelle.IMG_PATH
                 ).convert_alpha()
 
-    def proba_propagation(self):
-        """
-        Retourne une probabilité entre 0 et 1
-        dépendante de la température
-        """
-
-        # Base minimale
-        base = 0.15  
-
-        # Influence température (0 → 100)
-        influence = self.data.temperature / 150  
-
-        # Limite max
-        return min(0.85, base + influence)
-    
-    def puissance_feu(self):
-        '''
-        Détermine la profondeur de propagation
-        '''
-        return 4 + int(self.data.temperature / 25)
-
-    def propagation_feu(self, ligne, colonne, puissance):
-
-        if not (0 <= ligne < self.grille.lignes and 0 <= colonne < self.grille.colonnes):
-            return
-
-        if puissance <= 0:
-            return
-
-        if self.grille.grille[ligne][colonne] in [(0,0,255), "feu"]:
-            return
-
-        self.grille.grille[ligne][colonne] = "feu"
-        self.ajout_feu(ligne, colonne)
-
-        proba = self.proba_propagation()
-
-        directions = [(-1,0),(1,0),(0,-1),(0,1)]
-
-        for dl, dc in directions:
-            if random() < proba:
-                self.file_propagation.append(
-                    (ligne + dl, colonne + dc, puissance - 1)
-                )
-
-    def update_propagation_feu(self):
-        now = pygame.time.get_ticks()
-
-        if now - self.last_fire_update < self.fire_delay:
-            return
-
-        self.last_fire_update = now
-
-        # On prend une vague complète
-        vague = self.file_propagation.copy()
-        self.file_propagation.clear()
-
-        for ligne, colonne, puissance in vague:
-            self.propagation_feu(ligne, colonne, puissance)
-
     def exit(self):
         '''Gère la fermeture de la fenêtre'''
         # On récupère tous les évènements pour vérifier si il y a un événement de type : pygame.QUIT
@@ -392,7 +301,6 @@ class Game:
             self.return_main_menu = True
             self.running = False
             
-
     def stats(self):
         '''
         Cette méthode permet de gérer l'affichage des stats de performance et de test
@@ -444,7 +352,7 @@ class Game:
                 self.chrono += diff_entre_frame
                 self.data.update_world(diff_entre_frame)
                 self.handle_event_bouton_feu()
-                self.update_propagation_feu()
+                self.flamme.update_propagation_feu()
                 self.modif_jauge()
                 self.modif_chrono()
             self.move_plan()
@@ -470,7 +378,7 @@ class Game:
             if cases.mouse_is_click() and self.data.utiliser_pouvoir("incendie"):
                 ligne = index // self.grille.colonnes
                 colonne = index % self.grille.colonnes
-                self.propagation_feu(ligne, colonne, self.puissance_feu())
+                self.flamme.propagation_feu(ligne, colonne, self.flamme.puissance_feu())
                 # Désactivation immédiate après 1 clic
                 self.bouton_feu_active = False
 
@@ -522,7 +430,7 @@ class Game:
         for objets in self.dico_UI_pause[self.plan]["Bouton"].values():
             objets.update() 
 
-        self.anim_feu() 
+        self.flamme.anim_feu() 
         self.anim_condamne() 
         self.anim_pollue()
         #self.meteo.pluie()
