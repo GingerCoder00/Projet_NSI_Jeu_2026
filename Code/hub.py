@@ -10,16 +10,13 @@ pygame.font.init()
 
 class Hub:
     '''Classe qui gère le Hub du Jeu'''
-    def __init__(self):
+    def __init__(self, screen):
 
-        # Gestion de l'écran
-        self.screen_taille = pygame.display.Info() # On récupère la taille de l'écran du système
-        self.Long = self.screen_taille.current_w # On récupère la longueur de l'écran
-        self.larg = self.screen_taille.current_h # On récupère la hauteur de l'écran
+        self.Long, self.larg = screen.get_size()
 
-        self.screen = pygame.display.set_mode((self.Long, self.larg)) # On initialise l'écran avec les dimensions préalablement récupérer
-        pygame.display.set_caption("Let's Smash Up The Earth") # On donne un nom à la fenêtre
         self.BASE_DIR = os.path.dirname(__file__)
+
+        self.screen = screen
 
         # Gestion du temps
         self.start_time = pygame.time.get_ticks()  # Temps de départ après l'initialisation de pygame
@@ -349,5 +346,11 @@ class Hub:
         pygame.display.flip()
 
 if __name__ == "__main__":  # Permet de démarrer le programme dans de bonnes conditions
-    hub = Hub()
+    screen_taille = pygame.display.Info() # On récupère la taille de l'écran du système
+    Long = screen_taille.current_w # On récupère la longueur de l'écran
+    larg = screen_taille.current_h # On récupère la hauteur de l'écran
+
+    screen = pygame.display.set_mode((Long, larg)) # On initialise l'écran avec les dimensions préalablement récupérer
+    pygame.display.set_caption("Let's Smash Up The Earth") # On donne un nom à la fenêtre
+    hub = Hub(screen)
     hub.run()

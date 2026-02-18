@@ -16,15 +16,13 @@ pygame.font.init()
 
 class Game:
     '''Classe qui gère le Hub du Jeu'''
-    def __init__(self):
-        self.screen_taille = pygame.display.Info() # On récupère la taille de l'écran du système
-        self.Long = self.screen_taille.current_w # On récupère la longueur de l'écran
-        self.larg = self.screen_taille.current_h # On récupère la hauteur de l'écran
+    def __init__(self, screen):
+
+        self.Long, self.larg = screen.get_size()
 
         self.BASE_DIR = os.path.dirname(__file__)
 
-        self.screen = pygame.display.set_mode((self.Long, self.larg)) # On initialise l'écran avec les dimensions préalablement récupérer
-        pygame.display.set_caption("Let's Smash Up The Earth") # On donne un nom à la fenêtre
+        self.screen = screen
 
         # Gestion du temps
         self.start_time = pygame.time.get_ticks()  # Temps de départ après l'initialisation de pygame
@@ -38,6 +36,7 @@ class Game:
 
         # Active et désactive la boucle de jeu
         self.running = True
+        self.return_main_menu = True
 
         self.resp = Resp_tools(self.Long, self.larg)
 
@@ -389,6 +388,11 @@ class Game:
         if self.dico_UI_pause[1]["Bouton"]["Bouton_Quitter"].mouse_is_click():
             self.running = False
 
+        if self.dico_UI_pause[1]["Bouton"]["Bouton_Menu_Principal"].mouse_is_click():
+            self.return_main_menu = True
+            self.running = False
+            
+
     def stats(self):
         '''
         Cette méthode permet de gérer l'affichage des stats de performance et de test
@@ -427,6 +431,8 @@ class Game:
         son fonctionnement
         '''
         self.grille.crea_cases()
+        self.return_main_menu = False
+
         while self.running:
             diff_entre_frame = self.clock.tick(60) / 1000
             self.keys = pygame.key.get_pressed()
@@ -445,7 +451,9 @@ class Game:
 
             self.draw()
             self.exit()
-        pygame.quit() # Puis on quitte proprement le jeu
+
+        if not self.return_main_menu:
+            pygame.quit() # Puis on quitte proprement le jeu
 
     def handle_event_bouton_feu(self):
         # Activation / désactivation du bouton
@@ -523,5 +531,12 @@ class Game:
         pygame.display.flip()
 
 if __name__ == "__main__":  # Permet de démarrer le programme dans de bonnes conditions
-    hub = Game()
-    hub.run()
+    screen_taille = pygame.display.Info() # On récupère la taille de l'écran du système
+    Long = screen_taille.current_w # On récupère la longueur de l'écran
+    larg = screen_taille.current_h # On récupère la hauteur de l'écran
+
+    screen = pygame.display.set_mode((Long, larg)) # On initialise l'écran avec les dimensions préalablement récupérer
+    pygame.display.set_caption("Let's Smash Up The Earth") # On donne un nom à la fenêtre
+
+    game = Game(screen)
+    game.run()

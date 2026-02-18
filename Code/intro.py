@@ -8,14 +8,10 @@ pygame.font.init()
 
 class Intro:
     '''Cete classe gère l'intro'''
-    def __init__(self, logo:str):
+    def __init__(self, logo:str, screen):
 
-        self.screen_taille = pygame.display.Info()
-        self.Long = self.screen_taille.current_w
-        self.larg = self.screen_taille.current_h
-
-        self.screen = pygame.display.set_mode((self.Long, self.larg))
-        pygame.display.set_caption("Let's Smash Up The Earth")
+        self.Long, self.larg = screen.get_size()
+        self.screen = screen
 
         self.start_time = pygame.time.get_ticks()  # temps de départ
         self.clock = pygame.time.Clock()
@@ -101,5 +97,12 @@ class Intro:
                 self.running = False
 
 if __name__ == "__main__":
-    intro = Intro("logo5.png")
+    screen_taille = pygame.display.Info() # On récupère la taille de l'écran du système
+    Long = screen_taille.current_w # On récupère la longueur de l'écran
+    larg = screen_taille.current_h # On récupère la hauteur de l'écran
+
+    screen = pygame.display.set_mode((Long, larg)) # On initialise l'écran avec les dimensions préalablement récupérer
+    pygame.display.set_caption("Let's Smash Up The Earth") # On donne un nom à la fenêtre
+
+    intro = Intro("logo5.png", screen)
     intro.run()
