@@ -30,6 +30,7 @@ class Game:
         self.start_time = pygame.time.get_ticks()  # Temps de départ après l'initialisation de pygame
         self.clock = pygame.time.Clock() # Initialisation de l'horloge interne du jeu
         self.temps_ecoule = 0
+        self.chrono = 0
 
         # Gestion du texte et importation de la police
         FONT_PATH = os.path.join(self.BASE_DIR, "font", "sans_sherif.otf")
@@ -77,6 +78,11 @@ class Game:
         # Num plan : {0:grille, 1:?}
         self.plan = 0
 
+        self.BLACK_SCREEN_PATH =  os.path.join(self.BASE_DIR, "sprite", "sprite_ecran_noir")
+        self.ecran_noir = pygame.image.load(f"{self.BLACK_SCREEN_PATH}.png").convert()  
+        self.ecran_noir = pygame.transform.scale(self.ecran_noir, (self.Long, self.larg)) 
+        self.ecran_noir.set_alpha(155)
+
         self.file_propagation = []  # [(ligne, colonne, puissance)]
         self.last_fire_update = pygame.time.get_ticks()
         self.fire_delay = 1200  # ms entre chaque vague
@@ -123,6 +129,18 @@ class Game:
                     "Bouton_Canicule" : UI_PNG(self.screen, self.BOUTON_USINE_PATH, self.resp.resp(self.ratio_objet["Bouton_Canicule"][0], self.ratio_objet["Bouton_Canicule"][1], self.ratio_objet["Bouton_Canicule"][2], self.ratio_objet["Bouton_Canicule"][3]), 6, 0.03),
                     "Bouton_Maree_Noire" : UI_PNG(self.screen, self.BOUTON_FEU_PATH, self.resp.resp(self.ratio_objet["Bouton_Maree_Noire"][0], self.ratio_objet["Bouton_Maree_Noire"][1], self.ratio_objet["Bouton_Maree_Noire"][2], self.ratio_objet["Bouton_Maree_Noire"][3]), 6, 0.03),
                     "Bouton_Desinformation" : UI_PNG(self.screen, self.BOUTON_USINE_PATH, self.resp.resp(self.ratio_objet["Bouton_Desinformation"][0], self.ratio_objet["Bouton_Desinformation"][1], self.ratio_objet["Bouton_Desinformation"][2], self.ratio_objet["Bouton_Desinformation"][3]), 6, 0.03),
+                },
+            }
+        }
+
+        self.dico_UI_pause = {
+            0:{ 
+                "Bouton" : {
+                },
+            },
+            1:{
+                "Bouton" : {
+                    "Rect_Pause" : UI_screen(self.screen, (0, 100, 127), (255,255,255), self.resp.resp(self.ratio_objet["Rect_Pause"][0], self.ratio_objet["Rect_Pause"][1], self.ratio_objet["Rect_Pause"][2], self.ratio_objet["Rect_Pause"][3]), taille_contour = 6, border_radius = 12, pulse = True),
                     "Bouton_Continuer" : UI_Bouton(self.screen, (158, 253, 56), (0,0,0), self.resp.resp_font(self.ratio_objet["Bouton_Continuer"][2], self.ratio_objet["Bouton_Continuer"][4]), self.resp.resp(self.ratio_objet["Bouton_Continuer"][0], self.ratio_objet["Bouton_Continuer"][1], self.ratio_objet["Bouton_Continuer"][2], self.ratio_objet["Bouton_Continuer"][3]), "CONTINUER", 4, 12, 16, 0.05),
                     "Bouton_Option" : UI_Bouton(self.screen, (158, 253, 56), (0,0,0), self.resp.resp_font(self.ratio_objet["Bouton_Option"][2], self.ratio_objet["Bouton_Option"][4]), self.resp.resp(self.ratio_objet["Bouton_Option"][0], self.ratio_objet["Bouton_Option"][1], self.ratio_objet["Bouton_Option"][2], self.ratio_objet["Bouton_Option"][3]), "OPTION", 4, 12, 16, 0.05),
                     "Bouton_Succes" : UI_Bouton(self.screen, (158, 253, 56), (0,0,0), self.resp.resp_font(self.ratio_objet["Bouton_Succes"][2], self.ratio_objet["Bouton_Succes"][4]), self.resp.resp(self.ratio_objet["Bouton_Succes"][0], self.ratio_objet["Bouton_Succes"][1], self.ratio_objet["Bouton_Succes"][2], self.ratio_objet["Bouton_Succes"][3]), "SUCCES", 4, 12, 16, 0.05),
@@ -131,6 +149,7 @@ class Game:
                 },
             }
         }
+
 
         self.grille = Grille(self.screen, 19, 30, 3.5, self.resp.resp(self.ratio_objet["Rect_bouton"][0], self.ratio_objet["Rect_bouton"][1], self.ratio_objet["Rect_bouton"][2], self.ratio_objet["Rect_bouton"][3]), self.dico_UI_interact)
         self.meteo = Meteo(self.screen, self.grille.zone_x, self.grille.zone_y, self.grille.zone_L, self.grille.zone_l)
@@ -152,7 +171,6 @@ class Game:
                 "Rect_notif" : UI_screen(self.screen, (0, 100, 127), (255,255,255), self.resp.resp(self.ratio_objet["Rect_notif"][0], self.ratio_objet["Rect_notif"][1], self.ratio_objet["Rect_notif"][2], self.ratio_objet["Rect_notif"][3]), taille_contour = 6, border_radius = 12, pulse = True),
                 "Rect_power" : UI_screen(self.screen, (0, 100, 127), (255,255,255), self.resp.resp(self.ratio_objet["Rect_power"][0], self.ratio_objet["Rect_power"][1], self.ratio_objet["Rect_power"][2], self.ratio_objet["Rect_power"][3]), taille_contour = 6, border_radius = 12, pulse = True),
                 "Texte_temps_chrono" : Texte(self.screen, self.resp.resp_text(self.ratio_objet["Texte_temps_chrono"][0], self.ratio_objet["Texte_temps_chrono"][1]), self.resp.resp_font(self.ratio_objet["Texte_temps_chrono"][0], self.ratio_objet["Texte_temps_chrono"][2]), (0,0,0), f"{self.temps_ecoule}", font_type = "font/pixellari.ttf"),
-                "Rect_Pause" : UI_screen(self.screen, (0, 100, 127), (255,255,255), self.resp.resp(self.ratio_objet["Rect_Pause"][0], self.ratio_objet["Rect_Pause"][1], self.ratio_objet["Rect_Pause"][2], self.ratio_objet["Rect_Pause"][3]), taille_contour = 6, border_radius = 12, pulse = True),
             },
         }
 
@@ -268,7 +286,7 @@ class Game:
         if self.keys[pygame.K_ESCAPE]:
             self.plan = 1  # Ceci arrête la boucle principal
         
-        if self.dico_UI_interact[1]["Bouton"]["Bouton_Continuer"].mouse_is_click():
+        if self.dico_UI_pause[1]["Bouton"]["Bouton_Continuer"].mouse_is_click():
             self.plan = 0
 
     def ajout_pollue(self, ligne, colonne):
@@ -368,6 +386,9 @@ class Game:
                 if event.type == pygame.QUIT:
                     self.running = False  # Ceci arrête la boucle principal
 
+        if self.dico_UI_pause[1]["Bouton"]["Bouton_Quitter"].mouse_is_click():
+            self.running = False
+
     def stats(self):
         '''
         Cette méthode permet de gérer l'affichage des stats de performance et de test
@@ -386,16 +407,19 @@ class Game:
             self.screen.blit(self.font.render(f"Taux de destruction : {self.data.destruction}", True, (0,0,0)), (0,250)) # Taux de destruction
 
     def modif_chrono(self):
-        self.dico_UI[0]["Texte_temps_chrono"].text = str(round(self.temps_ecoule, 1)).zfill(5)
+        texte = str(round(self.chrono, 1)).zfill(5)
+        
+        for plan in [0, 1]:
+            self.dico_UI[plan]["Texte_temps_chrono"].text = texte
+
 
     def modif_jauge(self):
-        for jauge in self.dico_UI_anim[0]["Jauge"].values():
-
-            # On récupère la valeur correspondante dans Data
-            valeur = getattr(self.data, jauge.nom_data)
-
-            # On convertit en frame
-            jauge.set_frame(self.converte_data_into_frame(jauge.nbr_frames, valeur))
+        for plan in [0, 1]:
+            for jauge in self.dico_UI_anim[plan]["Jauge"].values():
+                valeur = getattr(self.data, jauge.nom_data)
+                jauge.set_frame(
+                    self.converte_data_into_frame(jauge.nbr_frames, valeur)
+                )
 
     def run(self):
         '''
@@ -409,12 +433,14 @@ class Game:
 
             self.temps_ecoule += diff_entre_frame
             self.fps = int(self.clock.get_fps())
-
-            self.data.update_world(diff_entre_frame)
-            self.handle_event_bouton_feu()
-            self.update_propagation_feu()
-            self.modif_jauge()
-            self.modif_chrono()
+            
+            if self.plan == 0:
+                self.chrono += diff_entre_frame
+                self.data.update_world(diff_entre_frame)
+                self.handle_event_bouton_feu()
+                self.update_propagation_feu()
+                self.modif_jauge()
+                self.modif_chrono()
             self.move_plan()
 
             self.draw()
@@ -445,25 +471,47 @@ class Game:
         '''
         self.screen.fill((71, 169, 215))  # Si on est dans le plan secret alors on affiche un arrière plan noir 
         
-        for interfaces in self.dico_UI[self.plan].values():
-            interfaces.update()  
+        if self.plan == 0:
+            for interfaces in self.dico_UI[self.plan].values():
+                interfaces.update()  
 
-        for cases in self.dico_UI_interact[self.plan]["Case"].values():
-            cases.update() 
+            for cases in self.dico_UI_interact[self.plan]["Case"].values():
+                cases.update() 
 
-        for objet in self.dico_UI_interact[self.plan]["Bouton"].values():
-            objet.update()  
+            for objet in self.dico_UI_interact[self.plan]["Bouton"].values():
+                objet.update()  
 
-        # Dessiner toutes les jauges
-        for anims in self.dico_UI_anim[self.plan].values():
-            for anim in anims.values():
-                anim.update()
+            # Dessiner toutes les jauges
+            for anims in self.dico_UI_anim[self.plan].values():
+                for anim in anims.values():
+                    anim.update()
 
-        # Puis dessiner les infos
-        for jauge in self.dico_UI_anim[self.plan]["Jauge"].values():
-            if jauge.show_info:
-                jauge.info.update()
-                jauge.texte_info.update()
+            # Puis dessiner les infos
+            for jauge in self.dico_UI_anim[self.plan]["Jauge"].values():
+                if jauge.show_info:
+                    jauge.info.update()
+                    jauge.texte_info.update()
+        else:
+            for interfaces in self.dico_UI[self.plan].values():
+                interfaces.create()  
+
+            for cases in self.dico_UI_interact[self.plan]["Case"].values():
+                cases.create() 
+
+            for objet in self.dico_UI_interact[self.plan]["Bouton"].values():
+                objet.create()  
+
+            # Dessiner toutes les jauges
+            for anims in self.dico_UI_anim[self.plan].values():
+                for anim in anims.values():
+                    anim.create()
+
+
+        if self.plan != 0:
+            self.screen.blit(self.ecran_noir, (0, 0))
+
+        for objets in self.dico_UI_pause[self.plan]["Bouton"].values():
+            objets.update() 
 
         self.anim_feu() 
         self.anim_condamne() 
