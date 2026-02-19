@@ -1,6 +1,11 @@
 
+from grille import *
+
 class Data:
-    def __init__(self):
+    def __init__(self, grille):
+
+        self.grille = grille
+
         # JAUGES PRINCIPALES
         
         self.pollution = 10
@@ -74,8 +79,6 @@ class Data:
     
     def update_world(self, temps):
 
-        
-
         # Pollution influence température
         self.temperature += self.pollution * self.coeff_temp_from_pollution * temps
 
@@ -114,9 +117,12 @@ class Data:
 
     # ACTIVER UN POUVOIR
     
-    def utiliser_pouvoir(self, nom):
+    def utiliser_pouvoir(self, nom, ligne = 0, colonne = 0):
 
         if nom not in self.pouvoirs:
+            return False
+        
+        if nom == "incendie" and self.grille.grille[ligne][colonne] in [(0,0,255), "feu", "pollue"]:
             return False
 
         pouvoir = self.pouvoirs[nom]

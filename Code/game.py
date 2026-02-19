@@ -96,9 +96,6 @@ class Game:
         self.BOUTON_DESINFORMATION_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_bouton_feu", "sprite_bouton_feu_0.png")
         self.bouton_desinformation_active = False
 
-
-        self.data = Data()
-
         # Gestion des éléments intéractifs
         self.dico_UI_interact = {
             0:{
@@ -148,6 +145,7 @@ class Game:
 
 
         self.grille = Grille(self.screen, 19, 30, 3.5, self.resp.resp(self.ratio_objet["Rect_bouton"][0], self.ratio_objet["Rect_bouton"][1], self.ratio_objet["Rect_bouton"][2], self.ratio_objet["Rect_bouton"][3]), self.dico_UI_interact)
+        self.data = Data(self.grille)
         self.meteo = Meteo(self.screen, self.grille.zone_x, self.grille.zone_y, self.grille.zone_L, self.grille.zone_l)
 
 
@@ -324,11 +322,12 @@ class Game:
 
         # Si bouton actif → on attend un clic sur une case
         for index, cases in self.dico_UI_interact[self.plan]["Case"].items():
-            if cases.mouse_is_click() and self.data.utiliser_pouvoir("incendie"):
+            if cases.mouse_is_click():
                 ligne = index // self.grille.colonnes
                 colonne = index % self.grille.colonnes
-                self.flamme.propagation_feu(ligne, colonne, self.flamme.puissance_feu())
-                # Désactivation immédiate après 1 clic
+                if self.data.utiliser_pouvoir("incendie", ligne, colonne):
+                    self.flamme.propagation_feu(ligne, colonne, self.flamme.puissance_feu())
+                    # Désactivation immédiate après 1 clic
                 self.bouton_feu_active = False
 
     def draw(self):

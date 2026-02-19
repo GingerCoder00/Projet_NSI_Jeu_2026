@@ -73,6 +73,7 @@ class Flamme:
 
         if self.grille.grille[ligne][colonne] in [(0,0,255), "feu", "pollue"]:
             return
+        
         else:
             self.grille.grille[ligne][colonne] = "feu"
             self.ajout_feu(ligne, colonne)
