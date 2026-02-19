@@ -71,7 +71,7 @@ class Flamme:
         if puissance <= 0:
             return
 
-        if self.grille.grille[ligne][colonne] in [(0,0,255), "feu"]:
+        if self.grille.grille[ligne][colonne] in [(0,0,255), "feu", "pollue"]:
             return
         else:
             self.grille.grille[ligne][colonne] = "feu"

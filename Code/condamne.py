@@ -34,6 +34,8 @@ class Condamne:
         croix.last_update = pygame.time.get_ticks()
 
         self.dico_UI_anim[0]["Croix"][len(self.dico_UI_anim[0]["Croix"])] = croix
+        self.grille.grille[ligne][colonne] = "condamne"
+        self.nbr_croix_spawn += 1
 
     def anim_condamne(self):
         FRAME_DELAY = 110  # ms
@@ -46,6 +48,4 @@ class Condamne:
 
                 # Mise à jour DU CŒUR de l'image affichée
                 croix.IMG_PATH = self.dico_info.type_cases["Terre inutilisable"][croix.frame]
-                croix.img_base = pygame.image.load(
-                    croix.IMG_PATH
-                ).convert_alpha()
+                croix.img_base = pygame.image.load(croix.IMG_PATH).convert_alpha()
