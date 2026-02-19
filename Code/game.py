@@ -12,6 +12,7 @@ from dico_info_game import *
 from flamme import *
 from condamne import *
 from pollue import *
+from usine import *
 
 pygame.init()
 pygame.mixer.init()
@@ -87,7 +88,7 @@ class Game:
         self.bouton_feu_active = False
         self.BOUTON_USINE_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_bouton_feu", "sprite_bouton_feu_0.png")
         self.bouton_usine_active = False
-        self.BOUTON_GUERRE_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_bouton_feu", "sprite_bouton_feu_0.png")
+        self.BOUTON_GUERRE_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_bouton_guerre", "sprite_bouton_guerre_0.png")
         self.bouton_guerre_active = False
         self.BOUTON_CANICULE_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_bouton_feu", "sprite_bouton_feu_0.png")
         self.bouton_canicule_active = False
@@ -105,10 +106,10 @@ class Game:
                 "Bouton" : {
                     "Bouton_Feu" : UI_PNG(self.screen, self.BOUTON_FEU_PATH, self.resp.resp(self.ratio_objet["Bouton_Feu"][0], self.ratio_objet["Bouton_Feu"][1], self.ratio_objet["Bouton_Feu"][2], self.ratio_objet["Bouton_Feu"][3]), 6, 0.03),
                     "Bouton_Usine" : UI_PNG(self.screen, self.BOUTON_USINE_PATH, self.resp.resp(self.ratio_objet["Bouton_Usine"][0], self.ratio_objet["Bouton_Usine"][1], self.ratio_objet["Bouton_Usine"][2], self.ratio_objet["Bouton_Usine"][3]), 6, 0.03),
-                    "Bouton_Guerre" : UI_PNG(self.screen, self.BOUTON_FEU_PATH, self.resp.resp(self.ratio_objet["Bouton_Guerre"][0], self.ratio_objet["Bouton_Guerre"][1], self.ratio_objet["Bouton_Guerre"][2], self.ratio_objet["Bouton_Guerre"][3]), 6, 0.03),
-                    "Bouton_Canicule" : UI_PNG(self.screen, self.BOUTON_USINE_PATH, self.resp.resp(self.ratio_objet["Bouton_Canicule"][0], self.ratio_objet["Bouton_Canicule"][1], self.ratio_objet["Bouton_Canicule"][2], self.ratio_objet["Bouton_Canicule"][3]), 6, 0.03),
-                    "Bouton_Maree_Noire" : UI_PNG(self.screen, self.BOUTON_FEU_PATH, self.resp.resp(self.ratio_objet["Bouton_Maree_Noire"][0], self.ratio_objet["Bouton_Maree_Noire"][1], self.ratio_objet["Bouton_Maree_Noire"][2], self.ratio_objet["Bouton_Maree_Noire"][3]), 6, 0.03),
-                    "Bouton_Desinformation" : UI_PNG(self.screen, self.BOUTON_USINE_PATH, self.resp.resp(self.ratio_objet["Bouton_Desinformation"][0], self.ratio_objet["Bouton_Desinformation"][1], self.ratio_objet["Bouton_Desinformation"][2], self.ratio_objet["Bouton_Desinformation"][3]), 6, 0.03),
+                    "Bouton_Guerre" : UI_PNG(self.screen, self.BOUTON_GUERRE_PATH, self.resp.resp(self.ratio_objet["Bouton_Guerre"][0], self.ratio_objet["Bouton_Guerre"][1], self.ratio_objet["Bouton_Guerre"][2], self.ratio_objet["Bouton_Guerre"][3]), 6, 0.03),
+                    "Bouton_Canicule" : UI_PNG(self.screen, self.BOUTON_CANICULE_PATH, self.resp.resp(self.ratio_objet["Bouton_Canicule"][0], self.ratio_objet["Bouton_Canicule"][1], self.ratio_objet["Bouton_Canicule"][2], self.ratio_objet["Bouton_Canicule"][3]), 6, 0.03),
+                    "Bouton_Maree_Noire" : UI_PNG(self.screen, self.BOUTON_MAREE_NOIRE_PATH, self.resp.resp(self.ratio_objet["Bouton_Maree_Noire"][0], self.ratio_objet["Bouton_Maree_Noire"][1], self.ratio_objet["Bouton_Maree_Noire"][2], self.ratio_objet["Bouton_Maree_Noire"][3]), 6, 0.03),
+                    "Bouton_Desinformation" : UI_PNG(self.screen, self.BOUTON_DESINFORMATION_PATH, self.resp.resp(self.ratio_objet["Bouton_Desinformation"][0], self.ratio_objet["Bouton_Desinformation"][1], self.ratio_objet["Bouton_Desinformation"][2], self.ratio_objet["Bouton_Desinformation"][3]), 6, 0.03),
                 },
             },
             1:{
@@ -187,6 +188,8 @@ class Game:
                 },
                 "Poubelle" : {
                 },
+                "Usine" : {
+                },
                 "Jauge" : {
                     "Jauge_pollution" : Jauge(self.screen, self.JAUGE_POLLUTION_PATH, "pollution", self.resp.resp(self.ratio_objet["Jauge_pollution"][0], self.ratio_objet["Jauge_pollution"][1], self.ratio_objet["Jauge_pollution"][2], self.ratio_objet["Jauge_pollution"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.pollution)),
                     "Jauge_bio" : Jauge(self.screen, self.JAUGE_BIO_PATH, "biodiversite", self.resp.resp(self.ratio_objet["Jauge_bio"][0], self.ratio_objet["Jauge_bio"][1], self.ratio_objet["Jauge_bio"][2], self.ratio_objet["Jauge_bio"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.biodiversite)),
@@ -204,6 +207,8 @@ class Game:
                 },
                 "Poubelle" : {
                 },
+                "Usine" : {
+                },
                 "Jauge" : {
                     "Jauge_pollution" : Jauge(self.screen, self.JAUGE_POLLUTION_PATH, "pollution", self.resp.resp(self.ratio_objet["Jauge_pollution"][0], self.ratio_objet["Jauge_pollution"][1], self.ratio_objet["Jauge_pollution"][2], self.ratio_objet["Jauge_pollution"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.pollution)),
                     "Jauge_bio" : Jauge(self.screen, self.JAUGE_BIO_PATH, "biodiversite", self.resp.resp(self.ratio_objet["Jauge_bio"][0], self.ratio_objet["Jauge_bio"][1], self.ratio_objet["Jauge_bio"][2], self.ratio_objet["Jauge_bio"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.biodiversite)),
@@ -219,6 +224,7 @@ class Game:
         self.flamme = Flamme(self.screen, self.grille, self.data, self.dico_UI_anim, lambda: self.plan) # On utilise lambda car le plan change dynamiquement
         self.condamne = Condamne(self.screen, self.grille, self.data, self.dico_UI_anim, lambda: self.plan) # On utilise lambda car le plan change dynamiquement
         self.pollue = Pollue(self.screen, self.grille, self.data, self.dico_UI_anim, lambda: self.plan) # On utilise lambda car le plan change dynamiquement
+        self.usine = Usine(self.screen, self.grille, self.data, self.dico_UI_anim, lambda: self.plan) # On utilise lambda car le plan change dynamiquement
 
     def converte_data_into_frame(self, nbr_frame, valeur_reel):
         valeur_reel = max(0, min(100, valeur_reel))
@@ -299,6 +305,7 @@ class Game:
                 self.chrono += diff_entre_frame
                 self.data.update_world(diff_entre_frame)
                 self.handle_event_bouton_feu()
+                self.handle_event_bouton_usine()
                 self.flamme.update_propagation_feu()
                 self.modif_jauge()
                 self.modif_chrono()
@@ -329,6 +336,26 @@ class Game:
                     self.flamme.propagation_feu(ligne, colonne, self.flamme.puissance_feu())
                     # Désactivation immédiate après 1 clic
                 self.bouton_feu_active = False
+
+    def handle_event_bouton_usine(self):
+        # Activation / désactivation du bouton
+        if self.dico_UI_interact[self.plan]["Bouton"]["Bouton_Usine"].mouse_is_click():
+            self.bouton_usine_active = True
+
+        # Si le bouton n'est pas actif, on arrête
+        if not self.bouton_usine_active:
+            return
+
+        # Si bouton actif → on attend un clic sur une case
+        for index, cases in self.dico_UI_interact[self.plan]["Case"].items():
+            if cases.mouse_is_click():
+                ligne = index // self.grille.colonnes
+                colonne = index % self.grille.colonnes
+                if self.data.utiliser_pouvoir("usine", ligne, colonne):
+                    self.usine.ajout_usine(ligne, colonne)
+                    # Désactivation immédiate après 1 clic
+                self.bouton_usine_active = False
+
 
     def draw(self):
         '''
@@ -381,6 +408,7 @@ class Game:
         self.flamme.anim_feu() 
         self.condamne.anim_condamne() 
         self.pollue.anim_pollue()
+        self.usine.anim_usine()
         #self.meteo.pluie()
         self.stats()  # On gère l'affichage des stats
 

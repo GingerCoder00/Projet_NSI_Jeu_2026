@@ -14,10 +14,6 @@ class Condamne:
         self.dico_info = Dico_info_Game()
         self.croix_frames = [pygame.image.load(path).convert_alpha() for path in self.dico_info.type_cases["Case ETDB"]]
 
-        self.file_propagation = []
-        self.last_croix_update = pygame.time.get_ticks()
-        self.croix_delay = 1200
-
         self.nbr_croix_spawn = 0
 
     def ajout_condamne(self, ligne, colonne):

@@ -12,6 +12,7 @@ class Dico_info_Game:
         self.CASES_Fe_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_feu", "sprite_feu_")
         self.CASES_P_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_pollue", "sprite_pollue_")
         self.CASES_In_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_condamne", "sprite_condamne_")
+        self.CASES_U_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_usine", "sprite_usine_")
 
         self.type_cases = {
             (0,0,255) : [f"{self.CASES_E_PATH}{i}.png" for i in range(4)],
@@ -21,4 +22,5 @@ class Dico_info_Game:
             "Case pollue" : [f"{self.CASES_P_PATH}{i}.png" for i in range(3)],
             "Case brulee" : "",
             "Terre inutilisable": [f"{self.CASES_In_PATH}{i}.png" for i in range(7)],
+            "Usine": [f"{self.CASES_U_PATH}{i}.png" for i in range(5)],
         }
