@@ -1,4 +1,4 @@
-import pygame
+
 from resp_tools import *
 import os
 from PIL import Image

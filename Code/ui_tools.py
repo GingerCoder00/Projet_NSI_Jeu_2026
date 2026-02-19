@@ -1,6 +1,4 @@
 import pygame
-from pygame.locals import QUIT
-from random import randint
 import math
 import os
 

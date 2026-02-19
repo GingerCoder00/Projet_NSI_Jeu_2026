@@ -89,13 +89,10 @@ class Game:
         self.BOUTON_USINE_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_bouton_feu", "sprite_bouton_feu_0.png")
         self.bouton_usine_active = False
         self.BOUTON_GUERRE_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_bouton_guerre", "sprite_bouton_guerre_0.png")
-        self.bouton_guerre_active = False
-        self.BOUTON_CANICULE_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_bouton_feu", "sprite_bouton_feu_0.png")
-        self.bouton_canicule_active = False
+        self.BOUTON_CANICULE_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_bouton_canicule", "sprite_bouton_canicule_6.png")
         self.BOUTON_MAREE_NOIRE_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_bouton_feu", "sprite_bouton_feu_0.png")
         self.bouton_maree_noire_active = False
         self.BOUTON_DESINFORMATION_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_bouton_feu", "sprite_bouton_feu_0.png")
-        self.bouton_desinformation_active = False
 
         # Gestion des éléments intéractifs
         self.dico_UI_interact = {
@@ -147,7 +144,7 @@ class Game:
 
         self.grille = Grille(self.screen, 19, 30, 3.5, self.resp.resp(self.ratio_objet["Rect_bouton"][0], self.ratio_objet["Rect_bouton"][1], self.ratio_objet["Rect_bouton"][2], self.ratio_objet["Rect_bouton"][3]), self.dico_UI_interact)
         self.data = Data(self.grille)
-        self.meteo = Meteo(self.screen, self.grille.zone_x, self.grille.zone_y, self.grille.zone_L, self.grille.zone_l)
+        self.meteo = Meteo(self.screen, self.grille.zone_x, self.grille.zone_y, self.grille.zone_L, self.grille.zone_l, lambda: self.plan) # On utilise lambda car le plan change dynamiquement
 
 
         # Gestion des éléments graphiques non intéractif
@@ -306,6 +303,7 @@ class Game:
                 self.data.update_world(diff_entre_frame)
                 self.handle_event_bouton_feu()
                 self.handle_event_bouton_usine()
+                self.handle_event_bouton_canicule()
                 self.flamme.update_propagation_feu()
                 self.modif_jauge()
                 self.modif_chrono()
@@ -356,6 +354,10 @@ class Game:
                     # Désactivation immédiate après 1 clic
                 self.bouton_usine_active = False
 
+    def handle_event_bouton_canicule(self):
+        # Activation / désactivation du bouton
+        if self.dico_UI_interact[self.plan]["Bouton"]["Bouton_Canicule"].mouse_is_click():
+            self.data.utiliser_pouvoir("canicule")
 
     def draw(self):
         '''
@@ -398,6 +400,8 @@ class Game:
                 for anim in anims.values():
                     anim.create()
 
+        self.meteo.pluie()
+
 
         if self.plan != 0:
             self.screen.blit(self.ecran_noir, (0, 0))
@@ -409,7 +413,6 @@ class Game:
         self.condamne.anim_condamne() 
         self.pollue.anim_pollue()
         self.usine.anim_usine()
-        #self.meteo.pluie()
         self.stats()  # On gère l'affichage des stats
 
         # Rafraîchissement de l'écran

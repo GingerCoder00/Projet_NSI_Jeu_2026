@@ -2,7 +2,7 @@ import pygame
 import os
 
 class Meteo:
-    def __init__(self, screen, zone_grille_x, zone_grille_y, zone_largeur, zone_hauteur):
+    def __init__(self, screen, zone_grille_x, zone_grille_y, zone_largeur, zone_hauteur, plan_ref):
         self.screen = screen
 
         self.zone_x = zone_grille_x
@@ -10,6 +10,7 @@ class Meteo:
         self.zone_L = zone_largeur
         self.zone_l = zone_hauteur
         self.last_frame = pygame.time.get_ticks()
+        self.plan_ref = plan_ref  # référence vers le plan du jeu
 
         self.BASE_DIR = os.path.dirname(__file__)
 
@@ -25,7 +26,7 @@ class Meteo:
         now = pygame.time.get_ticks()
         rain_delay = 50 # Delai en ms
 
-        if now - self.last_frame >= rain_delay:
+        if now - self.last_frame >= rain_delay and self.plan_ref() == 0:
             self.pluie_frame = (self.pluie_frame + 1) % len(self.sprite_pluie)
             self.last_frame = now
 
