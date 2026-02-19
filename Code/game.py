@@ -10,6 +10,7 @@ from resp_tools import *
 from grille import *
 from dico_info_game import *
 from flamme import *
+from condamne import *
 
 pygame.init()
 pygame.mixer.init()
@@ -217,41 +218,12 @@ class Game:
         }
 
         self.flamme = Flamme(self.screen, self.grille, self.data, self.dico_UI_anim, lambda: self.plan) # On utilise lambda car le plan change dynamiquement
+        self.condamne = Condamne(self.screen, self.grille, self.data, self.dico_UI_anim, lambda: self.plan) # On utilise lambda car le plan change dynamiquement
 
 
     def converte_data_into_frame(self, nbr_frame, valeur_reel):
         valeur_reel = max(0, min(100, valeur_reel))
         return round((valeur_reel / 100) * (nbr_frame - 1))
-
-    def ajout_condamne(self, ligne, colonne):
-        x, y = self.grille.placement_grille(colonne, ligne)
-
-        croix = UI_PNG(
-            self.screen,
-            self.dico_info.type_cases["Terre inutilisable"][0],
-            (x, y, self.grille.case_Long, self.grille.case_larg),
-            5, 0
-        )
-
-        croix.frame = 0
-        croix.last_update = pygame.time.get_ticks()
-
-        self.dico_UI_anim[0]["Croix"][len(self.dico_UI_anim[0]["Croix"])] = croix
-
-    def anim_condamne(self):
-        FRAME_DELAY = 120  # ms
-        now = pygame.time.get_ticks()
-
-        for croix in self.dico_UI_anim[self.plan]["Croix"].values():
-            if now - croix.last_update >= FRAME_DELAY:
-                croix.frame = (croix.frame + 1) % len(self.dico_info.type_cases["Terre inutilisable"])
-                croix.last_update = now
-
-                # Mise à jour DU CŒUR de l'image affichée
-                croix.IMG_PATH = self.dico_info.type_cases["Terre inutilisable"][croix.frame]
-                croix.img_base = pygame.image.load(
-                    croix.IMG_PATH
-                ).convert_alpha()
 
     def move_plan(self):
 
@@ -344,6 +316,7 @@ class Game:
         '''
         self.grille.crea_cases()
         self.return_main_menu = False
+        self.condamne.ajout_condamne(4,6)
 
         while self.running:
             diff_entre_frame = self.clock.tick(60) / 1000
@@ -435,7 +408,7 @@ class Game:
             objets.update() 
 
         self.flamme.anim_feu() 
-        self.anim_condamne() 
+        self.condamne.anim_condamne() 
         self.anim_pollue()
         #self.meteo.pluie()
         self.stats()  # On gère l'affichage des stats

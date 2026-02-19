@@ -1,5 +1,5 @@
 import pygame
-from ui_tools import *
+from ui_tools import UI_PNG
 from random import random
 from data import *
 from grille import *
