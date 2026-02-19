@@ -28,6 +28,7 @@ class Usine:
 
         plan = self.plan_ref()
         self.dico_UI_anim[plan]["Usine"][self.nbr_usines_spawn] = usine
+        self.grille.grille[ligne][colonne] = "usine"
 
         self.nbr_usines_spawn += 1
 
