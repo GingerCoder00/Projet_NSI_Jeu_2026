@@ -1,6 +1,4 @@
 import pygame
-from random import randint, random
-from PIL import Image
 import os
 from ui_tools import *
 from jauge import *
