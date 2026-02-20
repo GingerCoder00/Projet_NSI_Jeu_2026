@@ -233,8 +233,8 @@ class Game:
                     lambda l, c: self.flamme.propagation_feu(l, c, self.flamme.puissance_feu()),
                     cursor_sprite_prefix=os.path.join(self.BASE_DIR, "sprite\sprite_bouton_feu\sprite_logo_feu_"),
                     cursor_frame_count=2,
-                    cooldown=4,
-                    frame_delay=80
+                    cooldown = 5,
+                    frame_delay = 105,
                 ),
 
                 "usine": Pouvoir(
@@ -245,9 +245,47 @@ class Game:
                     lambda l, c: self.usine.ajout_usine(l, c),
                     cursor_sprite_prefix=os.path.join(self.BASE_DIR, "sprite\sprite_bouton_feu\sprite_logo_feu_"),
                     cursor_frame_count=2,
-                    cooldown=4,
-                    frame_delay=80
-                )
+                    cooldown = 10,
+                    frame_delay = 105,
+                ),
+                "guerre": Pouvoir(
+                    "guerre",
+                    self.dico_UI_interact[0]["Bouton"]["Bouton_Guerre"],
+                    self.data,
+                    self.grille,
+                    lambda : self.data.utiliser_pouvoir("guerre"),
+                    cooldown = 8,
+                    cible_grille=False
+                ),
+                "canicule": Pouvoir(
+                    "canicule",
+                    self.dico_UI_interact[0]["Bouton"]["Bouton_Canicule"],
+                    self.data,
+                    self.grille,
+                    lambda : self.data.utiliser_pouvoir("canicule"),
+                    cooldown = 12,
+                    cible_grille=False
+                ),
+                "maree_noire": Pouvoir(
+                    "maree_noire",
+                    self.dico_UI_interact[0]["Bouton"]["Bouton_Maree_Noire"],
+                    self.data,
+                    self.grille,
+                    lambda l, c: self.pollue.ajout_pollue(l, c),
+                    cursor_sprite_prefix=os.path.join(self.BASE_DIR, "sprite\sprite_bouton_feu\sprite_logo_feu_"),
+                    cursor_frame_count=2,
+                    cooldown = 12,
+                    frame_delay = 105,
+                ),
+                "desinformation": Pouvoir(
+                    "desinformation",
+                    self.dico_UI_interact[0]["Bouton"]["Bouton_Desinformation"],
+                    self.data,
+                    self.grille,
+                    lambda : self.data.utiliser_pouvoir("desinformation"),
+                    cooldown = 20,
+                    cible_grille=False
+                ),
             }
 
     def converte_data_into_frame(self, nbr_frame, valeur_reel):
@@ -315,8 +353,6 @@ class Game:
         '''
         self.grille.crea_cases()
         self.return_main_menu = False
-        self.condamne.ajout_condamne(4,6)
-        self.pollue.ajout_pollue(6,3)
 
         while self.running:
             diff_entre_frame = self.clock.tick(60) / 1000
@@ -399,7 +435,7 @@ class Game:
                 for anim in anims.values():
                     anim.create()
 
-        #self.meteo.pluie()
+        self.meteo.pluie()
 
 
         if self.plan != 0:

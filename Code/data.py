@@ -14,20 +14,20 @@ class Data:
         self.biodiversite = 100
         self.stabilite = 100
         self.profit = 0
-        self.augmentation_profil = 20
+        self.augmentation_profil = 30
         self.destruction = 0
 
         # PARAMÈTRES MONDE
         
-        self.coeff_temp_from_pollution = 0.0008
-        self.coeff_eau_from_temp = 0.0009
-        self.coeff_biodiv_from_pollution = 0.0005
+        self.coeff_temp_from_pollution = 0.0002
+        self.coeff_eau_from_temp = 0.00035
+        self.coeff_biodiv_from_pollution = 0.00015
         self.coeff_biodiv_from_temp = 0.0006
-        self.coeff_stab_from_eau = 0.007
+        self.coeff_stab_from_eau = 0.0002
         self.coeff_stab_from_biodiv = 0.0022
-        self.coeff_pollution_from_stab = 0.015
-        self.coeff_profit_from_profit = 0.037
-        self.coeff_pollution_from_profit = 0.0006
+        self.coeff_pollution_from_stab = 0.0004
+        self.coeff_profit_from_profit = 0.04
+        self.coeff_pollution_from_profit = 0.00015
 
         # POUVOIRS
         
@@ -49,14 +49,14 @@ class Data:
             "guerre": {
                 "cout": 20,
                 "effets": {
-                    "stabilite": -10,
+                    "stabilite": -8,
                     "pollution": 6
                 }
             },
             "canicule": {
                 "cout": 14,
                 "effets": {
-                    "temperature": 8
+                    "temperature": 6
                 }
             },
             "maree_noire": {
@@ -69,7 +69,7 @@ class Data:
             "desinformation": {
                 "cout": 25,
                 "effets": {
-                    "stabilite": -10,
+                    "stabilite": -8,
                     "augmentation_profil": 12
                 }
             }
@@ -127,6 +127,9 @@ class Data:
         
         if nom == "usine" and self.grille.grille[ligne][colonne] in [(0,0,255), "feu", "pollue", "condamne"]:
             return False
+        
+        if nom == "maree_noire" and self.grille.grille[ligne][colonne] in [(0,255,0), (0,50,0), "pollue", "condamne"]:
+            return False
 
         pouvoir = self.pouvoirs[nom]
 
@@ -149,14 +152,14 @@ class Data:
 
     def update_destruction(self):
         base = (
-            self.pollution * 0.25 +
-            self.temperature * 0.25 +
-            (100 - self.eau) * 0.2 +
+            self.pollution * 0.2 +
+            self.temperature * 0.2 +
+            (100 - self.eau) * 0.15 +
             (100 - self.biodiversite) * 0.15 +
             (100 - self.stabilite) * 0.15
         )
         # Effet d'emballement climatique
-        chaos = (self.pollution * self.temperature) / 200
+        chaos = (self.pollution * self.temperature) / 135
         self.destruction = base + chaos
         self.destruction = max(0, min(100, self.destruction))
 

@@ -51,7 +51,7 @@ class Flamme:
         dépendante de la température
         """
         # Base minimale
-        base = 0.25  
+        base = 0.15  
 
         # Influence température (0 → 100)
         influence = self.data.temperature / 150  
@@ -63,7 +63,7 @@ class Flamme:
         '''
         Détermine la profondeur de propagation
         '''
-        return 4 + int(self.data.temperature / 25)
+        return 3 + int(self.data.temperature / 25)
 
     def propagation_feu(self, ligne, colonne, puissance):
         if puissance <= 0:

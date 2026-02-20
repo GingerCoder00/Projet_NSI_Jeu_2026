@@ -31,6 +31,6 @@ class Meteo:
             self.last_frame = now
 
         image = self.sprite_pluie[self.pluie_frame]
-        image.set_alpha(155)  # Change l'opacité ici
+        image.set_alpha(120)  # Change l'opacité ici
 
         self.screen.blit(image, (self.zone_x, self.zone_y))

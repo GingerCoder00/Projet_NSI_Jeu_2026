@@ -6,13 +6,15 @@ class Pouvoir:
                  cursor_sprite_prefix=None,
                  cursor_frame_count=1,
                  cooldown=3,
-                 frame_delay=100):
+                 frame_delay=100,
+                 cible_grille=True):
 
         self.nom = nom
         self.bouton = bouton
         self.data = data
         self.grille = grille
         self.callback_action = callback_action
+        self.cible_grille = cible_grille
 
         self.actif = False
 
@@ -57,28 +59,35 @@ class Pouvoir:
 
         self.ready = self.is_ready(current_time)
 
-        # ❌ Pas assez d'argent → désactive
         if not self.assez_argent():
             self.actif = False
             return False
 
         # Activation bouton
         if self.bouton.mouse_is_click() and self.ready:
+
+            # 🎯 Cas pouvoir global (pas de case)
+            if not self.cible_grille:
+
+                if self.data.utiliser_pouvoir(self.nom):
+                    self.callback_action()
+                    self.last_use = current_time
+
+                return True
+
+            # 🎯 Cas pouvoir avec cible
             self.actif = True
 
         if not self.actif:
             return False
 
-        # Pose sur grille
         for index, case in cases.items():
             if case.mouse_is_click():
 
                 ligne = index // self.grille.colonnes
                 colonne = index % self.grille.colonnes
 
-                # 💡 Ici Data gère le coût + les effets
                 if self.data.utiliser_pouvoir(self.nom, ligne, colonne):
-
                     self.callback_action(ligne, colonne)
                     self.last_use = current_time
 
