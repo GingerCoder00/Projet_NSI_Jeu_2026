@@ -13,6 +13,7 @@ from flamme import *
 from condamne import *
 from pollue import *
 from usine import *
+from pouvoir import *
 
 pygame.init()
 pygame.mixer.init()
@@ -179,7 +180,6 @@ class Game:
         self.dico_UI_anim = {
             0:{
                 "Flamme" : {
-                
                 },
                 "Croix" : {
                 },
@@ -222,6 +222,33 @@ class Game:
         self.condamne = Condamne(self.screen, self.grille, self.data, self.dico_UI_anim, lambda: self.plan) # On utilise lambda car le plan change dynamiquement
         self.pollue = Pollue(self.screen, self.grille, self.data, self.dico_UI_anim, lambda: self.plan) # On utilise lambda car le plan change dynamiquement
         self.usine = Usine(self.screen, self.grille, self.data, self.dico_UI_anim, lambda: self.plan) # On utilise lambda car le plan change dynamiquement
+
+        self.pouvoir_actif = None
+        self.pouvoirs = {
+                "incendie": Pouvoir(
+                    "incendie",
+                    self.dico_UI_interact[0]["Bouton"]["Bouton_Feu"],
+                    self.data,
+                    self.grille,
+                    lambda l, c: self.flamme.propagation_feu(l, c, self.flamme.puissance_feu()),
+                    cursor_sprite_prefix=os.path.join(self.BASE_DIR, "sprite\sprite_bouton_feu\sprite_logo_feu_"),
+                    cursor_frame_count=2,
+                    cooldown=4,
+                    frame_delay=80
+                ),
+
+                "usine": Pouvoir(
+                    "usine",
+                    self.dico_UI_interact[0]["Bouton"]["Bouton_Usine"],
+                    self.data,
+                    self.grille,
+                    lambda l, c: self.usine.ajout_usine(l, c),
+                    cursor_sprite_prefix=os.path.join(self.BASE_DIR, "sprite\sprite_bouton_feu\sprite_logo_feu_"),
+                    cursor_frame_count=2,
+                    cooldown=4,
+                    frame_delay=80
+                )
+            }
 
     def converte_data_into_frame(self, nbr_frame, valeur_reel):
         valeur_reel = max(0, min(100, valeur_reel))
@@ -299,14 +326,22 @@ class Game:
             self.fps = int(self.clock.get_fps())
             
             if self.plan == 0:
+                self.flamme.update_propagation_feu()
                 self.chrono += diff_entre_frame
                 self.data.update_world(diff_entre_frame)
-                self.handle_event_bouton_feu()
-                self.handle_event_bouton_usine()
-                self.handle_event_bouton_canicule()
-                self.flamme.update_propagation_feu()
-                self.modif_jauge()
-                self.modif_chrono()
+                current_time = pygame.time.get_ticks() / 1000
+
+                activated = False
+
+                for pouvoir in self.pouvoirs.values():
+                    if pouvoir.update(self.dico_UI_interact[self.plan]["Case"], current_time):
+                        activated = True
+
+                if activated:
+                    self.pouvoir_actif = None
+
+            self.modif_jauge()
+            self.modif_chrono()
             self.move_plan()
 
             self.draw()
@@ -315,49 +350,6 @@ class Game:
 
         if not self.return_main_menu:
             pygame.quit() # Puis on quitte proprement le jeu
-
-    def handle_event_bouton_feu(self):
-        # Activation / désactivation du bouton
-        if self.dico_UI_interact[self.plan]["Bouton"]["Bouton_Feu"].mouse_is_click():
-            self.bouton_feu_active = True
-
-        # Si le bouton n'est pas actif, on arrête
-        if not self.bouton_feu_active:
-            return
-
-        # Si bouton actif → on attend un clic sur une case
-        for index, cases in self.dico_UI_interact[self.plan]["Case"].items():
-            if cases.mouse_is_click():
-                ligne = index // self.grille.colonnes
-                colonne = index % self.grille.colonnes
-                if self.data.utiliser_pouvoir("incendie", ligne, colonne):
-                    self.flamme.propagation_feu(ligne, colonne, self.flamme.puissance_feu())
-                    # Désactivation immédiate après 1 clic
-                self.bouton_feu_active = False
-
-    def handle_event_bouton_usine(self):
-        # Activation / désactivation du bouton
-        if self.dico_UI_interact[self.plan]["Bouton"]["Bouton_Usine"].mouse_is_click():
-            self.bouton_usine_active = True
-
-        # Si le bouton n'est pas actif, on arrête
-        if not self.bouton_usine_active:
-            return
-
-        # Si bouton actif → on attend un clic sur une case
-        for index, cases in self.dico_UI_interact[self.plan]["Case"].items():
-            if cases.mouse_is_click():
-                ligne = index // self.grille.colonnes
-                colonne = index % self.grille.colonnes
-                if self.data.utiliser_pouvoir("usine", ligne, colonne):
-                    self.usine.ajout_usine(ligne, colonne)
-                    # Désactivation immédiate après 1 clic
-                self.bouton_usine_active = False
-
-    def handle_event_bouton_canicule(self):
-        # Activation / désactivation du bouton
-        if self.dico_UI_interact[self.plan]["Bouton"]["Bouton_Canicule"].mouse_is_click():
-            self.data.utiliser_pouvoir("canicule")
 
     def draw(self):
         '''
@@ -385,6 +377,13 @@ class Game:
                 if jauge.show_info:
                     jauge.info.update()
                     jauge.texte_info.update()
+
+            for pouvoir in self.pouvoirs.values():
+                pouvoir.draw_cooldown(self.screen)
+
+            for pouvoir in self.pouvoirs.values():
+                pouvoir.draw_cursor(self.screen)
+
         else:
             for interfaces in self.dico_UI[self.plan].values():
                 interfaces.create()  
@@ -400,7 +399,7 @@ class Game:
                 for anim in anims.values():
                     anim.create()
 
-        self.meteo.pluie()
+        #self.meteo.pluie()
 
 
         if self.plan != 0:
