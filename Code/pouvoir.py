@@ -35,6 +35,18 @@ class Pouvoir:
                 self.cursor_frames.append(img)
 
     # ---------------------------------------------------
+    # Récupération automatique du coût depuis Data
+    # ---------------------------------------------------
+
+    def get_cout(self):
+        if self.nom in self.data.pouvoirs:
+            return self.data.pouvoirs[self.nom]["cout"]
+        return 0
+
+    def assez_argent(self):
+        return self.data.profit >= self.get_cout()
+
+    # ---------------------------------------------------
 
     def is_ready(self, current_time):
         return (current_time - self.last_use) >= self.cooldown
@@ -44,6 +56,11 @@ class Pouvoir:
     def update(self, cases, current_time):
 
         self.ready = self.is_ready(current_time)
+
+        # ❌ Pas assez d'argent → désactive
+        if not self.assez_argent():
+            self.actif = False
+            return False
 
         # Activation bouton
         if self.bouton.mouse_is_click() and self.ready:
@@ -59,7 +76,9 @@ class Pouvoir:
                 ligne = index // self.grille.colonnes
                 colonne = index % self.grille.colonnes
 
+                # 💡 Ici Data gère le coût + les effets
                 if self.data.utiliser_pouvoir(self.nom, ligne, colonne):
+
                     self.callback_action(ligne, colonne)
                     self.last_use = current_time
 
@@ -72,7 +91,8 @@ class Pouvoir:
 
     def draw_cursor(self, screen):
 
-        if not self.actif or not self.cursor_frames:
+        # ❌ Si pas assez d'argent → pas de logo
+        if not self.actif or not self.cursor_frames or not self.assez_argent():
             return
 
         now = pygame.time.get_ticks()
@@ -92,17 +112,24 @@ class Pouvoir:
 
     def draw_cooldown(self, screen):
 
-        if self.ready:
+        rect = self.bouton.rect
+
+        # 🟣 Cas 1 : Pas assez d'argent → bouton grisé
+        if not self.assez_argent():
+            surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
+            surface.fill((80, 80, 80, 180))
+            screen.blit(surface, (rect.x, rect.y))
             return
 
-        rect = self.bouton.rect
-        surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
-        surface.fill((0, 0, 0, 150))
-        screen.blit(surface, (rect.x, rect.y))
+        # 🔵 Cas 2 : Cooldown actif
+        if not self.ready:
+            surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
+            surface.fill((0, 0, 0, 150))
+            screen.blit(surface, (rect.x, rect.y))
 
-        remaining = round(self.cooldown - (pygame.time.get_ticks()/1000 - self.last_use), 1)
+            remaining = round(self.cooldown - (pygame.time.get_ticks()/1000 - self.last_use), 1)
 
-        font = pygame.font.Font(None, 28)
-        txt = font.render(str(max(0, remaining)), True, (255,255,255))
-        txt_rect = txt.get_rect(center=rect.center)
-        screen.blit(txt, txt_rect)
+            font = pygame.font.Font(None, 28)
+            txt = font.render(str(max(0, remaining)), True, (255,255,255))
+            txt_rect = txt.get_rect(center=rect.center)
+            screen.blit(txt, txt_rect)

@@ -1,8 +1,6 @@
 import pygame
 from ui_tools import UI_PNG
 from random import random
-from data import *
-from grille import *
 from dico_info_game import *
 
 class Flamme:
@@ -53,7 +51,7 @@ class Flamme:
         dépendante de la température
         """
         # Base minimale
-        base = 0.15  
+        base = 0.25  
 
         # Influence température (0 → 100)
         influence = self.data.temperature / 150  
@@ -65,7 +63,7 @@ class Flamme:
         '''
         Détermine la profondeur de propagation
         '''
-        return 3 + int(self.data.temperature / 25)
+        return 4 + int(self.data.temperature / 25)
 
     def propagation_feu(self, ligne, colonne, puissance):
         if puissance <= 0:
