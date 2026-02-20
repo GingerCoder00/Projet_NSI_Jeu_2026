@@ -1,6 +1,8 @@
 import pygame
 from ui_tools import UI_PNG
 from random import random
+from data import *
+from grille import *
 from dico_info_game import *
 
 class Flamme:
