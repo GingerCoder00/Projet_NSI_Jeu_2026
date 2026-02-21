@@ -51,7 +51,7 @@ class Usine:
 
         for usine in self.dico_UI_anim[self.plan_ref()]["Usine"].values():
             if now - usine.last_update >= frame_delay:
-                usine.frame = (usine.frame + 1) % len(self.dico_info.type_cases["Usine"])
+                usine.frame = (usine.frame + 1) % len(self.usine_frames)
                 usine.last_update = now
 
                 # Mise à jour DU CŒUR de l'image affichée

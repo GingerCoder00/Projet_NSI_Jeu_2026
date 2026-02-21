@@ -44,7 +44,7 @@ class Condamne:
         self.nbr_croix_spawn += 1
 
     def anim_condamne(self):
-        FRAME_DELAY = 110
+        FRAME_DELAY = 120 # en ms
         now = pygame.time.get_ticks()
 
         for croix in self.dico_UI_anim[self.plan_ref()]["Croix"].values():
