@@ -433,7 +433,7 @@ class Game:
                 for anim in anims.values():
                     anim.create()
 
-        self.meteo.pluie()
+        #self.meteo.pluie()
 
 
         if self.plan != 0:
