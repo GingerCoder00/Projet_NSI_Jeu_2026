@@ -361,6 +361,7 @@ class Game:
             
             if self.plan == 0:
                 self.flamme.update_propagation_feu()
+                self.flamme.update_extinction(self.meteo)
                 self.chrono += diff_entre_frame
                 self.data.update_world(diff_entre_frame)
                 current_time = pygame.time.get_ticks() / 1000

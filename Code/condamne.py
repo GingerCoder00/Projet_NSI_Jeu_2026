@@ -37,6 +37,8 @@ class Condamne:
 
         croix.frame = 0
         croix.last_update = pygame.time.get_ticks()
+        croix.ligne = ligne
+        croix.colonne = colonne
 
         self.grille.grille[ligne][colonne] = "condamne"
 

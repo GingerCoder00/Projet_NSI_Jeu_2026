@@ -17,20 +17,24 @@ class Meteo:
         self.RAIN_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_effet_pluie", "sprite_pluie_")
         self.sprite_pluie = [pygame.image.load(f"{self.RAIN_PATH}{str(i).zfill(2)}.png").convert() for i in range(23)] # Importation des 23 frames
         self.sprite_pluie = [pygame.transform.scale(elt, (self.zone_L, self.zone_l)) for elt in self.sprite_pluie] # Convertion des frames pour la grille
-        self.pluie_frame = 0      
+        self.pluie_frame = 0
+
+        self.pluie_active = False      
 
     def pluie(self):
-        '''
-        Cette méthode gère la pluie
-        '''
         now = pygame.time.get_ticks()
-        rain_delay = 50 # Delai en ms
+        rain_delay = 50
 
-        if now - self.last_frame >= rain_delay and self.plan_ref() == 0:
+        if self.plan_ref() == 0:
+            self.pluie_active = True
+        else:
+            self.pluie_active = False
+
+        if now - self.last_frame >= rain_delay and self.pluie_active:
             self.pluie_frame = (self.pluie_frame + 1) % len(self.sprite_pluie)
             self.last_frame = now
 
-        image = self.sprite_pluie[self.pluie_frame]
-        image.set_alpha(120)  # Change l'opacité ici
-
-        self.screen.blit(image, (self.zone_x, self.zone_y))
+        if self.pluie_active:
+            image = self.sprite_pluie[self.pluie_frame]
+            image.set_alpha(120)
+            self.screen.blit(image, (self.zone_x, self.zone_y))

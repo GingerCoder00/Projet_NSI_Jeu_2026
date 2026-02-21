@@ -36,7 +36,9 @@ class Data:
                 "cout": 12,
                 "effets": {
                     "pollution": 4,
-                    "biodiversite": -4
+                    "biodiversite": -3,
+                    "temperature": 3,
+                    "eau": -4
                 }
             },
             "usine": {
@@ -56,14 +58,16 @@ class Data:
             "canicule": {
                 "cout": 14,
                 "effets": {
-                    "temperature": 6
+                    "temperature": 6,
+                    "eau": -5,
                 }
             },
             "maree_noire": {
                 "cout": 18,
                 "effets": {
                     "pollution": 7,
-                    "biodiversite": -8
+                    "biodiversite": -8,
+                    "eau": -6
                 }
             },
             "desinformation": {

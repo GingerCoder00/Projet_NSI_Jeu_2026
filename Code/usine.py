@@ -27,6 +27,8 @@ class Usine:
 
         usine.frame = 0
         usine.last_update = pygame.time.get_ticks()
+        usine.ligne = ligne
+        usine.colonne = colonne
 
         plan = self.plan_ref()
         self.dico_UI_anim[plan]["Usine"][self.nbr_usines_spawn] = usine
