@@ -27,6 +27,7 @@ class Flamme:
         self.nbr_flammes_spawn = 0
 
         self.SOUND_EXPLOSION_PATH = [os.path.join(self.BASE_DIR, "sound", f"explosion{i}") for i in range(1,4)]
+        self.SOUND_FIRE_PATH = [os.path.join(self.BASE_DIR, "sound", f"fire{i}") for i in range(1,4)]
         
 
     def ajout_feu(self, ligne, colonne):
@@ -104,6 +105,9 @@ class Flamme:
                     self.animation.scale(3, ligne, colonne)[0],
                     frame_delay=80
                 )
+                self.fire_sound = pygame.mixer.Sound(f"{self.SOUND_FIRE_PATH[randint(0,2)]}.wav")
+                self.fire_sound.set_volume(0.05)
+                self.fire_sound.play()
             self.grille.grille[ligne][colonne] = "feu"
             self.ajout_feu(ligne, colonne)
 
@@ -153,7 +157,7 @@ class Flamme:
             frame_delay=100
         )
         self.explosion_sound = pygame.mixer.Sound(f"{self.SOUND_EXPLOSION_PATH[randint(0,2)]}.wav")
-        self.explosion_sound.set_volume(0.15)
+        self.explosion_sound.set_volume(0.1)
         self.explosion_sound.play()
 
         # Supprimer visuellement l'usine

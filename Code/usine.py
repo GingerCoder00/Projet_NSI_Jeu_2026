@@ -24,6 +24,8 @@ class Usine:
 
         self.nbr_usines_spawn = 0
 
+        self.SOUND_USINE_PATH = [os.path.join(self.BASE_DIR, "sound", f"chute{i}") for i in range(1,4)]
+
     def ajout_usine(self, ligne, colonne):
         x, y = self.grille.placement_grille(colonne, ligne)
 
@@ -58,6 +60,10 @@ class Usine:
             self.condamne.ajout_condamne(new_ligne, new_colonne)
 
         self.nbr_usines_spawn += 1
+
+        self.usine_sound = pygame.mixer.Sound(f"{self.SOUND_USINE_PATH[randint(0,2)]}.wav")
+        self.usine_sound.set_volume(0.05)
+        self.usine_sound.play()
 
     def anim_usine(self):
         frame_delay = 120  # ms
