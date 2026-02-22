@@ -54,7 +54,8 @@ class Grille:
                 x, y = self.placement_grille(colonnes, lignes)
                 self.MAP_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_map", f"map_{self.num_map}.png")
                 color = self.color_pixel_map(self.MAP_PATH, colonnes, lignes)
-                self.dico_interact[0]["Case"][index] = UI_PNG(self.screen, self.dico_info.type_cases[color][randint(0,3)], (x, y, self.case_Long, self.case_larg), 5, 0.01)
-                self.dico_interact[1]["Case"][index] = UI_PNG(self.screen, self.dico_info.type_cases[color][randint(0,3)], (x, y, self.case_Long, self.case_larg), 5, 0.01)
+                index_randint = randint(0, len(self.dico_info.type_cases[color]) - 1)
+                self.dico_interact[0]["Case"][index] = UI_PNG(self.screen, self.dico_info.type_cases[color][index_randint], (x, y, self.case_Long, self.case_larg), 5, 0.01)
+                self.dico_interact[1]["Case"][index] = UI_PNG(self.screen, self.dico_info.type_cases[color][index_randint], (x, y, self.case_Long, self.case_larg), 5, 0.01)
                 self.grille[lignes][colonnes] = color
                 index += 1
