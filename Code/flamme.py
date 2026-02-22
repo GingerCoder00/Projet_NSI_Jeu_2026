@@ -5,6 +5,7 @@ from data import *
 from grille import *
 from dico_info_game import *
 from animation import *
+from random import randint
 
 class Flamme:
     def __init__(self, screen, grille, data, dico_UI_anim, plan_ref):
@@ -24,6 +25,9 @@ class Flamme:
         self.fire_delay = 1200
 
         self.nbr_flammes_spawn = 0
+
+        self.SOUND_EXPLOSION_PATH = [os.path.join(self.BASE_DIR, "sound", f"explosion{i}") for i in range(1,4)]
+        
 
     def ajout_feu(self, ligne, colonne):
         x, y = self.grille.placement_grille(colonne, ligne)
@@ -148,6 +152,9 @@ class Flamme:
             self.animation.scale(5, ligne, colonne, from_top = 0.45)[0],
             frame_delay=100
         )
+        self.explosion_sound = pygame.mixer.Sound(f"{self.SOUND_EXPLOSION_PATH[randint(0,2)]}.wav")
+        self.explosion_sound.set_volume(0.15)
+        self.explosion_sound.play()
 
         # Supprimer visuellement l'usine
         for key, usine in list(self.dico_UI_anim[plan]["Usine"].items()):
