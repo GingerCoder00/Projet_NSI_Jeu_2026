@@ -4,6 +4,7 @@ from random import random
 from data import *
 from grille import *
 from dico_info_game import *
+from animation import *
 
 class Flamme:
     def __init__(self, screen, grille, data, dico_UI_anim, plan_ref):
@@ -12,6 +13,8 @@ class Flamme:
         self.data = data
         self.dico_UI_anim = dico_UI_anim
         self.plan_ref = plan_ref  # référence vers le plan du jeu
+        self.animation = Animation(screen, plan_ref, dico_UI_anim, grille)
+        self.BASE_DIR = os.path.dirname(__file__)
 
         self.dico_info = Dico_info_Game()
         self.fire_frames = [pygame.image.load(path).convert_alpha() for path in self.dico_info.type_cases["Case ETDB"]]
@@ -70,13 +73,14 @@ class Flamme:
         '''
         return 3 + int(self.data.temperature / 25)
 
-    def propagation_feu(self, ligne, colonne, puissance):
+    def propagation_feu(self, ligne, colonne, puissance, spawn_anim=False):
+        
         if puissance <= 0:
             return
         
         case = self.grille.grille[ligne][colonne]
 
-        # 🔥 Si on tombe sur une usine
+        # Si on tombe sur une usine
         if case == "usine":
             self.detruire_usine(ligne, colonne)
             return
@@ -85,6 +89,17 @@ class Flamme:
             return
         
         else:
+            if spawn_anim:
+                frames = [
+                    os.path.join(self.BASE_DIR, "sprite", "sprite_feu", f"sprite_feu_spawn_{i}.png")
+                    for i in range(7)
+                ]
+                self.animation.ajouter_animation(
+                    frames,
+                    self.animation.scale(3, ligne, colonne)[1],
+                    self.animation.scale(3, ligne, colonne)[0],
+                    frame_delay=80
+                )
             self.grille.grille[ligne][colonne] = "feu"
             self.ajout_feu(ligne, colonne)
 
@@ -125,6 +140,14 @@ class Flamme:
     def detruire_usine(self, ligne, colonne):
 
         plan = self.plan_ref()
+
+        frames = [os.path.join(self.BASE_DIR, "sprite", "sprite_usine", f"sprite_usine_explosion_{i}.png")for i in range(9)]
+        self.animation.ajouter_animation(
+            frames,
+            self.animation.scale(5, ligne, colonne, from_top = 0.45)[1],
+            self.animation.scale(5, ligne, colonne, from_top = 0.45)[0],
+            frame_delay=100
+        )
 
         # Supprimer visuellement l'usine
         for key, usine in list(self.dico_UI_anim[plan]["Usine"].items()):

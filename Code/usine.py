@@ -4,6 +4,7 @@ from data import *
 from grille import *
 from dico_info_game import *
 from condamne import *
+from animation import *
 
 class Usine:
     def __init__(self, screen, grille, data, dico_UI_anim, plan_ref):
@@ -12,6 +13,9 @@ class Usine:
         self.data = data
         self.dico_UI_anim = dico_UI_anim
         self.plan_ref = plan_ref  # référence vers le plan du jeu
+
+        self.animation = Animation(screen, plan_ref, dico_UI_anim, grille)
+        self.BASE_DIR = os.path.dirname(__file__)
 
         self.condamne = Condamne(screen, grille, data, dico_UI_anim, plan_ref)
 
@@ -29,6 +33,14 @@ class Usine:
         usine.last_update = pygame.time.get_ticks()
         usine.ligne = ligne
         usine.colonne = colonne
+
+        frames = [os.path.join(self.BASE_DIR, "sprite", "sprite_usine", f"sprite_usine_spawn_{str(i).zfill(2)}.png") for i in range(14)]
+        self.animation.ajouter_animation(
+            frames,
+            self.animation.scale(10, ligne, colonne, from_top = 0.45)[1],
+            self.animation.scale(10, ligne, colonne, from_top = 0.45)[0],
+            frame_delay = 40
+        )
 
         plan = self.plan_ref()
         self.dico_UI_anim[plan]["Usine"][self.nbr_usines_spawn] = usine

@@ -60,8 +60,7 @@ class Animation:
         for anim in self.animations.values():
             anim.create()
 
-    def scale(self, scale, ligne, colonne):
-
+    def scale(self, scale, ligne, colonne, from_top=0):
         largeur_anim = self.grille.case_Long * scale
         hauteur_anim = self.grille.case_larg * scale
 
@@ -70,4 +69,7 @@ class Animation:
         x_center = x + self.grille.case_Long / 2
         y_center = y + self.grille.case_larg / 2
 
-        return ((largeur_anim, hauteur_anim), (x_center - largeur_anim / 2, y_center - hauteur_anim / 2))
+        # Position initiale au-dessus si demandé
+        y_center_initial = y_center - hauteur_anim * from_top  # au-dessus de la case
+
+        return ((largeur_anim, hauteur_anim), (x_center - largeur_anim / 2, y_center_initial - hauteur_anim / 2))

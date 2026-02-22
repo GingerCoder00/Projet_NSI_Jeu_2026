@@ -12,6 +12,7 @@ from condamne import *
 from pollue import *
 from usine import *
 from pouvoir import *
+from animation import *
 
 pygame.init()
 pygame.mixer.init()
@@ -228,7 +229,7 @@ class Game:
                     self.dico_UI_interact[0]["Bouton"]["Bouton_Feu"],
                     self.data,
                     self.grille,
-                    lambda l, c: self.flamme.propagation_feu(l, c, self.flamme.puissance_feu()),
+                    lambda l, c: self.flamme.propagation_feu(l, c, self.flamme.puissance_feu(), spawn_anim = True),
                     cursor_sprite_prefix=os.path.join(self.BASE_DIR, "sprite\sprite_bouton_feu\sprite_logo_feu_"),
                     cursor_frame_count=2,
                     cooldown = 5,
@@ -406,6 +407,11 @@ class Game:
             for anims in self.dico_UI_anim[self.plan].values():
                 for anim in anims.values():
                     anim.update()
+
+            self.flamme.animation.update()
+            self.flamme.animation.draw()
+            self.usine.animation.update()
+            self.usine.animation.draw()
 
             # Puis dessiner les infos
             for jauge in self.dico_UI_anim[self.plan]["Jauge"].values():
