@@ -26,25 +26,25 @@ class Notification_gestion:
         self.notif_sound.set_volume(0.2)
 
         self.file = []
-        self.active_message = "<Rien à signaler>"
+        self.active_message = "< Aucune Notification ... >"
 
         # Machine à écrire
         self.current_display = ""
         self.char_index = 0
-        self.typing_speed = 20
+        self.typing_speed = 15
         self.last_char_time = pygame.time.get_ticks()
         self.is_typing = True
+
+        self.BASE_DIR = os.path.dirname(__file__)
+
+        self.FONT_PATH = os.path.join(self.BASE_DIR, "font", "font_retro2.ttf")
 
         self.font = None
         self.lines = []
 
-    # --------------------------------------------------
-
     def ajouter(self, message):
         self.file.append(message)
         self.notif_sound.play()
-
-    # --------------------------------------------------
 
     def update(self):
 
@@ -69,9 +69,7 @@ class Notification_gestion:
 
         self._update_text_layout()
 
-    # --------------------------------------------------
-    # 🔥 Adaptation taille + retour ligne auto
-    # --------------------------------------------------
+    # Adaptation taille + retour ligne auto
 
     def _update_text_layout(self):
 
@@ -85,7 +83,7 @@ class Notification_gestion:
         if font_size < 14:
             font_size = 14
 
-        self.font = pygame.font.Font(None, font_size)
+        self.font = pygame.font.Font(self.FONT_PATH, font_size)
 
         words = self.current_display.split(" ")
         lines = []
@@ -103,8 +101,6 @@ class Notification_gestion:
 
         lines.append(current_line)
         self.lines = lines
-
-    # --------------------------------------------------
 
     def draw(self):
 

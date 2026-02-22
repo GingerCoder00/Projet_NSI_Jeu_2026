@@ -1,12 +1,11 @@
 import pygame
-from pygame.locals import QUIT
 import os
 from ui_tools import *
 
 pygame.init()
 
 class Jauge:
-    def __init__(self, screen, fichier:str, nom_data:str, dimension:tuple, ampli_inflate:int, volume_son:float, frame:int, compl_zero:str = "", hover_on:bool = True, hover_info = True, nbr_frames = 7):
+    def __init__(self, screen, fichier:str, nom_data:str, data_file, dimension:tuple, ampli_inflate:int, volume_son:float, frame:int, compl_zero:str = "", hover_on:bool = True, hover_info = True, nbr_frames = 7):
         self.screen = screen
         BASE_DIR = os.path.dirname(__file__)
         self.hover_info = hover_info
@@ -17,6 +16,8 @@ class Jauge:
         self.true_l = self.l
         self.frame = frame
         self.nom_data = nom_data
+        self.data = data_file
+        self.taux = self.data()
         self.nbr_frames = nbr_frames
         self.compl_zero = compl_zero
         self.ampli_inf = ampli_inflate
@@ -36,12 +37,12 @@ class Jauge:
         self.img_base = pygame.image.load(self.IMG_PATH).convert_alpha()
         self.rect = pygame.Rect(self.true_x, self.true_y, self.true_L, self.true_l)
 
-        Longueur, largeur = self.screen.get_size()
-        Longueur, largeur = self.screen.get_size()
-        self.info = UI_screen(self.screen, (255,255,255), (0,0,0), (self.mouse_x, self.mouse_y, Longueur * 0.12, largeur * 0.25), 4, 18)
+        self.Longueur, self.largeur = self.screen.get_size()
+        self.info = UI_screen(self.screen, (255,255,255), (0,0,0), (self.mouse_x, self.mouse_y, self.Longueur * 0.12, self.largeur * 0.25), 4, 18)
 
         # Position initiale du texte (peut être proche de la souris ou dans un coin)
-        self.texte_info = Texte(self.screen, (self.mouse_x + 10, self.mouse_y + 10), int(Longueur * 0.07 * 0.3), (0,0,0), f"{self.nom_data}")
+        self.texte_info = Texte(self.screen, (self.mouse_x + 10, self.mouse_y + 10), int(self.Longueur * 0.07 * 0.3), (0,0,0), f"{self.nom_data.capitalize()}")
+        self.texte_stats_info = Texte(self.screen, (self.mouse_x + 10, self.mouse_y + 70), int(self.largeur * 0.07 * 0.3), (0,0,0), f"{round(getattr(self.taux, self.nom_data), 5)}")
 
         # Paramètre bruitage
         self.volume = volume_son
@@ -80,6 +81,8 @@ class Jauge:
                 self.info.y = min(self.mouse_y, self.screen.get_height() - self.info.l)
                 self.texte_info.x = self.info.x + 10
                 self.texte_info.y = self.info.y + 10
+                self.texte_stats_info.x = self.info.x + 10
+                self.texte_stats_info.y = self.info.y + 70
 
         else:
             self.show_info = False
@@ -98,3 +101,6 @@ class Jauge:
         self.create()
         if self.hover_on:
             self.mouse_hover()
+
+        self.taux = self.data()
+        self.texte_stats_info = Texte(self.screen, (self.info.x + 10, self.info.y + 70), int(self.Longueur * 0.07 * 0.3), (0,0,0), f"{round(getattr(self.taux, self.nom_data), 5)}")

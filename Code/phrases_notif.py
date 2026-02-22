@@ -4,12 +4,17 @@ PHRASES_DESINFORMATION = [
     "Les scientifiques confirment que tout va bien.",
     "Les feux actuels sont totalement naturels.",
     "La hausse des températures est un phénomène cyclique.",
-    "Les usines améliorent la biodiversité locale.",
-    "Les médias exagèrent la situation.",
+    "Les usines ameliorent la biodiversité locale.",
+    "Les médias exagerent la situation.",
     "Aucune preuve d'un lien entre pollution et climat.",
-    "Les experts sont divisés sur la question.",
-    "Les incendies stimulent la croissance économique.",
+    "Les experts sont divises sur la question.",
+    "Les incendies stimulent la croissance economique.",
     "Tout est sous contrôle selon les autorités.",
-    "Les citoyens soutiennent massivement les industries."
+    "Les citoyens soutiennent massivement les industries.",
+    "Des etudes montrent que le réchauffement climatique n'est qu'une theorie pour renverser le pouvoir",
+    "Les scientifiques disent tous que notre planete se porte à merveille"
+]
 
+PHRASES_POLLUTION = [
+    "Des particules noirs "
 ]

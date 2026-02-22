@@ -33,7 +33,7 @@ class Data:
         
         self.pouvoirs = {
             "incendie": {
-                "cout": 12,
+                "cout": 15,
                 "effets": {
                     "pollution": 4,
                     "biodiversite": -3,
@@ -42,10 +42,10 @@ class Data:
                 }
             },
             "usine": {
-                "cout": 15,
+                "cout": 18,
                 "effets": {
-                    "pollution": 8,
-                    "augmentation_profil": 5
+                    "pollution": 7,
+                    "augmentation_profil": 4
                 }
             },
             "guerre": {
@@ -56,25 +56,25 @@ class Data:
                 }
             },
             "canicule": {
-                "cout": 14,
+                "cout": 22,
                 "effets": {
                     "temperature": 6,
                     "eau": -5,
                 }
             },
             "maree_noire": {
-                "cout": 18,
+                "cout": 25,
                 "effets": {
                     "pollution": 7,
-                    "biodiversite": -8,
+                    "biodiversite": -7,
                     "eau": -6
                 }
             },
             "desinformation": {
-                "cout": 25,
+                "cout": 30,
                 "effets": {
-                    "stabilite": -8,
-                    "augmentation_profil": 12
+                    "stabilite": -6,
+                    "augmentation_profil": 7
                 }
             }
         }
