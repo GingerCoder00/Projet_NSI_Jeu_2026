@@ -13,6 +13,7 @@ from pollue import *
 from usine import *
 from pouvoir import *
 from animation import *
+from notification import *
 
 pygame.init()
 pygame.mixer.init()
@@ -167,6 +168,8 @@ class Game:
             },
         }
 
+        self.notification = Notification_gestion(self.screen, self.dico_UI[self.plan]["Rect_notif"],self.resp)
+
         self.JAUGE_POLLUTION_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_jauge_pollution", "sprite_jauge_pollution_")
         self.JAUGE_BIO_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_jauge_biodiversite", "sprite_jauge_biodiversite_")
         self.JAUGE_NIV_OCEAN_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_jauge_niv_ocean", "sprite_jauge_niv_ocean_")
@@ -230,6 +233,7 @@ class Game:
                     self.data,
                     self.grille,
                     lambda l, c: self.flamme.propagation_feu(l, c, self.flamme.puissance_feu(), spawn_anim = True),
+                    self.notification,
                     cursor_sprite_prefix=os.path.join(self.BASE_DIR, "sprite\sprite_bouton_feu\sprite_logo_feu_"),
                     cursor_frame_count=2,
                     cooldown = 5,
@@ -242,6 +246,7 @@ class Game:
                     self.data,
                     self.grille,
                     lambda l, c: self.usine.ajout_usine(l, c),
+                    self.notification,
                     cursor_sprite_prefix=os.path.join(self.BASE_DIR, "sprite\sprite_bouton_feu\sprite_logo_feu_"),
                     cursor_frame_count=2,
                     cooldown = 10,
@@ -253,6 +258,7 @@ class Game:
                     self.data,
                     self.grille,
                     lambda : self.data.utiliser_pouvoir("guerre"),
+                    self.notification,
                     cooldown = 8,
                     cible_grille=False
                 ),
@@ -262,6 +268,7 @@ class Game:
                     self.data,
                     self.grille,
                     lambda : self.data.utiliser_pouvoir("canicule"),
+                    self.notification,
                     cooldown = 12,
                     cible_grille=False
                 ),
@@ -271,6 +278,7 @@ class Game:
                     self.data,
                     self.grille,
                     lambda l, c: self.pollue.ajout_pollue(l, c),
+                    self.notification,
                     cursor_sprite_prefix=os.path.join(self.BASE_DIR, "sprite\sprite_bouton_feu\sprite_logo_feu_"),
                     cursor_frame_count=2,
                     cooldown = 12,
@@ -282,6 +290,7 @@ class Game:
                     self.data,
                     self.grille,
                     lambda : self.data.utiliser_pouvoir("desinformation"),
+                    self.notification,
                     cooldown = 20,
                     cible_grille=False
                 ),
@@ -354,7 +363,7 @@ class Game:
         self.return_main_menu = False
 
         while self.running:
-            diff_entre_frame = self.clock.tick(60) / 1000
+            diff_entre_frame = self.clock.tick(120) / 1000
             self.keys = pygame.key.get_pressed()
 
             self.temps_ecoule += diff_entre_frame
@@ -375,6 +384,8 @@ class Game:
 
                 if activated:
                     self.pouvoir_actif = None
+
+                self.notification.update()
 
             self.modif_jauge()
             self.modif_chrono()
@@ -439,6 +450,8 @@ class Game:
             for anims in self.dico_UI_anim[self.plan].values():
                 for anim in anims.values():
                     anim.create()
+
+        self.notification.draw()
 
         #self.meteo.pluie()
 

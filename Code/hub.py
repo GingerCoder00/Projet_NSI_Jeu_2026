@@ -297,7 +297,7 @@ class Hub:
         '''
         while self.running:
             self.keys = pygame.key.get_pressed()  # On récupère les touches enclenchées
-            self.clock.tick(60)  # On paramètre le tick soit les fps max de la boucle (ici 60fps)
+            self.clock.tick(120)  # On paramètre le tick soit les fps max de la boucle (ici 60fps)
             self.temps_ecoule = (pygame.time.get_ticks() - self.start_time)/1000  # On récupère le temps réel
             self.fps = int(self.clock.get_fps())  # On récupère les fps en temps réel
             if self.music_actif == 0:  # musique autorisée

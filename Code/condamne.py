@@ -42,7 +42,8 @@ class Condamne:
 
         self.grille.grille[ligne][colonne] = "condamne"
 
-        self.dico_UI_anim[0]["Croix"][len(self.dico_UI_anim[0]["Croix"])] = croix
+        plan = self.plan_ref()
+        self.dico_UI_anim[plan]["Croix"][len(self.dico_UI_anim[0]["Croix"])] = croix
         self.nbr_croix_spawn += 1
 
     def anim_condamne(self):

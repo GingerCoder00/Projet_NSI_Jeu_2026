@@ -41,6 +41,9 @@ class Flamme:
         flamme.ligne = ligne
         flamme.colonne = colonne
 
+        self.data.pollution += 1
+        self.data.temperature += 1.5
+
         plan = self.plan_ref()
         self.dico_UI_anim[plan]["Flamme"][self.nbr_flammes_spawn] = flamme
 
@@ -149,50 +152,42 @@ class Flamme:
 
         plan = self.plan_ref()
 
-        frames = [os.path.join(self.BASE_DIR, "sprite", "sprite_usine", f"sprite_usine_explosion_{i}.png")for i in range(9)]
+        # Animation explosion
+        frames = [
+            os.path.join(self.BASE_DIR, "sprite", "sprite_usine",
+                        f"sprite_usine_explosion_{i}.png")
+            for i in range(9)
+        ]
+
         self.animation.ajouter_animation(
             frames,
-            self.animation.scale(5, ligne, colonne, from_top = 0.45)[1],
-            self.animation.scale(5, ligne, colonne, from_top = 0.45)[0],
+            self.animation.scale(5, ligne, colonne, from_top=0.45)[1],
+            self.animation.scale(5, ligne, colonne, from_top=0.45)[0],
             frame_delay=100
         )
-        self.explosion_sound = pygame.mixer.Sound(f"{self.SOUND_EXPLOSION_PATH[randint(0,2)]}.wav")
-        self.explosion_sound.set_volume(0.1)
-        self.explosion_sound.play()
 
-        # Supprimer visuellement l'usine
+        # Son explosion
+        explosion_sound = pygame.mixer.Sound(f"{self.SOUND_EXPLOSION_PATH[randint(0,2)]}.wav")
+        explosion_sound.set_volume(0.1)
+        explosion_sound.play()
+
+        # Supprimer l’usine visuellement
         for key, usine in list(self.dico_UI_anim[plan]["Usine"].items()):
             if usine.ligne == ligne and usine.colonne == colonne:
                 del self.dico_UI_anim[plan]["Usine"][key]
                 break
 
-        # Supprimer les cases condamnées autour
-        positions_autour = [
-            (-1, -1), (-1, 0), (-1, 1),
-            (0, -1), (0, 1),
-            (1, -1), (1, 0), (1, 1)
-        ]
+        # Nettoyage des cases autour (croix condamnées)
+        for key, croix in list(self.dico_UI_anim[plan]["Croix"].items()):
+            if abs(croix.ligne - ligne) <= 1 and abs(croix.colonne - colonne) <= 1:
+                self.grille.grille[croix.ligne][croix.colonne] = "terre"
+                del self.dico_UI_anim[plan]["Croix"][key]
 
-        for d_ligne, d_colonne in positions_autour:
-            new_ligne = ligne + d_ligne
-            new_colonne = colonne + d_colonne
-
-            if 0 <= new_ligne < self.grille.lignes and 0 <= new_colonne < self.grille.colonnes:
-
-                if self.grille.grille[new_ligne][new_colonne] == "condamne":
-
-                    self.grille.grille[new_ligne][new_colonne] = "terre"
-
-                    for key, croix in list(self.dico_UI_anim[plan]["Croix"].items()):
-                        if croix.ligne == new_ligne and croix.colonne == new_colonne:
-                            del self.dico_UI_anim[plan]["Croix"][key]
-                            break
-
-        # 💰 Perte de profit
+        # Perte économique
         self.data.profit = max(0, self.data.profit - 8)
         self.data.augmentation_profil = max(0, self.data.augmentation_profil - 7)
 
-        # 🔥 La case devient feu
+        # La case usine devient feu
         self.grille.grille[ligne][colonne] = "feu"
         self.ajout_feu(ligne, colonne)
         
@@ -200,13 +195,13 @@ class Flamme:
 
         for key, flamme in list(self.dico_UI_anim[self.plan_ref()]["Flamme"].items()):
 
-            # 🔥 Vitesse de combustion de base
+            # Vitesse de combustion de base
             perte = 0.7
 
-            # 🌡️ Température augmente durée de vie
+            # Température augmente durée de vie
             perte -= self.data.temperature / 125
 
-            # 🌧️ Pluie accélère extinction
+            # Pluie accélère extinction
             if meteo.pluie_active:
                 perte += 2
 
@@ -218,7 +213,10 @@ class Flamme:
             if flamme.vie <= 0:
 
                 # On remet la case normale
-                self.grille.grille[flamme.ligne][flamme.colonne] = (0,255,0)
+                self.grille.grille[flamme.ligne][flamme.colonne] = "terre"
 
                 # On supprime la flamme
                 del self.dico_UI_anim[self.plan_ref()]["Flamme"][key]
+
+                self.data.pollution -= 1
+                self.data.temperature -= 1.5

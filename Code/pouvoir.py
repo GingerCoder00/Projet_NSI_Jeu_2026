@@ -1,8 +1,11 @@
 import pygame
-import os
+from phrases_notif import PHRASES_DESINFORMATION
+from random import choice
+from notification import *
 
 class Pouvoir:
     def __init__(self, nom, bouton, data, grille, callback_action,
+                 notif_manager,
                  cursor_sprite_prefix=None,
                  cursor_frame_count=1,
                  cooldown=3,
@@ -15,6 +18,7 @@ class Pouvoir:
         self.grille = grille
         self.callback_action = callback_action
         self.cible_grille = cible_grille
+        self.notif = notif_manager
 
         self.actif = False
 
@@ -72,6 +76,12 @@ class Pouvoir:
                 if self.data.utiliser_pouvoir(self.nom):
                     self.callback_action()
                     self.last_use = current_time
+
+                    # Si désinformation → afficher phrase
+                    if self.nom == "desinformation":
+                        phrase = choice(PHRASES_DESINFORMATION)
+                        self.notif.ajouter(phrase)
+
 
                 return True
 

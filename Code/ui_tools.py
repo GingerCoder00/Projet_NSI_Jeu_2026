@@ -104,6 +104,7 @@ class UI_screen:
         self.centre_rect = (self.x + self.L // 2, self.y + self.l // 2)
         self.t_cont = taille_contour
         self.bord_rad = border_radius
+        self.rect = pygame.Rect(0, 0, self.true_L, self.true_l)
 
 
         # Paramètre interaction souris
@@ -118,6 +119,7 @@ class UI_screen:
         centre_y = self.y + self.l // 2
 
         self.rect = pygame.Rect(0, 0, self.true_L, self.true_l)
+
         self.rect.center = (centre_x, centre_y)
 
         self.contour = pygame.Rect(

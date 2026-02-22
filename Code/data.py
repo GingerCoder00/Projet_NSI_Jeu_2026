@@ -156,11 +156,11 @@ class Data:
 
     def update_destruction(self):
         base = (
-            self.pollution * 0.2 +
-            self.temperature * 0.2 +
-            (100 - self.eau) * 0.15 +
-            (100 - self.biodiversite) * 0.15 +
-            (100 - self.stabilite) * 0.15
+            self.pollution * 0.1 +
+            self.temperature * 0.1 +
+            (100 - self.eau) * 0.1 +
+            (100 - self.biodiversite) * 0.1 +
+            (100 - self.stabilite) * 0.1
         )
         # Effet d'emballement climatique
         chaos = (self.pollution * self.temperature) / 135

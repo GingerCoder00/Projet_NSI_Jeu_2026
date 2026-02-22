@@ -78,7 +78,7 @@ class Intro:
     def run(self):
         while self.running:
             self.keys = pygame.key.get_pressed()
-            self.clock.tick(60)
+            self.clock.tick(120)
             self.temps_ecoule = (pygame.time.get_ticks() - self.start_time)/1000
             self.fps = int(self.clock.get_fps())
 
