@@ -99,14 +99,14 @@ class Flamme:
         else:
             if spawn_anim:
                 frames = [
-                    os.path.join(self.BASE_DIR, "sprite", "sprite_feu", f"sprite_feu_spawn_{i}.png")
-                    for i in range(7)
+                    os.path.join(self.BASE_DIR, "sprite", "sprite_feu", f"sprite_feu_spawn_{str(i).zfill(2)}.png")
+                    for i in range(18)
                 ]
                 self.animation.ajouter_animation(
                     frames,
                     self.animation.scale(3, ligne, colonne)[1],
                     self.animation.scale(3, ligne, colonne)[0],
-                    frame_delay=80
+                    frame_delay=1
                 )
                 self.fire_sound = pygame.mixer.Sound(f"{self.SOUND_FIRE_PATH[randint(0,2)]}.wav")
                 self.fire_sound.set_volume(0.05)
@@ -163,12 +163,12 @@ class Flamme:
             frames,
             self.animation.scale(5, ligne, colonne, from_top=0.45)[1],
             self.animation.scale(5, ligne, colonne, from_top=0.45)[0],
-            frame_delay=100
+            frame_delay=70
         )
 
         # Son explosion
         explosion_sound = pygame.mixer.Sound(f"{self.SOUND_EXPLOSION_PATH[randint(0,2)]}.wav")
-        explosion_sound.set_volume(0.1)
+        explosion_sound.set_volume(0.11)
         explosion_sound.play()
 
         # Supprimer l’usine visuellement

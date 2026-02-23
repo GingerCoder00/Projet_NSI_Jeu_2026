@@ -402,7 +402,7 @@ class Game:
         '''
         Cette méthode gère tout les affichages d'objets à l'écran ainsi que le rafraichissement de celui-ci
         '''
-        self.screen.fill((71, 169, 215))  # Si on est dans le plan secret alors on affiche un arrière plan noir 
+        self.screen.fill((0,0,0))  # Si on est dans le plan secret alors on affiche un arrière plan noir 
         
         if self.plan == 0:
             for interfaces in self.dico_UI[self.plan].values():
