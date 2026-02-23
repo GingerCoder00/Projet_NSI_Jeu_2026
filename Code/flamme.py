@@ -6,6 +6,7 @@ from grille import *
 from dico_info_game import *
 from animation import *
 from random import randint
+from case_brulee import CaseBrulee
 
 class Flamme:
     def __init__(self, screen, grille, data, dico_UI_anim, dico_UI_interact, plan_ref):
@@ -219,16 +220,17 @@ class Flamme:
                 # Supprimer la flamme
                 del self.dico_UI_anim[self.plan_ref()]["Flamme"][key]
 
-                # Trouver la case visuelle correspondante
-                for case in self.dico_UI_interact[self.plan_ref()]["Case"].values():
+                # Supprimer la case visuelle normale
+                for key_case, case in list(self.dico_UI_interact[self.plan_ref()]["Case"].items()):
                     if case.ligne == flamme.ligne and case.colonne == flamme.colonne:
-
-                        # Remplacer son sprite par terre brûlée
-                        case.img_base = pygame.image.load(
-                            self.dico_info.type_cases["Terre inutilisable"][0]
-                        ).convert_alpha()
-
+                        del self.dico_UI_interact[self.plan_ref()]["Case"][key_case]
                         break
+
+                # Créer une CaseBrulee
+                case_brulee = CaseBrulee(self.screen, self.grille, flamme.ligne, flamme.colonne, self.dico_UI_interact, self.plan_ref)
+                plan = self.plan_ref()
+                new_key = max(self.dico_UI_interact[plan]["CaseBrulee"].keys(), default=-1) + 1
+                self.dico_UI_interact[plan]["CaseBrulee"][new_key] = case_brulee
 
                 # Ajustement stats
                 self.data.pollution -= 0.5

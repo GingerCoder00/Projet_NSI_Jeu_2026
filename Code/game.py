@@ -98,9 +98,9 @@ class Game:
         # Gestion des éléments intéractifs
         self.dico_UI_interact = {
             0:{
-                "Case" : {
+                "Case": {},
+                "CaseBrulee": {},
 
-                },
                 "Bouton" : {
                     "Bouton_Feu" : UI_PNG(self.screen, self.BOUTON_FEU_PATH, self.resp.resp(self.ratio_objet["Bouton_Feu"][0], self.ratio_objet["Bouton_Feu"][1], self.ratio_objet["Bouton_Feu"][2], self.ratio_objet["Bouton_Feu"][3]), 6, 0.03),
                     "Bouton_Usine" : UI_PNG(self.screen, self.BOUTON_USINE_PATH, self.resp.resp(self.ratio_objet["Bouton_Usine"][0], self.ratio_objet["Bouton_Usine"][1], self.ratio_objet["Bouton_Usine"][2], self.ratio_objet["Bouton_Usine"][3]), 6, 0.03),
@@ -111,9 +111,9 @@ class Game:
                 },
             },
             1:{
-                "Case" : {
+                "Case": {},
+                "CaseBrulee": {},
 
-                },
                 "Bouton" : {
                     "Bouton_Feu" : UI_PNG(self.screen, self.BOUTON_FEU_PATH, self.resp.resp(self.ratio_objet["Bouton_Feu"][0], self.ratio_objet["Bouton_Feu"][1], self.ratio_objet["Bouton_Feu"][2], self.ratio_objet["Bouton_Feu"][3]), 6, 0.03),
                     "Bouton_Usine" : UI_PNG(self.screen, self.BOUTON_USINE_PATH, self.resp.resp(self.ratio_objet["Bouton_Usine"][0], self.ratio_objet["Bouton_Usine"][1], self.ratio_objet["Bouton_Usine"][2], self.ratio_objet["Bouton_Usine"][3]), 6, 0.03),
@@ -247,10 +247,10 @@ class Game:
                     self.grille,
                     lambda l, c: self.usine.ajout_usine(l, c),
                     self.notification,
-                    cursor_sprite_prefix=os.path.join(self.BASE_DIR, "sprite\sprite_bouton_feu\sprite_logo_feu_"),
-                    cursor_frame_count=2,
+                    cursor_sprite_prefix=os.path.join(self.BASE_DIR, "sprite\sprite_bouton_usine\sprite_logo_usine_"),
+                    cursor_frame_count=3,
                     cooldown = 10,
-                    frame_delay = 105,
+                    frame_delay = 115,
                 ),
                 "guerre": Pouvoir(
                     "guerre",
@@ -354,6 +354,13 @@ class Game:
                     self.converte_data_into_frame(jauge.nbr_frames, valeur)
                 )
 
+    def update_cases_brulees(self):
+        plan = self.plan
+
+        for key, case in list(self.dico_UI_interact[plan]["CaseBrulee"].items()):
+            if case.update(self.meteo):
+                del self.dico_UI_interact[plan]["CaseBrulee"][key]
+
     def run(self):
         '''
         Cette méthode enclenche la boucle principale du menu en appelant toutes les méthodes utiles à 
@@ -372,6 +379,7 @@ class Game:
             if self.plan == 0:
                 self.flamme.update_propagation_feu()
                 self.flamme.update_extinction(self.meteo)
+                self.update_cases_brulees()
                 self.chrono += diff_entre_frame
                 self.data.update_world(diff_entre_frame)
                 current_time = pygame.time.get_ticks() / 1000
@@ -409,7 +417,10 @@ class Game:
                 interfaces.update()  
 
             for cases in self.dico_UI_interact[self.plan]["Case"].values():
-                cases.update() 
+                cases.update()
+
+            for cases_brulees in self.dico_UI_interact[self.plan]["CaseBrulee"].values():
+                cases_brulees.img.update()
 
             for objet in self.dico_UI_interact[self.plan]["Bouton"].values():
                 objet.update()  
@@ -443,6 +454,9 @@ class Game:
 
             for cases in self.dico_UI_interact[self.plan]["Case"].values():
                 cases.create() 
+            
+            for cases_brulees in self.dico_UI_interact[self.plan]["CaseBrulee"].values():
+                cases_brulees.img.create()
 
             for objet in self.dico_UI_interact[self.plan]["Bouton"].values():
                 objet.create()  

@@ -21,7 +21,7 @@ class Dico_info_Game:
             (0,50,0) : [f"{self.CASES_Fo_PATH}{i}.png" for i in range(6)],
             "Case ETDB" : [f"{self.CASES_Fe_PATH}{i}.png" for i in range(5)],
             "Case pollue" : [f"{self.CASES_P_PATH}{i}.png" for i in range(3)],
-            "Case brulee" : [f"{self.CASES_Fe_PATH}{i}.png" for i in range(5)],
-            "Terre inutilisable": [f"{self.CASES_B_PATH}{i}.png" for i in range(1)],
+            "Case brulee" : [f"{self.CASES_B_PATH}{i}.png" for i in range(1)],
+            "Terre inutilisable": [f"{self.CASES_In_PATH}{i}.png" for i in range(7)],
             "Usine": [f"{self.CASES_U_PATH}{i}.png" for i in range(5)],
         }
