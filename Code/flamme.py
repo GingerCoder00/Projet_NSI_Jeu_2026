@@ -8,11 +8,12 @@ from animation import *
 from random import randint
 
 class Flamme:
-    def __init__(self, screen, grille, data, dico_UI_anim, plan_ref):
+    def __init__(self, screen, grille, data, dico_UI_anim, dico_UI_interact, plan_ref):
         self.screen = screen
         self.grille = grille
         self.data = data
         self.dico_UI_anim = dico_UI_anim
+        self.dico_UI_interact = dico_UI_interact
         self.plan_ref = plan_ref  # référence vers le plan du jeu
         self.animation = Animation(screen, plan_ref, dico_UI_anim, grille)
         self.BASE_DIR = os.path.dirname(__file__)
@@ -41,8 +42,8 @@ class Flamme:
         flamme.ligne = ligne
         flamme.colonne = colonne
 
-        self.data.pollution += 1
-        self.data.temperature += 1.5
+        self.data.pollution += 0.5
+        self.data.temperature += 0.8
 
         plan = self.plan_ref()
         self.dico_UI_anim[plan]["Flamme"][self.nbr_flammes_spawn] = flamme
@@ -67,7 +68,7 @@ class Flamme:
         dépendante de la température
         """
         # Base minimale
-        base = 0.15  
+        base = 0.12  
 
         # Influence température (0 → 100)
         influence = self.data.temperature / 150  
@@ -79,7 +80,7 @@ class Flamme:
         '''
         Détermine la profondeur de propagation
         '''
-        return 3 + int(self.data.temperature / 25)
+        return 2 + int(self.data.temperature / 25)
 
     def propagation_feu(self, ligne, colonne, puissance, spawn_anim=False):
         
@@ -196,10 +197,10 @@ class Flamme:
         for key, flamme in list(self.dico_UI_anim[self.plan_ref()]["Flamme"].items()):
 
             # Vitesse de combustion de base
-            perte = 0.7
+            perte = 0.9
 
             # Température augmente durée de vie
-            perte -= self.data.temperature / 125
+            perte -= self.data.temperature / 175
 
             # Pluie accélère extinction
             if meteo.pluie_active:
@@ -212,11 +213,23 @@ class Flamme:
 
             if flamme.vie <= 0:
 
-                # On remet la case normale
-                self.grille.grille[flamme.ligne][flamme.colonne] = "terre"
+                # Mettre la grille logique à brulee
+                self.grille.grille[flamme.ligne][flamme.colonne] = "brulee"
 
-                # On supprime la flamme
+                # Supprimer la flamme
                 del self.dico_UI_anim[self.plan_ref()]["Flamme"][key]
 
-                self.data.pollution -= 1
-                self.data.temperature -= 1.5
+                # Trouver la case visuelle correspondante
+                for case in self.dico_UI_interact[self.plan_ref()]["Case"].values():
+                    if case.ligne == flamme.ligne and case.colonne == flamme.colonne:
+
+                        # Remplacer son sprite par terre brûlée
+                        case.img_base = pygame.image.load(
+                            self.dico_info.type_cases["Terre inutilisable"][0]
+                        ).convert_alpha()
+
+                        break
+
+                # Ajustement stats
+                self.data.pollution -= 0.5
+                self.data.temperature -= 0.8

@@ -11,6 +11,7 @@ class Dico_info_Game:
         self.CASES_Fo_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_foret\\v4", "sprite_foret_")
         self.CASES_Fe_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_feu", "sprite_feu_")
         self.CASES_P_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_pollue", "sprite_pollue_")
+        self.CASES_B_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_brulee", "sprite_brulee_")
         self.CASES_In_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_condamne", "sprite_condamne_")
         self.CASES_U_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_usine", "sprite_usine_")
 
@@ -20,7 +21,7 @@ class Dico_info_Game:
             (0,50,0) : [f"{self.CASES_Fo_PATH}{i}.png" for i in range(6)],
             "Case ETDB" : [f"{self.CASES_Fe_PATH}{i}.png" for i in range(5)],
             "Case pollue" : [f"{self.CASES_P_PATH}{i}.png" for i in range(3)],
-            "Case brulee" : "",
-            "Terre inutilisable": [f"{self.CASES_In_PATH}{i}.png" for i in range(7)],
+            "Case brulee" : [f"{self.CASES_Fe_PATH}{i}.png" for i in range(5)],
+            "Terre inutilisable": [f"{self.CASES_B_PATH}{i}.png" for i in range(1)],
             "Usine": [f"{self.CASES_U_PATH}{i}.png" for i in range(5)],
         }
