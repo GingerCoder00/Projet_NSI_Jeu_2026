@@ -70,5 +70,5 @@ class CaseBrulee:
         case_herbe.ligne = self.ligne
         case_herbe.colonne = self.colonne
 
-        new_key = max(self.dico_UI_interact[plan]["Case"].keys(), default=-1) + 1
-        self.dico_UI_interact[plan]["Case"][new_key] = case_herbe
+        key = self.ligne * self.grille.colonnes + self.colonne
+        self.dico_UI_interact[plan]["Case"][key] = case_herbe

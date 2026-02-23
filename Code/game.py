@@ -236,7 +236,7 @@ class Game:
                     self.notification,
                     cursor_sprite_prefix=os.path.join(self.BASE_DIR, "sprite\sprite_bouton_feu\sprite_logo_feu_"),
                     cursor_frame_count=2,
-                    cooldown = 5,
+                    cooldown = 7,
                     frame_delay = 105,
                 ),
 
@@ -249,7 +249,7 @@ class Game:
                     self.notification,
                     cursor_sprite_prefix=os.path.join(self.BASE_DIR, "sprite\sprite_bouton_usine\sprite_logo_usine_"),
                     cursor_frame_count=3,
-                    cooldown = 10,
+                    cooldown = 15,
                     frame_delay = 115,
                 ),
                 "guerre": Pouvoir(
@@ -259,7 +259,7 @@ class Game:
                     self.grille,
                     lambda : self.data.utiliser_pouvoir("guerre"),
                     self.notification,
-                    cooldown = 8,
+                    cooldown = 30,
                     cible_grille=False
                 ),
                 "canicule": Pouvoir(
@@ -269,7 +269,7 @@ class Game:
                     self.grille,
                     lambda : self.data.utiliser_pouvoir("canicule"),
                     self.notification,
-                    cooldown = 12,
+                    cooldown = 20,
                     cible_grille=False
                 ),
                 "maree_noire": Pouvoir(
@@ -281,7 +281,7 @@ class Game:
                     self.notification,
                     cursor_sprite_prefix=os.path.join(self.BASE_DIR, "sprite\sprite_bouton_feu\sprite_logo_feu_"),
                     cursor_frame_count=2,
-                    cooldown = 12,
+                    cooldown = 8,
                     frame_delay = 105,
                 ),
                 "desinformation": Pouvoir(
@@ -295,6 +295,7 @@ class Game:
                     cible_grille=False
                 ),
             }
+        self.pouvoir_actif = None
 
     def converte_data_into_frame(self, nbr_frame, valeur_reel):
         valeur_reel = max(0, min(100, valeur_reel))
@@ -384,14 +385,20 @@ class Game:
                 self.data.update_world(diff_entre_frame)
                 current_time = pygame.time.get_ticks() / 1000
 
-                activated = False
-
                 for pouvoir in self.pouvoirs.values():
-                    if pouvoir.update(self.dico_UI_interact[self.plan]["Case"], current_time):
-                        activated = True
+                    result = pouvoir.update(self.dico_UI_interact[self.plan]["Case"], current_time)
+                    if result == "activate":
 
-                if activated:
-                    self.pouvoir_actif = None
+                        # Désactive l'ancien pouvoir
+                        if self.pouvoir_actif:
+                            self.pouvoir_actif.actif = False
+
+                        # Active le nouveau
+                        self.pouvoir_actif = pouvoir
+                        pouvoir.actif = True
+
+                    elif result is True:
+                        self.pouvoir_actif = None
 
                 self.notification.update()
 
@@ -413,6 +420,7 @@ class Game:
         self.screen.fill((0,0,0))  # Si on est dans le plan secret alors on affiche un arrière plan noir 
         
         if self.plan == 0:
+
             for interfaces in self.dico_UI[self.plan].values():
                 interfaces.update()  
 

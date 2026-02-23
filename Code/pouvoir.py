@@ -19,14 +19,15 @@ class Pouvoir:
         self.cible_grille = cible_grille
         self.notif = notif_manager
 
+        # Toujours présent mais contrôlé par Game
         self.actif = False
 
-        # -------- Cooldown --------
+        # Cooldown
         self.cooldown = cooldown
         self.last_use = -cooldown
         self.ready = True
 
-        # -------- Animation curseur --------
+        # Animation curseur
         self.cursor_frames = []
         self.cursor_frame_index = 0
         self.cursor_last_update = pygame.time.get_ticks()
@@ -39,10 +40,6 @@ class Pouvoir:
                 img = pygame.transform.scale(img, (60, 60))
                 self.cursor_frames.append(img)
 
-    # ---------------------------------------------------
-    # Récupération automatique du coût depuis Data
-    # ---------------------------------------------------
-
     def get_cout(self):
         if self.nom in self.data.pouvoirs:
             return self.data.pouvoirs[self.nom]["cout"]
@@ -51,89 +48,75 @@ class Pouvoir:
     def assez_argent(self):
         return self.data.profit >= self.get_cout()
 
-    # ---------------------------------------------------
-
     def is_ready(self, current_time):
         return (current_time - self.last_use) >= self.cooldown
-
-    # ---------------------------------------------------
 
     def update(self, cases, current_time):
 
         self.ready = self.is_ready(current_time)
 
+        # Pas assez d'argent
         if not self.assez_argent():
             if self.bouton.mouse_is_click():
                 phrase = PHRASES_POUVOIR[3]
                 self.notif.ajouter(phrase)
-            self.actif = False
             return False
 
-        # Activation bouton
+        # Demande d'activation (au lieu d'activer direct)
+        
         if self.bouton.mouse_is_click() and self.ready:
+            return "activate"
 
-            # Cas pouvoir global (pas de case)
-            if not self.cible_grille:
+        # Pouvoir global (pas de cible grille)
+        
+        if self.actif and not self.cible_grille:
 
-                if self.data.utiliser_pouvoir(self.nom):
-                    self.callback_action()
-                    self.last_use = current_time
+            if self.data.utiliser_pouvoir(self.nom):
+                self.callback_action()
+                self.last_use = current_time
 
-                    # Phrase pour les pouvoirs sans placement sur grille
-                    if self.nom == "desinformation":
-                        phrase = choice(PHRASES_DESINFORMATION)
-                        self.notif.ajouter(phrase)
+                if self.nom == "desinformation":
+                    self.notif.ajouter(choice(PHRASES_DESINFORMATION))
 
-                    if self.nom == "guerre":
-                        phrase = PHRASES_POUVOIR[8]
-                        self.notif.ajouter(phrase)
+                if self.nom == "guerre":
+                    self.notif.ajouter(PHRASES_POUVOIR[8])
 
-                    if self.nom == "canicule":
-                        phrase = PHRASES_POUVOIR[9]
-                        self.notif.ajouter(phrase)
+                if self.nom == "canicule":
+                    self.notif.ajouter(PHRASES_POUVOIR[9])
 
+            self.actif = False
+            return True
 
-                return True
+        # Pouvoir avec cible grille
 
-            # Cas pouvoir avec cible
-            self.actif = True
+        if self.actif:
 
-        if not self.actif:
-            return False
+            for index, case in cases.items():
+                if case.mouse_is_click():
 
-        for index, case in cases.items():
-            if case.mouse_is_click():
+                    ligne = index // self.grille.colonnes
+                    colonne = index % self.grille.colonnes
 
-                ligne = index // self.grille.colonnes
-                colonne = index % self.grille.colonnes
+                    if self.data.utiliser_pouvoir(self.nom, ligne, colonne):
+                        self.callback_action(ligne, colonne)
+                        self.last_use = current_time
 
-                if self.data.utiliser_pouvoir(self.nom, ligne, colonne):
-                    self.callback_action(ligne, colonne)
-                    self.last_use = current_time
+                        if self.nom == "incendie":
+                            self.notif.ajouter(PHRASES_POUVOIR[5])
 
-                    # Phrase pour les pouvoirs sans placement sur grille
-                    if self.nom == "incendie":
-                        phrase = PHRASES_POUVOIR[5]
-                        self.notif.ajouter(phrase)
+                        if self.nom == "usine":
+                            self.notif.ajouter(PHRASES_POUVOIR[6])
 
-                    if self.nom == "usine":
-                        phrase = PHRASES_POUVOIR[6]
-                        self.notif.ajouter(phrase)
+                        if self.nom == "maree_noire":
+                            self.notif.ajouter(PHRASES_POUVOIR[7])
 
-                    if self.nom == "maree_noire":
-                        phrase = PHRASES_POUVOIR[7]
-                        self.notif.ajouter(phrase)
-
-                self.actif = False
-                return True
+                    self.actif = False
+                    return True
 
         return False
 
-    # ---------------------------------------------------
-
     def draw_cursor(self, screen):
 
-        # Si pas assez d'argent → pas de logo
         if not self.actif or not self.cursor_frames or not self.assez_argent():
             return
 
@@ -150,20 +133,16 @@ class Pouvoir:
 
         screen.blit(img, rect)
 
-    # ---------------------------------------------------
-
     def draw_cooldown(self, screen):
 
         rect = self.bouton.rect
 
-        # Cas 1 : Pas assez d'argent → bouton grisé
         if not self.assez_argent():
             surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
             surface.fill((80, 80, 80, 180))
             screen.blit(surface, (rect.x, rect.y))
             return
 
-        # Cas 2 : Cooldown actif
         if not self.ready:
             surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
             surface.fill((0, 0, 0, 150))

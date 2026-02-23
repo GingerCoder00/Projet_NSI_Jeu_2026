@@ -41,9 +41,9 @@ class Grille:
         r, g, b, a = pixels[x, y]
         return r, g, b
 
-    def placement_grille(self, ligne:int, colonne:int):
-        x = self.zone_x + self.marge + ligne * (self.case_Long + self.marge)
-        y = self.zone_y + self.marge +  colonne * (self.case_larg + self.marge)
+    def placement_grille(self, colonne:int, ligne:int):
+        x = self.zone_x + self.marge + colonne * (self.case_Long + self.marge)
+        y = self.zone_y + self.marge + ligne * (self.case_larg + self.marge)
         return x, y
 
     def crea_cases(self):

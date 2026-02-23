@@ -229,9 +229,8 @@ class Flamme:
                 # Créer une CaseBrulee
                 case_brulee = CaseBrulee(self.screen, self.grille, flamme.ligne, flamme.colonne, self.dico_UI_interact, self.plan_ref)
                 plan = self.plan_ref()
-                new_key = max(self.dico_UI_interact[plan]["CaseBrulee"].keys(), default=-1) + 1
-                self.dico_UI_interact[plan]["CaseBrulee"][new_key] = case_brulee
-
+                key = flamme.ligne * self.grille.colonnes + flamme.colonne
+                self.dico_UI_interact[plan]["CaseBrulee"][key] = case_brulee
                 # Ajustement stats
                 self.data.pollution -= 0.5
                 self.data.temperature -= 0.8

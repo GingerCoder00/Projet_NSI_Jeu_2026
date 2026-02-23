@@ -31,7 +31,7 @@ class Notification_gestion:
         # Machine à écrire
         self.current_display = ""
         self.char_index = 0
-        self.typing_speed = 15
+        self.typing_speed = 6
         self.last_char_time = pygame.time.get_ticks()
         self.is_typing = True
 
