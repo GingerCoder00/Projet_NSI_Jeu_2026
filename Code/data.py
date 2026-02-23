@@ -1,10 +1,12 @@
 
 from grille import *
+from phrases_notif import PHRASES_POUVOIR
 
 class Data:
-    def __init__(self, grille):
+    def __init__(self, grille, notif_manager):
 
         self.grille = grille
+        self.notif = notif_manager
 
         # JAUGES PRINCIPALES
         
@@ -127,18 +129,22 @@ class Data:
             return False
         
         if nom == "incendie" and self.grille.grille[ligne][colonne] in [(0,0,255), "feu", "pollue"]:
+            phrase = PHRASES_POUVOIR[0]
+            self.notif.ajouter(phrase)
             return False
         
-        if nom == "usine" and self.grille.grille[ligne][colonne] in [(0,0,255), "feu", "pollue", "condamne"]:
+        if nom == "usine" and self.grille.grille[ligne][colonne] in [(0,0,255), "feu", "pollue", "condamne", "brulee", (0,50,0)]:
+            phrase = PHRASES_POUVOIR[1]
+            self.notif.ajouter(phrase)
             return False
+        
         
         if nom == "maree_noire" and self.grille.grille[ligne][colonne] in [(0,255,0), (0,50,0), "pollue", "condamne"]:
+            phrase = PHRASES_POUVOIR[2]
+            self.notif.ajouter(phrase)
             return False
 
         pouvoir = self.pouvoirs[nom]
-
-        if self.profit < pouvoir["cout"]:
-            return False
 
         # On paye le coût
         self.profit -= pouvoir["cout"]

@@ -1,7 +1,6 @@
 import pygame
-from phrases_notif import PHRASES_DESINFORMATION
+from phrases_notif import PHRASES_DESINFORMATION, PHRASES_POUVOIR
 from random import choice
-from notification import *
 
 class Pouvoir:
     def __init__(self, nom, bouton, data, grille, callback_action,
@@ -64,28 +63,39 @@ class Pouvoir:
         self.ready = self.is_ready(current_time)
 
         if not self.assez_argent():
+            if self.bouton.mouse_is_click():
+                phrase = PHRASES_POUVOIR[3]
+                self.notif.ajouter(phrase)
             self.actif = False
             return False
 
         # Activation bouton
         if self.bouton.mouse_is_click() and self.ready:
 
-            # 🎯 Cas pouvoir global (pas de case)
+            # Cas pouvoir global (pas de case)
             if not self.cible_grille:
 
                 if self.data.utiliser_pouvoir(self.nom):
                     self.callback_action()
                     self.last_use = current_time
 
-                    # Si désinformation → afficher phrase
+                    # Phrase pour les pouvoirs sans placement sur grille
                     if self.nom == "desinformation":
                         phrase = choice(PHRASES_DESINFORMATION)
+                        self.notif.ajouter(phrase)
+
+                    if self.nom == "guerre":
+                        phrase = PHRASES_POUVOIR[8]
+                        self.notif.ajouter(phrase)
+
+                    if self.nom == "canicule":
+                        phrase = PHRASES_POUVOIR[9]
                         self.notif.ajouter(phrase)
 
 
                 return True
 
-            # 🎯 Cas pouvoir avec cible
+            # Cas pouvoir avec cible
             self.actif = True
 
         if not self.actif:
@@ -101,6 +111,19 @@ class Pouvoir:
                     self.callback_action(ligne, colonne)
                     self.last_use = current_time
 
+                    # Phrase pour les pouvoirs sans placement sur grille
+                    if self.nom == "incendie":
+                        phrase = PHRASES_POUVOIR[5]
+                        self.notif.ajouter(phrase)
+
+                    if self.nom == "usine":
+                        phrase = PHRASES_POUVOIR[6]
+                        self.notif.ajouter(phrase)
+
+                    if self.nom == "maree_noire":
+                        phrase = PHRASES_POUVOIR[7]
+                        self.notif.ajouter(phrase)
+
                 self.actif = False
                 return True
 
@@ -110,7 +133,7 @@ class Pouvoir:
 
     def draw_cursor(self, screen):
 
-        # ❌ Si pas assez d'argent → pas de logo
+        # Si pas assez d'argent → pas de logo
         if not self.actif or not self.cursor_frames or not self.assez_argent():
             return
 
@@ -133,14 +156,14 @@ class Pouvoir:
 
         rect = self.bouton.rect
 
-        # 🟣 Cas 1 : Pas assez d'argent → bouton grisé
+        # Cas 1 : Pas assez d'argent → bouton grisé
         if not self.assez_argent():
             surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
             surface.fill((80, 80, 80, 180))
             screen.blit(surface, (rect.x, rect.y))
             return
 
-        # 🔵 Cas 2 : Cooldown actif
+        # Cas 2 : Cooldown actif
         if not self.ready:
             surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
             surface.fill((0, 0, 0, 150))

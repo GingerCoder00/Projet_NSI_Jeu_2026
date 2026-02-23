@@ -144,7 +144,6 @@ class Game:
 
 
         self.grille = Grille(self.screen, 19, 30, 3.5, self.resp.resp(self.ratio_objet["Rect_bouton"][0], self.ratio_objet["Rect_bouton"][1], self.ratio_objet["Rect_bouton"][2], self.ratio_objet["Rect_bouton"][3]), self.dico_UI_interact)
-        self.data = Data(self.grille)
         self.meteo = Meteo(self.screen, self.grille.zone_x, self.grille.zone_y, self.grille.zone_L, self.grille.zone_l, lambda: self.plan) # On utilise lambda car le plan change dynamiquement
 
 
@@ -169,6 +168,7 @@ class Game:
         }
 
         self.notification = Notification_gestion(self.screen, self.dico_UI[self.plan]["Rect_notif"],self.resp)
+        self.data = Data(self.grille, self.notification)
 
         self.JAUGE_POLLUTION_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_jauge_pollution", "sprite_jauge_pollution_")
         self.JAUGE_BIO_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_jauge_biodiversite", "sprite_jauge_biodiversite_")
