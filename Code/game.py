@@ -220,7 +220,7 @@ class Game:
             }
         }
 
-        self.flamme = Flamme(self.screen, self.grille, self.data, self.dico_UI_anim, self.dico_UI_interact, lambda: self.plan) # On utilise lambda car le plan change dynamiquement
+        self.flamme = Flamme(self.screen, self.grille, self.data, self.dico_UI_anim, self.dico_UI_interact, lambda: self.plan, self.notification) # On utilise lambda car le plan change dynamiquement
         self.condamne = Condamne(self.screen, self.grille, self.data, self.dico_UI_anim, lambda: self.plan) # On utilise lambda car le plan change dynamiquement
         self.pollue = Pollue(self.screen, self.grille, self.data, self.dico_UI_anim, lambda: self.plan) # On utilise lambda car le plan change dynamiquement
         self.usine = Usine(self.screen, self.grille, self.data, self.dico_UI_anim, lambda: self.plan) # On utilise lambda car le plan change dynamiquement

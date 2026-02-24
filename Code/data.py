@@ -129,8 +129,6 @@ class Data:
             return False
         
         if nom == "incendie" and self.grille.grille[ligne][colonne] in [(0,0,255), "feu", "pollue"]:
-            phrase = PHRASES_POUVOIR[0]
-            self.notif.ajouter(phrase)
             return False
         
         if nom == "usine" and self.grille.grille[ligne][colonne] in [(0,0,255), "feu", "pollue", "condamne", "brulee", (0,50,0)]:

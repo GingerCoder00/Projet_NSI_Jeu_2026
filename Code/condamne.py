@@ -34,6 +34,7 @@ class Condamne:
             (x, y, self.grille.case_Long, self.grille.case_larg),
             5, 0
         )
+        croix.case_originel = self.grille.grille[ligne][colonne]
 
         croix.frame = 0
         croix.last_update = pygame.time.get_ticks()
@@ -43,7 +44,7 @@ class Condamne:
         self.grille.grille[ligne][colonne] = "condamne"
 
         plan = self.plan_ref()
-        self.dico_UI_anim[plan]["Croix"][len(self.dico_UI_anim[0]["Croix"])] = croix
+        self.dico_UI_anim[plan]["Croix"][len(self.dico_UI_anim[plan]["Croix"])] = croix
         self.nbr_croix_spawn += 1
 
     def anim_condamne(self):

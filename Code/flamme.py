@@ -9,7 +9,7 @@ from random import randint
 from case_brulee import CaseBrulee
 
 class Flamme:
-    def __init__(self, screen, grille, data, dico_UI_anim, dico_UI_interact, plan_ref):
+    def __init__(self, screen, grille, data, dico_UI_anim, dico_UI_interact, plan_ref, notif):
         self.screen = screen
         self.grille = grille
         self.data = data
@@ -18,6 +18,7 @@ class Flamme:
         self.plan_ref = plan_ref  # référence vers le plan du jeu
         self.animation = Animation(screen, plan_ref, dico_UI_anim, grille)
         self.BASE_DIR = os.path.dirname(__file__)
+        self.notif = notif
 
         self.dico_info = Dico_info_Game()
         self.fire_frames = [pygame.image.load(path).convert_alpha() for path in self.dico_info.type_cases["Case ETDB"]]
@@ -82,6 +83,34 @@ class Flamme:
         Détermine la profondeur de propagation
         '''
         return 2 + int(self.data.temperature / 25)
+    
+    def case_inflammable(self, ligne, colonne):
+
+        case = self.grille.grille[ligne][colonne]
+        plan = self.plan_ref()
+
+        # Eau
+        if case == (0,0,255):
+            return False
+
+        # Déjà en feu
+        if case == "feu":
+            return False
+
+        # Polluée
+        if case == "pollue":
+            return False
+
+        # Case brûlée
+        if case == "brulee":
+            return False
+
+        # Croix condamnée (protection)
+        for croix in self.dico_UI_anim[plan]["Croix"].values():
+            if croix.ligne == ligne and croix.colonne == colonne and croix.case_originel == (0,0,255):
+                return False
+
+        return True
 
     def propagation_feu(self, ligne, colonne, puissance, spawn_anim=False):
         
@@ -95,7 +124,7 @@ class Flamme:
             self.detruire_usine(ligne, colonne)
             return
 
-        if self.grille.grille[ligne][colonne] in [(0,0,255), "feu", "pollue"]:
+        if not self.case_inflammable(ligne, colonne):
             return
         
         else:
@@ -182,7 +211,7 @@ class Flamme:
         # Nettoyage des cases autour (croix condamnées)
         for key, croix in list(self.dico_UI_anim[plan]["Croix"].items()):
             if abs(croix.ligne - ligne) <= 2 and abs(croix.colonne - colonne) <= 2:
-                self.grille.grille[croix.ligne][croix.colonne] = "terre"
+                self.grille.grille[croix.ligne][croix.colonne] = croix.case_originel
                 del self.dico_UI_anim[plan]["Croix"][key]
 
         # Perte économique
