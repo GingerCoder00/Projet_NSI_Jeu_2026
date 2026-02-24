@@ -68,6 +68,8 @@ class StartGame:
         if pygame.key.get_pressed()[pygame.K_F1]:
             txt = self.font.render(f"FPS : {int(self.clock.get_fps())}", True, (255, 255, 255))
             self.screen.blit(txt, (10, 10))
+            txt = self.font.render(f"Timer : {self.temps_ecoule}", True, (255,255,255))  # Temps écoulé
+            self.screen.blit(txt, (0,25))
 
     def draw(self):
         self.screen.fill((0, 0, 0))
@@ -87,8 +89,8 @@ class StartGame:
 
     def run(self):
         while self.running:
-            self.clock.tick(60)  # 🔥 60 FPS stable (menu inutile en 120)
-
+            self.clock.tick(60) 
+            self.temps_ecoule = (pygame.time.get_ticks() - self.start_time)/1000  # On récupère le temps réel
             self.exit()
             self.draw()
 

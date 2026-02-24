@@ -12,6 +12,10 @@ class Notification_gestion:
         self.BASE_DIR = os.path.dirname(__file__)
         self.FONT_PATH = os.path.join(self.BASE_DIR, "font", "font_retro2.ttf")
 
+        self.NOTIF_SONG_PATH = os.path.join(self.BASE_DIR, "sound", "notif.wav")
+        self.notif_sound = pygame.mixer.Sound(self.NOTIF_SONG_PATH)
+        self.notif_sound.set_volume(0.2)
+
         # Police créée UNE SEULE FOIS
         rect = self.rect_ui.rect
         font_size = int(rect.height * self.font_size_ratio)
@@ -48,6 +52,7 @@ class Notification_gestion:
         self.is_typing = True
         self.layout_dirty = True
         self.show_default = False  # On n'affichera plus le message par défaut
+        self.notif_sound.play()
 
     def update(self):
         """Met à jour le texte à afficher."""
