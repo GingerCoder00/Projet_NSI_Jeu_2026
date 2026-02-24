@@ -13,12 +13,13 @@ class Notification:
         return pygame.time.get_ticks() - self.start_time > self.duree
 
 class Notification_gestion:
-    def __init__(self, screen, rect_ui, resp_tools):
+    def __init__(self, screen, rect_ui, resp_tools, color = (255,255,255)):
 
         self.screen = screen
         self.rect_ui = rect_ui
         self.resp = resp_tools
         self.BASE_DIR = os.path.dirname(__file__)
+        self.color = color
 
         self.NOTIF_SONG_PATH = os.path.join(self.BASE_DIR, "sound", "notif.wav")
 
@@ -78,28 +79,33 @@ class Notification_gestion:
         max_height = rect.height * 0.8
 
         # Taille dynamique selon hauteur rectangle
-        font_size = int(rect.height * 0.25)
+        font_size = int(rect.height * 0.2)
 
-        if font_size < 14:
-            font_size = 14
+        while font_size > 12:
+            font = pygame.font.Font(self.FONT_PATH, font_size)
 
-        self.font = pygame.font.Font(self.FONT_PATH, font_size)
+            words = self.current_display.split(" ")
+            lines = []
+            current_line = ""
 
-        words = self.current_display.split(" ")
-        lines = []
-        current_line = ""
+            for word in words:
+                test_line = current_line + word + " "
+                if font.render(test_line, True, (255,255,255)).get_width() <= max_width:
+                    current_line = test_line
+                else:
+                    lines.append(current_line)
+                    current_line = word + " "
 
-        for word in words:
-            test_line = current_line + word + " "
-            test_surface = self.font.render(test_line, True, (255,255,255))
+            lines.append(current_line)
 
-            if test_surface.get_width() <= max_width:
-                current_line = test_line
-            else:
-                lines.append(current_line)
-                current_line = word + " "
+            total_height = len(lines) * font.get_height()
 
-        lines.append(current_line)
+            if total_height <= max_height:
+                break
+
+            font_size -= 2
+
+        self.font = font
         self.lines = lines
 
     def draw(self):
@@ -111,7 +117,7 @@ class Notification_gestion:
 
         for i, line in enumerate(self.lines):
 
-            txt_surface = self.font.render(line, True, (255,255,255))
+            txt_surface = self.font.render(line, True, self.color)
             txt_rect = txt_surface.get_rect(center=(rect.centerx, start_y + i * self.font.get_height() + 18))
 
             self.screen.blit(txt_surface, txt_rect)

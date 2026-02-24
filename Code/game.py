@@ -20,7 +20,7 @@ pygame.mixer.init()
 pygame.font.init()
 
 class Game:
-    '''Classe qui gère le Hub du Jeu'''
+    '''Classe qui gère le Jeu'''
     def __init__(self, screen):
 
         self.Long, self.larg = screen.get_size()
@@ -167,7 +167,7 @@ class Game:
             },
         }
 
-        self.notification = Notification_gestion(self.screen, self.dico_UI[self.plan]["Rect_notif"],self.resp)
+        self.notification = Notification_gestion(self.screen, self.dico_UI[self.plan]["Rect_notif"], self.resp)
         self.data = Data(self.grille, self.notification)
 
         self.JAUGE_POLLUTION_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_jauge_pollution", "sprite_jauge_pollution_")

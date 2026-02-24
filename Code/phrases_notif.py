@@ -1,4 +1,8 @@
 
+PHRASES_AIDE_START = [
+    """REGLES DU JEU : Tu incarnes une mega corporation qui accelere volontairement l’effondrement climatique. Et cela pour augmenter ses profits !""" 
+]
+
 PHRASES_DESINFORMATION = [
 
     "Les scientifiques confirment que tout va bien.",
@@ -16,6 +20,7 @@ PHRASES_DESINFORMATION = [
 ]
 
 PHRASES_POUVOIR = [
+
     "Tu ne peux pas incendier ici...",
     "Tu ne peux pas construire une usine ici...",
     "Tu ne peux reverser malencontresement du pétrole que dans l'eau",
