@@ -28,7 +28,7 @@ class Flamme:
 
         self.nbr_flammes_spawn = 0
 
-        self.SOUND_EXPLOSION_PATH = [os.path.join(self.BASE_DIR, "sound", f"explosion{i}") for i in range(1,4)]
+        self.SOUND_EXPLOSION_PATH = [os.path.join(self.BASE_DIR, "sound", f"explosion{i}") for i in range(5)]
         self.SOUND_FIRE_PATH = [os.path.join(self.BASE_DIR, "sound", f"fire{i}") for i in range(1,4)]
         
 
@@ -106,9 +106,9 @@ class Flamme:
                 ]
                 self.animation.ajouter_animation(
                     frames,
-                    self.animation.scale(3, ligne, colonne)[1],
-                    self.animation.scale(3, ligne, colonne)[0],
-                    frame_delay=1
+                    self.animation.scale(5, ligne, colonne)[1],
+                    self.animation.scale(5, ligne, colonne)[0],
+                    frame_delay = 3
                 )
                 self.fire_sound = pygame.mixer.Sound(f"{self.SOUND_FIRE_PATH[randint(0,2)]}.wav")
                 self.fire_sound.set_volume(0.05)
@@ -157,19 +157,19 @@ class Flamme:
         # Animation explosion
         frames = [
             os.path.join(self.BASE_DIR, "sprite", "sprite_usine",
-                        f"sprite_usine_explosion_{i}.png")
-            for i in range(9)
+                        f"sprite_usine_explosion_{str(i).zfill(2)}.png")
+            for i in range(24)
         ]
 
         self.animation.ajouter_animation(
             frames,
-            self.animation.scale(5, ligne, colonne, from_top=0.45)[1],
-            self.animation.scale(5, ligne, colonne, from_top=0.45)[0],
-            frame_delay=70
+            self.animation.scale(5, ligne, colonne, from_top = 0.4)[1],
+            self.animation.scale(5, ligne, colonne, from_top = 0.4)[0],
+            frame_delay=15
         )
 
         # Son explosion
-        explosion_sound = pygame.mixer.Sound(f"{self.SOUND_EXPLOSION_PATH[randint(0,2)]}.wav")
+        explosion_sound = pygame.mixer.Sound(f"{self.SOUND_EXPLOSION_PATH[randint(0,4)]}.wav")
         explosion_sound.set_volume(0.11)
         explosion_sound.play()
 

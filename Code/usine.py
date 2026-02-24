@@ -36,11 +36,11 @@ class Usine:
         usine.ligne = ligne
         usine.colonne = colonne
 
-        frames = [os.path.join(self.BASE_DIR, "sprite", "sprite_usine", f"sprite_usine_spawn_{str(i).zfill(2)}.png") for i in range(14)]
+        frames = [os.path.join(self.BASE_DIR, "sprite", "sprite_usine", f"sprite_usine_spawn_{str(i).zfill(2)}.png") for i in range(19)]
         self.animation.ajouter_animation(
             frames,
-            self.animation.scale(10, ligne, colonne, from_top = 0.45)[1],
-            self.animation.scale(10, ligne, colonne, from_top = 0.45)[0],
+            self.animation.scale(5, ligne, colonne)[1],
+            self.animation.scale(5, ligne, colonne)[0],
             frame_delay = 40
         )
 

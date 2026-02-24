@@ -11,12 +11,12 @@ class Data:
         # JAUGES PRINCIPALES
         
         self.pollution = 10
-        self.temperature = 10
+        self.temperature = 90
         self.eau = 100
         self.biodiversite = 100
         self.stabilite = 100
         self.profit = 5
-        self.augmentation_profil = 25
+        self.augmentation_profil = 225
         self.destruction = 0
 
         # PARAMÈTRES MONDE
