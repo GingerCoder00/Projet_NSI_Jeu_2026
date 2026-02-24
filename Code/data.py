@@ -64,7 +64,7 @@ class Data:
                     "eau": -5,
                 }
             },
-            "maree_noire": {
+            "Maree Noire": {
                 "cout": 25,
                 "effets": {
                     "pollution": 7,
@@ -139,7 +139,7 @@ class Data:
             return False
         
         
-        if nom == "maree_noire" and self.grille.grille[ligne][colonne] in [(0,255,0), (0,50,0), "pollue", "condamne"]:
+        if nom == "Maree Noire" and self.grille.grille[ligne][colonne] in [(0,255,0), (0,50,0), "pollue", "condamne"]:
             phrase = PHRASES_POUVOIR[2]
             self.notif.ajouter(phrase)
             return False

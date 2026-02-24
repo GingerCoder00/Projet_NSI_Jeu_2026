@@ -117,10 +117,10 @@ class Game:
                 "Bouton" : {
                     "Bouton_Feu" : UI_PNG(self.screen, self.BOUTON_FEU_PATH, self.resp.resp(self.ratio_objet["Bouton_Feu"][0], self.ratio_objet["Bouton_Feu"][1], self.ratio_objet["Bouton_Feu"][2], self.ratio_objet["Bouton_Feu"][3]), 6, 0.03),
                     "Bouton_Usine" : UI_PNG(self.screen, self.BOUTON_USINE_PATH, self.resp.resp(self.ratio_objet["Bouton_Usine"][0], self.ratio_objet["Bouton_Usine"][1], self.ratio_objet["Bouton_Usine"][2], self.ratio_objet["Bouton_Usine"][3]), 6, 0.03),
-                    "Bouton_Guerre" : UI_PNG(self.screen, self.BOUTON_FEU_PATH, self.resp.resp(self.ratio_objet["Bouton_Guerre"][0], self.ratio_objet["Bouton_Guerre"][1], self.ratio_objet["Bouton_Guerre"][2], self.ratio_objet["Bouton_Guerre"][3]), 6, 0.03),
-                    "Bouton_Canicule" : UI_PNG(self.screen, self.BOUTON_USINE_PATH, self.resp.resp(self.ratio_objet["Bouton_Canicule"][0], self.ratio_objet["Bouton_Canicule"][1], self.ratio_objet["Bouton_Canicule"][2], self.ratio_objet["Bouton_Canicule"][3]), 6, 0.03),
-                    "Bouton_Maree_Noire" : UI_PNG(self.screen, self.BOUTON_FEU_PATH, self.resp.resp(self.ratio_objet["Bouton_Maree_Noire"][0], self.ratio_objet["Bouton_Maree_Noire"][1], self.ratio_objet["Bouton_Maree_Noire"][2], self.ratio_objet["Bouton_Maree_Noire"][3]), 6, 0.03),
-                    "Bouton_Desinformation" : UI_PNG(self.screen, self.BOUTON_USINE_PATH, self.resp.resp(self.ratio_objet["Bouton_Desinformation"][0], self.ratio_objet["Bouton_Desinformation"][1], self.ratio_objet["Bouton_Desinformation"][2], self.ratio_objet["Bouton_Desinformation"][3]), 6, 0.03),
+                    "Bouton_Guerre" : UI_PNG(self.screen, self.BOUTON_GUERRE_PATH, self.resp.resp(self.ratio_objet["Bouton_Guerre"][0], self.ratio_objet["Bouton_Guerre"][1], self.ratio_objet["Bouton_Guerre"][2], self.ratio_objet["Bouton_Guerre"][3]), 6, 0.03),
+                    "Bouton_Canicule" : UI_PNG(self.screen, self.BOUTON_CANICULE_PATH, self.resp.resp(self.ratio_objet["Bouton_Canicule"][0], self.ratio_objet["Bouton_Canicule"][1], self.ratio_objet["Bouton_Canicule"][2], self.ratio_objet["Bouton_Canicule"][3]), 6, 0.03),
+                    "Bouton_Maree_Noire" : UI_PNG(self.screen, self.BOUTON_MAREE_NOIRE_PATH, self.resp.resp(self.ratio_objet["Bouton_Maree_Noire"][0], self.ratio_objet["Bouton_Maree_Noire"][1], self.ratio_objet["Bouton_Maree_Noire"][2], self.ratio_objet["Bouton_Maree_Noire"][3]), 6, 0.03),
+                    "Bouton_Desinformation" : UI_PNG(self.screen, self.BOUTON_DESINFORMATION_PATH, self.resp.resp(self.ratio_objet["Bouton_Desinformation"][0], self.ratio_objet["Bouton_Desinformation"][1], self.ratio_objet["Bouton_Desinformation"][2], self.ratio_objet["Bouton_Desinformation"][3]), 6, 0.03),
                 },
             }
         }
@@ -227,7 +227,7 @@ class Game:
 
         self.pouvoir_actif = None
         self.pouvoirs = {
-                "incendie": Pouvoir(
+                "incendie": Pouvoir(self.screen,
                     "incendie",
                     self.dico_UI_interact[0]["Bouton"]["Bouton_Feu"],
                     self.data,
@@ -240,7 +240,7 @@ class Game:
                     frame_delay = 105,
                 ),
 
-                "usine": Pouvoir(
+                "usine": Pouvoir(self.screen,
                     "usine",
                     self.dico_UI_interact[0]["Bouton"]["Bouton_Usine"],
                     self.data,
@@ -252,7 +252,7 @@ class Game:
                     cooldown = 15,
                     frame_delay = 115,
                 ),
-                "guerre": Pouvoir(
+                "guerre": Pouvoir(self.screen,
                     "guerre",
                     self.dico_UI_interact[0]["Bouton"]["Bouton_Guerre"],
                     self.data,
@@ -262,7 +262,7 @@ class Game:
                     cooldown = 30,
                     cible_grille=False
                 ),
-                "canicule": Pouvoir(
+                "canicule": Pouvoir(self.screen,
                     "canicule",
                     self.dico_UI_interact[0]["Bouton"]["Bouton_Canicule"],
                     self.data,
@@ -272,8 +272,8 @@ class Game:
                     cooldown = 20,
                     cible_grille=False
                 ),
-                "maree_noire": Pouvoir(
-                    "maree_noire",
+                "Maree Noire": Pouvoir(self.screen,
+                    "Maree Noire",
                     self.dico_UI_interact[0]["Bouton"]["Bouton_Maree_Noire"],
                     self.data,
                     self.grille,
@@ -284,14 +284,14 @@ class Game:
                     cooldown = 8,
                     frame_delay = 105,
                 ),
-                "desinformation": Pouvoir(
+                "desinformation": Pouvoir(self.screen,
                     "desinformation",
                     self.dico_UI_interact[0]["Bouton"]["Bouton_Desinformation"],
                     self.data,
                     self.grille,
                     lambda : self.data.utiliser_pouvoir("desinformation"),
                     self.notification,
-                    cooldown = 20,
+                    cooldown = 45,
                     cible_grille=False
                 ),
             }
@@ -430,6 +430,8 @@ class Game:
             for cases_brulees in self.dico_UI_interact[self.plan]["CaseBrulee"].values():
                 cases_brulees.img.update()
 
+            self.notification.draw()
+
             for objet in self.dico_UI_interact[self.plan]["Bouton"].values():
                 objet.update()  
 
@@ -450,11 +452,17 @@ class Game:
                     jauge.texte_info.update()
                     jauge.texte_stats_info.update()
 
+            # Cooldowns + curseur
             for pouvoir in self.pouvoirs.values():
                 pouvoir.draw_cooldown(self.screen)
 
+            if self.pouvoir_actif:
+                self.pouvoir_actif.draw_cursor(self.screen)
+
+            # Interface info en dernier
             for pouvoir in self.pouvoirs.values():
-                pouvoir.draw_cursor(self.screen)
+                pouvoir.hover_info()
+                pouvoir.draw_info()
 
         else:
             for interfaces in self.dico_UI[self.plan].values():
@@ -466,6 +474,8 @@ class Game:
             for cases_brulees in self.dico_UI_interact[self.plan]["CaseBrulee"].values():
                 cases_brulees.img.create()
 
+            self.notification.draw()
+
             for objet in self.dico_UI_interact[self.plan]["Bouton"].values():
                 objet.create()  
 
@@ -474,10 +484,7 @@ class Game:
                 for anim in anims.values():
                     anim.create()
 
-        self.notification.draw()
-
         #self.meteo.pluie()
-
 
         if self.plan != 0:
             self.screen.blit(self.ecran_noir, (0, 0))

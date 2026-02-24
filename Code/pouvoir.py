@@ -1,9 +1,11 @@
 import pygame
 from phrases_notif import PHRASES_DESINFORMATION, PHRASES_POUVOIR
 from random import choice
+from ui_tools import UI_screen, Texte
+import os
 
 class Pouvoir:
-    def __init__(self, nom, bouton, data, grille, callback_action,
+    def __init__(self, screen, nom, bouton, data, grille, callback_action,
                  notif_manager,
                  cursor_sprite_prefix=None,
                  cursor_frame_count=1,
@@ -11,6 +13,7 @@ class Pouvoir:
                  frame_delay=100,
                  cible_grille=True):
 
+        self.screen = screen
         self.nom = nom
         self.bouton = bouton
         self.data = data
@@ -40,6 +43,22 @@ class Pouvoir:
                 img = pygame.transform.scale(img, (60, 60))
                 self.cursor_frames.append(img)
 
+        # Interface info
+
+        self.Longueur, self.largeur = self.screen.get_size()
+        self.mouse_x, self.mouse_y = pygame.mouse.get_pos()
+
+        self.show_info = False
+        self.Longueur, self.largeur = pygame.display.get_surface().get_size()
+
+        self.BASE_DIR = os.path.dirname(__file__)
+        self.FONT_PATH = os.path.join(self.BASE_DIR, "font", "font_retro2.ttf")
+
+        self.info = UI_screen(self.screen, (255, 119, 92), (117, 0, 0), (self.mouse_x - self.Longueur * 0.19, self.mouse_y - self.largeur * 0.19, self.Longueur * 0.19, self.largeur * 0.19), 7, 18)
+        self.texte_nom = Texte(self.screen, (self.mouse_x + 10, self.mouse_y + 25), int(self.Longueur * 0.07 * 0.3), (255, 237, 237), f"{self.nom.capitalize()}", font_type = self.FONT_PATH)
+        self.texte_cout = Texte(self.screen, (self.mouse_x + 10, self.mouse_y + 85), int(self.Longueur * 0.07 * 0.3), (255, 237, 237), f"Cout : {self.get_cout()}", font_type = self.FONT_PATH)
+        self.texte_cooldown = Texte(self.screen, (self.mouse_x + 10, self.mouse_y + 145), int(self.Longueur * 0.07 * 0.3), (255, 237, 237), f"Cooldown : {self.cooldown}s", font_type = self.FONT_PATH)
+
     def get_cout(self):
         if self.nom in self.data.pouvoirs:
             return self.data.pouvoirs[self.nom]["cout"]
@@ -52,6 +71,7 @@ class Pouvoir:
         return (current_time - self.last_use) >= self.cooldown
 
     def update(self, cases, current_time):
+        self.mouse_x, self.mouse_y = pygame.mouse.get_pos()
 
         self.ready = self.is_ready(current_time)
 
@@ -107,7 +127,7 @@ class Pouvoir:
                         if self.nom == "usine":
                             self.notif.ajouter(PHRASES_POUVOIR[6])
 
-                        if self.nom == "maree_noire":
+                        if self.nom == "Maree Noire":
                             self.notif.ajouter(PHRASES_POUVOIR[7])
 
                     self.actif = False
@@ -116,7 +136,6 @@ class Pouvoir:
         return False
 
     def draw_cursor(self, screen):
-
         if not self.actif or not self.cursor_frames or not self.assez_argent():
             return
 
@@ -134,7 +153,6 @@ class Pouvoir:
         screen.blit(img, rect)
 
     def draw_cooldown(self, screen):
-
         rect = self.bouton.rect
 
         if not self.assez_argent():
@@ -154,3 +172,32 @@ class Pouvoir:
             txt = font.render(str(max(0, remaining)), True, (255,255,255))
             txt_rect = txt.get_rect(center=rect.center)
             screen.blit(txt, txt_rect)
+    
+    def hover_info(self):
+        if self.bouton.rect.collidepoint((self.mouse_x, self.mouse_y)):
+            self.show_info = True
+
+            # Position dynamique (comme Jauge)
+            self.info.x = min(self.mouse_x - self.Longueur * 0.19, self.screen.get_width() - self.info.L)
+            self.info.y = min(self.mouse_y - self.largeur * 0.19, self.screen.get_height() - self.info.l)
+
+            # Textes dynamiques
+            self.texte_nom.x = self.info.x + 10
+            self.texte_nom.y = self.info.y + 25
+
+            self.texte_cout.x = self.info.x + 10
+            self.texte_cout.y = self.info.y + 85
+
+            self.texte_cooldown.x = self.info.x + 10
+            self.texte_cooldown.y = self.info.y + 145
+        else:
+            self.show_info = False
+
+    def draw_info(self):
+        if not self.show_info:
+            return
+
+        self.info.update()
+        self.texte_nom.update()
+        self.texte_cout.update()
+        self.texte_cooldown.update()
