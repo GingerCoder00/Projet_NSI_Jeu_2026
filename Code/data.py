@@ -15,7 +15,7 @@ class Data:
         self.eau = 100
         self.biodiversite = 100
         self.stabilite = 100
-        self.profit = 0
+        self.profit = 5
         self.augmentation_profil = 25
         self.destruction = 0
 

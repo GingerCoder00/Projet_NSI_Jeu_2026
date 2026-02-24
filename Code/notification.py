@@ -112,6 +112,6 @@ class Notification_gestion:
         for i, line in enumerate(self.lines):
 
             txt_surface = self.font.render(line, True, (255,255,255))
-            txt_rect = txt_surface.get_rect(center=(rect.centerx, start_y + i * self.font.get_height()))
+            txt_rect = txt_surface.get_rect(center=(rect.centerx, start_y + i * self.font.get_height() + 18))
 
             self.screen.blit(txt_surface, txt_rect)
