@@ -1,6 +1,9 @@
 
 PHRASES_AIDE_START = [
-    """REGLE DU JEU : Tu incarnes une mega corporation n'a que pour seul but d'engrenger plus de profit, meme si cela detruit la planete ! Tu dois etre le plus rapide pour faire regner le capitalisme !""" 
+    "REGLE DU JEU : Tu incarnes une mega corporation n'a que pour seul but d'engrenger plus de profit, meme si cela detruit la planete ! Tu dois etre le plus rapide pour faire regner le capitalisme !",
+    "Vous trouverez des jauges representant plusieurs caracteristiques de la planete en temps reel ! Chaque taux sera compris entre 1 et 100",
+    "Vous aurez aussi a disposition plusieurs pouvoirs pour accroitre votre empire economique ! Certain peuvent etre pose sur la grille",
+    "Tandis que d'autres comme par exemple la guerre commerciale son des pouvoirs immediats qui n'ont pas besoin d'etre poses sur la grille"
 ]
 
 PHRASES_DESINFORMATION = [

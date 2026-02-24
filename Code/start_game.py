@@ -32,29 +32,53 @@ class StartGame:
             "Rect_Info_Pouvoir": (0.43, 0.05, 0.53, 0.9),
             "Rect_Info_Start": (0.04, 0.05, 0.35, 0.9),
             "Rect_Regle": (0.075, 0.1, 0.28, 0.45),
+            "Rect_Jauge": (0.6, 0.1, 0.33, 0.3),
+            "Rect_Pouvoir_Feu": (0.6, 0.46, 0.33, 0.2),
+            "Rect_Pouvoir_Guerre": (0.6, 0.71, 0.33, 0.2),
             "Bouton_Retour": (0.111, 0.79, 0.2, 0.1, 0.2),
             "Bouton_Start": (0.089, 0.61, 0.25, 0.15, 0.22),
+            "Jauge_Bio": (0.495, 0.08, 0.05, 0.34),
+            "Bouton_Feu": (0.47, 0.47, 0.1, 0.18),
+            "Bouton_Guerre" : (0.47, 0.72, 0.1, 0.18),
+
         }
 
+        self.JAUGE_BIO_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_jauge_biodiversite", "sprite_jauge_biodiversite_4.png")
+        self.JAUGE_TOTAL_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_jauge_total", "sprite_jauge_total_08.png")
+        self.BOUTON_FEU_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_bouton_feu", "sprite_bouton_feu_0.png")
+        self.BOUTON_GUERRE_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_bouton_guerre", "sprite_bouton_guerre_0.png")
+
         self.dico_UI = {
-            "Rect_Fond": UI_screen(self.screen, (110, 219, 219), (110, 219, 219), self.resp.resp(*self.ratio_objet["Rect_Fond"]), pulse=False),
-
-            "Rect_Info_Pouvoir": UI_screen(self.screen, (88, 41, 0), (255, 255, 255), self.resp.resp(*self.ratio_objet["Rect_Info_Pouvoir"]), taille_contour=6, border_radius=12),
-
-            "Rect_Info_Start": UI_screen(self.screen, (0, 86, 27), (255, 255, 255), self.resp.resp(*self.ratio_objet["Rect_Info_Start"]), taille_contour=6, border_radius=12),
-
-            "Rect_Regle": UI_screen(self.screen, (212, 255, 255), (0, 184, 184), self.resp.resp(*self.ratio_objet["Rect_Regle"]), taille_contour=6, border_radius=12, pulse=False),
+            "Rect_Fond": UI_screen(self.screen, (31, 191, 184), (31, 191, 184), self.resp.resp(*self.ratio_objet["Rect_Fond"]), pulse=False),
+            "Rect_Info_Pouvoir": UI_screen(self.screen, (5, 113, 108), (25, 120, 165), self.resp.resp(*self.ratio_objet["Rect_Info_Pouvoir"]), taille_contour=6, border_radius=12, pulse=False),
+            "Rect_Info_Start": UI_screen(self.screen, (5, 113, 108), (25, 120, 165), self.resp.resp(*self.ratio_objet["Rect_Info_Start"]), taille_contour=6, border_radius=12, pulse=False),
+            "Rect_Regle": UI_screen(self.screen, (230, 134, 57), (230, 193, 110), self.resp.resp(*self.ratio_objet["Rect_Regle"]), taille_contour=6, border_radius=12, pulse=False),
+            "Rect_Jauge": UI_screen(self.screen, (230, 134, 57), (230, 193, 110), self.resp.resp(*self.ratio_objet["Rect_Jauge"]), taille_contour=6, border_radius=12, pulse=False),
+            "Rect_Pouvoir_Feu": UI_screen(self.screen, (230, 134, 57), (230, 193, 110), self.resp.resp(*self.ratio_objet["Rect_Pouvoir_Feu"]), taille_contour=6, border_radius=12, pulse=False),
+            "Rect_Pouvoir_Guerre": UI_screen(self.screen, (230, 134, 57), (230, 193, 110), self.resp.resp(*self.ratio_objet["Rect_Pouvoir_Guerre"]), taille_contour=6, border_radius=12, pulse=False),
         }
 
         self.dico_UI_interact = {
-            "Bouton_Retour": UI_Bouton(self.screen, (0, 123, 184), (0, 66, 97), self.resp.resp_font(self.ratio_objet["Bouton_Retour"][2], self.ratio_objet["Bouton_Retour"][4]), self.resp.resp(*self.ratio_objet["Bouton_Retour"][:4]), "RETOUR", 4, 12, 16, 0.05),
-            "Bouton_Start": UI_Bouton(self.screen, (0, 123, 184), (0, 66, 97), self.resp.resp_font(self.ratio_objet["Bouton_Start"][2], self.ratio_objet["Bouton_Start"][4]), self.resp.resp(*self.ratio_objet["Bouton_Start"][:4]), "START", 4, 12, 16, 0.05),
+            "Bouton_Retour": UI_Bouton(self.screen, (232, 221, 67), (0,0,0), self.resp.resp_font(self.ratio_objet["Bouton_Retour"][2], self.ratio_objet["Bouton_Retour"][4]), self.resp.resp(*self.ratio_objet["Bouton_Retour"][:4]), "RETOUR", taille_contour = 6, border_radius = 12, ampli_inflate = 16, volume_son = 0.05),
+            "Bouton_Start": UI_Bouton(self.screen, (232, 221, 67), (0,0,0), self.resp.resp_font(self.ratio_objet["Bouton_Start"][2], self.ratio_objet["Bouton_Start"][4]), self.resp.resp(*self.ratio_objet["Bouton_Start"][:4]), "START", taille_contour = 6, border_radius = 12, ampli_inflate = 16, volume_son = 0.05),
         }
 
-        self.notification = Notification_gestion(self.screen, self.dico_UI["Rect_Regle"], (0, 0, 0), font_size_ratio = 0.09, diff_y = 25)
+        self.dico_PNG = {
+            "Jauge_Bio" : UI_PNG(self.screen, self.JAUGE_BIO_PATH, self.resp.resp(self.ratio_objet["Jauge_Bio"][0], self.ratio_objet["Jauge_Bio"][1], self.ratio_objet["Jauge_Bio"][2], self.ratio_objet["Jauge_Bio"][3]), 0, 0, hover_on = False),
+            "Bouton_Feu" : UI_PNG(self.screen, self.BOUTON_FEU_PATH, self.resp.resp(self.ratio_objet["Bouton_Feu"][0], self.ratio_objet["Bouton_Feu"][1], self.ratio_objet["Bouton_Feu"][2], self.ratio_objet["Bouton_Feu"][3]), 0, 0, hover_on = False),
+            "Bouton_Guerre" : UI_PNG(self.screen, self.BOUTON_GUERRE_PATH, self.resp.resp(self.ratio_objet["Bouton_Guerre"][0], self.ratio_objet["Bouton_Guerre"][1], self.ratio_objet["Bouton_Guerre"][2], self.ratio_objet["Bouton_Guerre"][3]), 0, 0, hover_on = False),
+        }
 
-        phrase = PHRASES_AIDE_START[0]
-        self.notification.ajouter(phrase)
+        self.notification1 = Notification_gestion(self.screen, self.dico_UI["Rect_Regle"], (0, 0, 0), font_size_ratio = 0.09, diff_y = 25)
+        self.notification2 = Notification_gestion(self.screen, self.dico_UI["Rect_Jauge"], (0, 0, 0), font_size_ratio = 0.13, diff_y = 25)
+        self.notification3 = Notification_gestion(self.screen, self.dico_UI["Rect_Pouvoir_Feu"], (0, 0, 0), font_size_ratio = 0.16, diff_y = 25)
+        self.notification4 = Notification_gestion(self.screen, self.dico_UI["Rect_Pouvoir_Guerre"], (0, 0, 0), font_size_ratio = 0.16, diff_y = 25)
+
+        phrases = PHRASES_AIDE_START
+        self.notification1.ajouter(phrases[0])
+        self.notification2.ajouter(phrases[1])
+        self.notification3.ajouter(phrases[2])
+        self.notification4.ajouter(phrases[3])
 
     def exit(self):
         for event in pygame.event.get():
@@ -64,12 +88,18 @@ class StartGame:
         if self.dico_UI_interact["Bouton_Retour"].mouse_is_click():
             self.running = False
 
+    def start(self):
+        return self.dico_UI_interact["Bouton_Start"].mouse_is_click()
+    
+    def retour(self):
+        return self.dico_UI_interact["Bouton_Retour"].mouse_is_click()
+
     def stats(self):
         if pygame.key.get_pressed()[pygame.K_F1]:
             txt = self.font.render(f"FPS : {int(self.clock.get_fps())}", True, (255, 255, 255))
             self.screen.blit(txt, (10, 10))
             txt = self.font.render(f"Timer : {self.temps_ecoule}", True, (255,255,255))  # Temps écoulé
-            self.screen.blit(txt, (0,25))
+            self.screen.blit(txt, (10,25))
 
     def draw(self):
         self.screen.fill((0, 0, 0))
@@ -80,9 +110,18 @@ class StartGame:
         for objet in self.dico_UI_interact.values():
             objet.update()
 
-        self.notification.update()
-        self.notification.draw()
+        for png in self.dico_PNG.values():
+            png.create()
 
+        self.notification1.update()
+        self.notification1.draw()
+        self.notification2.update()
+        self.notification2.draw()
+        self.notification3.update()
+        self.notification3.draw()
+        self.notification4.update()
+        self.notification4.draw()
+        
         self.stats()
 
         pygame.display.update()  # plus léger que flip()
