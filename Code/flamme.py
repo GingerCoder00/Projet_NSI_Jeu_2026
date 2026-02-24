@@ -181,7 +181,7 @@ class Flamme:
 
         # Nettoyage des cases autour (croix condamnées)
         for key, croix in list(self.dico_UI_anim[plan]["Croix"].items()):
-            if abs(croix.ligne - ligne) <= 1 and abs(croix.colonne - colonne) <= 1:
+            if abs(croix.ligne - ligne) <= 2 and abs(croix.colonne - colonne) <= 2:
                 self.grille.grille[croix.ligne][croix.colonne] = "terre"
                 del self.dico_UI_anim[plan]["Croix"][key]
 

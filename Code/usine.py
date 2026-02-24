@@ -48,9 +48,11 @@ class Usine:
         self.dico_UI_anim[plan]["Usine"][self.nbr_usines_spawn] = usine
         self.grille.grille[ligne][colonne] = "usine"
 
-        self.position_init = [(-1, -1), (-1, 0), (-1, 1),
-                              (0, -1), (0, 1),
-                              (1, -1), (1, 0), (1, 1)]
+        self.position_init = [(-2, -2), (-2, -1), (-2, 0), (-2, 1), (-2, 2),
+                              (-1, -2), (-1, -1), (-1, 0), (-1, 1), (-1, 2),
+                              (0, -2), (0, -1), (0, 1), (0, 2),
+                              (1, -2), (1, -1), (1, 0), (1, 1), (1, 2),
+                              (2, -2), (2, -1), (2, 0), (2, 1), (2, 2)]
         
         for d_ligne, d_colonne in self.position_init:
             new_ligne = ligne + d_ligne

@@ -22,7 +22,7 @@ class Grille:
         self.BASE_DIR = os.path.dirname(__file__)
 
         self.resp = Resp_tools(self.Long, self.larg)
-        self.num_map = randint(0,3)
+        self.num_map = randint(0,5)
 
         self.rect_zone = ratio_grille
 
@@ -52,7 +52,7 @@ class Grille:
         for lignes in range(self.lignes):
             for colonnes in range(self.colonnes):
                 x, y = self.placement_grille(colonnes, lignes)
-                self.MAP_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_map", f"map_{self.num_map}.png")
+                self.MAP_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_map", f"sprite_map_{self.num_map}.png")
                 color = self.color_pixel_map(self.MAP_PATH, colonnes, lignes)
                 index_randint = randint(0, len(self.dico_info.type_cases[color]) - 1)
                 case = UI_PNG(self.screen, self.dico_info.type_cases[color][index_randint], (x, y, self.case_Long, self.case_larg), 5, 0.01)
