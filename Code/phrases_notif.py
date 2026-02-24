@@ -1,6 +1,6 @@
 
 PHRASES_AIDE_START = [
-    """REGLES DU JEU : Tu incarnes une mega corporation qui accelere volontairement l’effondrement climatique. Et cela pour augmenter ses profits !""" 
+    """REGLE DU JEU : Tu incarnes une mega corporation n'a que pour seul but d'engrenger plus de profit, meme si cela detruit la planete ! Tu dois etre le plus rapide pour faire regner le capitalisme !""" 
 ]
 
 PHRASES_DESINFORMATION = [
