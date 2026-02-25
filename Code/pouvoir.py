@@ -48,16 +48,22 @@ class Pouvoir:
         self.Longueur, self.largeur = self.screen.get_size()
         self.mouse_x, self.mouse_y = pygame.mouse.get_pos()
 
+        self.ratio_texte = {
+            "Nom_Pouvoir" : (0.01, 0.02),
+            "Cout_Pouvoir" : (0.01, 0.08),
+            "Cooldown_Pouvoir" : (0.01, 0.14),
+        }
+
         self.show_info = False
-        self.Longueur, self.largeur = pygame.display.get_surface().get_size()
+        self.Longueur, self.largeur = self.screen.get_size()
 
         self.BASE_DIR = os.path.dirname(__file__)
         self.FONT_PATH = os.path.join(self.BASE_DIR, "font", "font_retro2.ttf")
 
         self.info = UI_screen(self.screen, (255, 119, 92), (117, 0, 0), (self.mouse_x - self.Longueur * 0.19, self.mouse_y - self.largeur * 0.19, self.Longueur * 0.19, self.largeur * 0.19), 7, 18)
-        self.texte_nom = Texte(self.screen, (self.mouse_x + 10, self.mouse_y + 25), int(self.Longueur * 0.07 * 0.3), (255, 237, 237), f"{self.nom.capitalize()}", font_type = self.FONT_PATH)
-        self.texte_cout = Texte(self.screen, (self.mouse_x + 10, self.mouse_y + 85), int(self.Longueur * 0.07 * 0.3), (255, 237, 237), f"Cout : {self.get_cout()}", font_type = self.FONT_PATH)
-        self.texte_cooldown = Texte(self.screen, (self.mouse_x + 10, self.mouse_y + 145), int(self.Longueur * 0.07 * 0.3), (255, 237, 237), f"Cooldown : {self.cooldown}s", font_type = self.FONT_PATH)
+        self.texte_nom = Texte(self.screen, (self.mouse_x + self.Longueur * self.ratio_texte["Nom_Pouvoir"][0], self.mouse_y + self.largeur * self.ratio_texte["Nom_Pouvoir"][1]), int(self.Longueur * 0.07 * 0.3), (255, 237, 237), f"{self.nom.capitalize()}", font_type = self.FONT_PATH)
+        self.texte_cout = Texte(self.screen, (self.mouse_x + self.Longueur * self.ratio_texte["Cout_Pouvoir"][0], self.mouse_y + self.largeur * self.ratio_texte["Cout_Pouvoir"][1]), int(self.Longueur * 0.07 * 0.3), (255, 237, 237), f"Cout : {self.get_cout()}", font_type = self.FONT_PATH)
+        self.texte_cooldown = Texte(self.screen, (self.mouse_x + self.Longueur * self.ratio_texte["Cooldown_Pouvoir"][0], self.mouse_y + self.largeur * self.ratio_texte["Cooldown_Pouvoir"][1]), int(self.Longueur * 0.07 * 0.3), (255, 237, 237), f"Cooldown : {self.cooldown}s", font_type = self.FONT_PATH)
 
     def get_cout(self):
         if self.nom in self.data.pouvoirs:
@@ -182,14 +188,14 @@ class Pouvoir:
             self.info.y = min(self.mouse_y - self.largeur * 0.19, self.screen.get_height() - self.info.l)
 
             # Textes dynamiques
-            self.texte_nom.x = self.info.x + 10
-            self.texte_nom.y = self.info.y + 25
+            self.texte_nom.x = self.info.x + self.Longueur * self.ratio_texte["Nom_Pouvoir"][0]
+            self.texte_nom.y = self.info.y + self.largeur * self.ratio_texte["Nom_Pouvoir"][1]
 
-            self.texte_cout.x = self.info.x + 10
-            self.texte_cout.y = self.info.y + 85
+            self.texte_cout.x = self.info.x + self.Longueur * self.ratio_texte["Cout_Pouvoir"][0]
+            self.texte_cout.y = self.info.y + self.largeur * self.ratio_texte["Cout_Pouvoir"][1]
 
-            self.texte_cooldown.x = self.info.x + 10
-            self.texte_cooldown.y = self.info.y + 145
+            self.texte_cooldown.x = self.info.x + self.Longueur * self.ratio_texte["Cooldown_Pouvoir"][0]
+            self.texte_cooldown.y = self.info.y + self.largeur * self.ratio_texte["Cooldown_Pouvoir"][1]
         else:
             self.show_info = False
 

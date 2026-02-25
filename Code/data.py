@@ -11,7 +11,7 @@ class Data:
         # JAUGES PRINCIPALES
         
         self.pollution = 10
-        self.temperature = 90
+        self.temperature = 0
         self.eau = 100
         self.biodiversite = 100
         self.stabilite = 100

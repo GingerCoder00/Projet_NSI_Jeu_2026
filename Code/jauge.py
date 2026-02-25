@@ -7,6 +7,7 @@ pygame.init()
 class Jauge:
     def __init__(self, screen, fichier:str, nom_data:str, data_file, dimension:tuple, ampli_inflate:int, volume_son:float, frame:int, compl_zero:str = "", hover_on:bool = True, hover_info = True, nbr_frames = 7):
         self.screen = screen
+        self.Longueur, self.largeur = self.screen.get_size()
         BASE_DIR = os.path.dirname(__file__)
         self.hover_info = hover_info
         self.x, self.y, self.L, self.l = dimension
@@ -22,6 +23,11 @@ class Jauge:
         self.compl_zero = compl_zero
         self.ampli_inf = ampli_inflate
         self.hover_on = hover_on
+
+        self.ratio_texte = {
+            "Nom_Jauge" : (0.01, 0.03),
+            "Taux_Jauge" : (0.01, 0.1),
+        }
 
         self.flag_inflate = False
 
@@ -44,8 +50,8 @@ class Jauge:
         self.FONT_PATH = os.path.join(self.BASE_DIR, "font", "font_retro2.ttf")
 
         # Position initiale du texte (peut être proche de la souris ou dans un coin)
-        self.texte_info = Texte(self.screen, (self.mouse_x + 10, self.mouse_y + 25), int(self.Longueur * 0.07 * 0.3), (0,0,0), f"{self.nom_data.capitalize()}", font_type = self.FONT_PATH)
-        self.texte_stats_info = Texte(self.screen, (self.mouse_x + 10, self.mouse_y + 100), int(self.largeur * 0.07 * 0.4), (0,0,0), f"{round(getattr(self.taux, self.nom_data), 1)}", font_type = self.FONT_PATH)
+        self.texte_info = Texte(self.screen, (self.mouse_x + self.Longueur * self.ratio_texte["Nom_Jauge"][0], self.mouse_y + self.largeur * self.ratio_texte["Nom_Jauge"][1]), int(self.Longueur * 0.07 * 0.3), (0,0,0), f"{self.nom_data.capitalize()}", font_type = self.FONT_PATH)
+        self.texte_stats_info = Texte(self.screen, (self.mouse_x + self.Longueur * self.ratio_texte["Taux_Jauge"][0], self.mouse_y + self.largeur * self.ratio_texte["Taux_Jauge"][1]), int(self.largeur * 0.07 * 0.4), (0,0,0), f"{round(getattr(self.taux, self.nom_data), 1)}", font_type = self.FONT_PATH)
 
         # Paramètre bruitage
         self.volume = volume_son
@@ -82,8 +88,8 @@ class Jauge:
             if self.hover_info:
                 self.info.x = min(self.mouse_x - self.Longueur * 0.16, self.screen.get_width() - self.info.L)
                 self.info.y = min(self.mouse_y - self.largeur * 0.17, self.screen.get_height() - self.info.l)
-                self.texte_info.x = self.info.x + 10
-                self.texte_info.y = self.info.y + 25
+                self.texte_info.x = self.info.x + self.Longueur * self.ratio_texte["Nom_Jauge"][0]
+                self.texte_info.y = self.info.y + self.largeur * self.ratio_texte["Nom_Jauge"][1]
 
         else:
             self.show_info = False
@@ -104,4 +110,4 @@ class Jauge:
             self.mouse_hover()
 
         self.taux = self.data()
-        self.texte_stats_info = Texte(self.screen, (self.info.x + 10, self.info.y + 100), int(self.Longueur * 0.07 * 0.4), (0,0,0), f"{round(getattr(self.taux, self.nom_data), 1)}", font_type = self.FONT_PATH)
+        self.texte_stats_info = Texte(self.screen, (self.info.x + self.Longueur * self.ratio_texte["Taux_Jauge"][0], self.info.y + self.largeur * self.ratio_texte["Taux_Jauge"][1]), int(self.Longueur * 0.07 * 0.4), (0,0,0), f"{round(getattr(self.taux, self.nom_data), 1)}", font_type = self.FONT_PATH)
