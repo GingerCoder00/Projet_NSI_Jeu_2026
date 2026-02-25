@@ -14,6 +14,7 @@ from usine import *
 from pouvoir import *
 from animation import *
 from notification import *
+from start_game import StartGame
 
 pygame.init()
 pygame.mixer.init()
@@ -28,6 +29,8 @@ class Game:
         self.BASE_DIR = os.path.dirname(__file__)
 
         self.screen = screen
+
+        self.start_game = StartGame(self.screen)
 
         # Gestion du temps
         self.start_time = pygame.time.get_ticks()  # Temps de départ après l'initialisation de pygame
@@ -77,8 +80,8 @@ class Game:
         self.dico_info = Dico_info_Game()
 
         # Variable affichage
-        # Num plan : {0:grille, 1:?}
-        self.plan = 0
+        # Num plan : {-1:start game, 0:grille, 1:pause}
+        self.plan = -1
 
         self.BLACK_SCREEN_PATH =  os.path.join(self.BASE_DIR, "sprite", "sprite_ecran_noir")
         self.ecran_noir = pygame.image.load(f"{self.BLACK_SCREEN_PATH}.png").convert()  
@@ -94,6 +97,11 @@ class Game:
 
         # Gestion des éléments intéractifs
         self.dico_UI_interact = {
+            -1:{
+                "Case": {},
+                "CaseBrulee": {},
+                "Bouton" : {}
+            },
             0:{
                 "Case": {},
                 "CaseBrulee": {},
@@ -164,7 +172,7 @@ class Game:
             },
         }
 
-        self.notification = Notification_gestion(self.screen, self.dico_UI[self.plan]["Rect_notif"])
+        self.notification = Notification_gestion(self.screen, self.dico_UI[0]["Rect_notif"])
         self.data = Data(self.grille, self.notification)
 
         self.JAUGE_POLLUTION_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_jauge_pollution", "sprite_jauge_pollution_")
@@ -360,37 +368,61 @@ class Game:
                 del self.dico_UI_interact[plan]["CaseBrulee"][key]
 
     def run(self):
-        '''
-        Cette méthode enclenche la boucle principale du menu en appelant toutes les méthodes utiles à 
-        son fonctionnement
-        '''
+
         self.grille.crea_cases()
         self.return_main_menu = False
 
         while self.running:
-            diff_entre_frame = self.clock.tick(120) / 1000
-            self.keys = pygame.key.get_pressed()
 
-            self.temps_ecoule += diff_entre_frame
+            dt = self.clock.tick(120) / 1000
+            self.keys = pygame.key.get_pressed()
             self.fps = int(self.clock.get_fps())
-            
-            if self.plan == 0:
+
+            for event in pygame.event.get():
+
+                if event.type == pygame.QUIT:
+                    self.running = False
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        if self.plan == 0:
+                            self.plan = 1
+                        elif self.plan == 1:
+                            self.plan = 0
+
+            if self.plan == -1:
+
+                self.start_game.run()
+
+                if self.start_game.start():
+                    self.plan = 0
+
+                if self.start_game.retour():
+                    self.running = False
+
+            elif self.plan == 0:
+
+                self.temps_ecoule += dt
+                self.chrono += dt
+
                 self.flamme.update_propagation_feu()
                 self.flamme.update_extinction(self.meteo)
                 self.update_cases_brulees()
-                self.chrono += diff_entre_frame
-                self.data.update_world(diff_entre_frame)
+
+                self.data.update_world(dt)
+
                 current_time = pygame.time.get_ticks() / 1000
 
                 for pouvoir in self.pouvoirs.values():
-                    result = pouvoir.update(self.dico_UI_interact[self.plan]["Case"], current_time)
-                    if result == "activate":
+                    result = pouvoir.update(
+                        self.dico_UI_interact[0]["Case"],
+                        current_time
+                    )
 
-                        # Désactive l'ancien pouvoir
+                    if result == "activate":
                         if self.pouvoir_actif:
                             self.pouvoir_actif.actif = False
 
-                        # Active le nouveau
                         self.pouvoir_actif = pouvoir
                         pouvoir.actif = True
 
@@ -398,104 +430,111 @@ class Game:
                         self.pouvoir_actif = None
 
                 self.notification.update()
+                self.modif_jauge()
+                self.modif_chrono()
 
-            self.modif_jauge()
-            self.modif_chrono()
-            self.move_plan()
+            elif self.plan == 1:
+
+                if self.dico_UI_pause[1]["Bouton"]["Bouton_Continuer"].mouse_is_click():
+                    self.plan = 0
+
+                if self.dico_UI_pause[1]["Bouton"]["Bouton_Quitter"].mouse_is_click():
+                    self.running = False
+
+                if self.dico_UI_pause[1]["Bouton"]["Bouton_Menu_Principal"].mouse_is_click():
+                    self.return_main_menu = True
+                    self.running = False
 
             self.draw()
-            self.exit()
-            
 
         if not self.return_main_menu:
-            pygame.quit() # Puis on quitte proprement le jeu
+            pygame.quit()
 
     def draw(self):
-        '''
-        Cette méthode gère tout les affichages d'objets à l'écran ainsi que le rafraichissement de celui-ci
-        '''
-        self.screen.fill((0,0,0))  # Si on est dans le plan secret alors on affiche un arrière plan noir 
-        
+
+        self.screen.fill((0, 0, 0))
+        if self.plan == -1:
+
+            self.start_game.draw()
+            pygame.display.flip()
+            return
+
+        # Interfaces
+        for interfaces in self.dico_UI[0].values():
+            interfaces.update()
+
+        # Grille
+        for case in self.dico_UI_interact[0]["Case"].values():
+            case.update()
+
+        for case_brulee in self.dico_UI_interact[0]["CaseBrulee"].values():
+            case_brulee.img.update()
+
+        # Boutons jeu (pas interactifs en pause)
         if self.plan == 0:
+            for bouton in self.dico_UI_interact[0]["Bouton"].values():
+                bouton.update()
+        else:
+            for bouton in self.dico_UI_interact[0]["Bouton"].values():
+                bouton.create()
 
-            for interfaces in self.dico_UI[self.plan].values():
-                interfaces.update()  
-
-            for cases in self.dico_UI_interact[self.plan]["Case"].values():
-                cases.update()
-
-            for cases_brulees in self.dico_UI_interact[self.plan]["CaseBrulee"].values():
-                cases_brulees.img.update()
-
-            self.notification.draw()
-
-            for objet in self.dico_UI_interact[self.plan]["Bouton"].values():
-                objet.update()  
-
-            # Dessiner toutes les jauges
-            for anims in self.dico_UI_anim[self.plan].values():
-                for anim in anims.values():
+        # Jauges
+        for anims in self.dico_UI_anim[0].values():
+            for anim in anims.values():
+                if self.plan == 0:
                     anim.update()
+                else:
+                    anim.create()
 
-            self.flamme.animation.update()
-            self.flamme.animation.draw()
-            self.usine.animation.update()
-            self.usine.animation.draw()
-
-            # Puis dessiner les infos
-            for jauge in self.dico_UI_anim[self.plan]["Jauge"].values():
+        # Infos jauges (UNIQUEMENT en jeu actif)
+        if self.plan == 0:
+            for jauge in self.dico_UI_anim[0]["Jauge"].values():
                 if jauge.show_info:
                     jauge.info.update()
                     jauge.texte_info.update()
                     jauge.texte_stats_info.update()
 
-            # Cooldowns + curseur
-            for pouvoir in self.pouvoirs.values():
-                pouvoir.draw_cooldown(self.screen)
+        # Pouvoirs (pas de hover en pause)
+        for pouvoir in self.pouvoirs.values():
+            pouvoir.draw_cooldown(self.screen)
 
+        self.notification.draw()
+
+        if self.plan == 0:
             if self.pouvoir_actif:
                 self.pouvoir_actif.draw_cursor(self.screen)
 
-            # Interface info en dernier
             for pouvoir in self.pouvoirs.values():
                 pouvoir.hover_info()
                 pouvoir.draw_info()
 
-        else:
-            for interfaces in self.dico_UI[self.plan].values():
-                interfaces.create()  
+        # Animations monde (SEULEMENT en jeu actif)
+        if self.plan == 0:
+            self.flamme.anim_feu()
+            self.condamne.anim_condamne()
+            self.pollue.anim_pollue()
+            self.usine.anim_usine()
 
-            for cases in self.dico_UI_interact[self.plan]["Case"].values():
-                cases.create() 
-            
-            for cases_brulees in self.dico_UI_interact[self.plan]["CaseBrulee"].values():
-                cases_brulees.img.create()
+        # Animations principales
+        if self.plan == 0:
+            self.flamme.animation.update()
+            self.usine.animation.update()
 
-            self.notification.draw()
+        self.flamme.animation.draw()
+        self.usine.animation.draw()
 
-            for objet in self.dico_UI_interact[self.plan]["Bouton"].values():
-                objet.create()  
+        if self.plan == 1:
 
-            # Dessiner toutes les jauges
-            for anims in self.dico_UI_anim[self.plan].values():
-                for anim in anims.values():
-                    anim.create()
-
-        #self.meteo.pluie()
-
-        if self.plan != 0:
+            # Overlay grisé
             self.screen.blit(self.ecran_noir, (0, 0))
 
-        for objets in self.dico_UI_pause[self.plan]["Bouton"].values():
-            objets.update() 
+            # Boutons pause (les seuls interactifs)
+            for bouton in self.dico_UI_pause[1]["Bouton"].values():
+                bouton.update()
 
-        self.flamme.anim_feu() 
-        self.condamne.anim_condamne() 
-        self.pollue.anim_pollue()
-        self.usine.anim_usine()
-        self.stats()  # On gère l'affichage des stats
+        # Stats en dernier
+        self.stats()
 
-        # Rafraîchissement de l'écran
         pygame.display.flip()
 
 if __name__ == "__main__":  # Permet de démarrer le programme dans de bonnes conditions

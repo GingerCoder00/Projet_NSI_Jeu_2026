@@ -69,10 +69,10 @@ class StartGame:
             "Bouton_Guerre" : UI_PNG(self.screen, self.BOUTON_GUERRE_PATH, self.resp.resp(self.ratio_objet["Bouton_Guerre"][0], self.ratio_objet["Bouton_Guerre"][1], self.ratio_objet["Bouton_Guerre"][2], self.ratio_objet["Bouton_Guerre"][3]), 0, 0, hover_on = False),
         }
 
-        self.notification1 = Notification_gestion(self.screen, self.dico_UI["Rect_Regle"], (0, 0, 0), font_size_ratio = 0.09, diff_y = 25)
-        self.notification2 = Notification_gestion(self.screen, self.dico_UI["Rect_Jauge"], (0, 0, 0), font_size_ratio = 0.13, diff_y = 25)
-        self.notification3 = Notification_gestion(self.screen, self.dico_UI["Rect_Pouvoir_Feu"], (0, 0, 0), font_size_ratio = 0.16, diff_y = 25)
-        self.notification4 = Notification_gestion(self.screen, self.dico_UI["Rect_Pouvoir_Guerre"], (0, 0, 0), font_size_ratio = 0.16, diff_y = 25)
+        self.notification1 = Notification_gestion(self.screen, self.dico_UI["Rect_Regle"], (0, 0, 0), font_size_ratio = 0.09, diff_y = 25, volume_sound = 0)
+        self.notification2 = Notification_gestion(self.screen, self.dico_UI["Rect_Jauge"], (0, 0, 0), font_size_ratio = 0.13, diff_y = 25, volume_sound = 0)
+        self.notification3 = Notification_gestion(self.screen, self.dico_UI["Rect_Pouvoir_Feu"], (0, 0, 0), font_size_ratio = 0.16, diff_y = 25, volume_sound = 0)
+        self.notification4 = Notification_gestion(self.screen, self.dico_UI["Rect_Pouvoir_Guerre"], (0, 0, 0), font_size_ratio = 0.16, diff_y = 25, volume_sound = 0)
 
         phrases = PHRASES_AIDE_START
         self.notification1.ajouter(phrases[0])
@@ -127,19 +127,7 @@ class StartGame:
         pygame.display.update()  # plus léger que flip()
 
     def run(self):
-        while self.running:
-            self.clock.tick(60) 
-            self.temps_ecoule = (pygame.time.get_ticks() - self.start_time)/1000  # On récupère le temps réel
-            self.exit()
-            self.draw()
-
-if __name__ == "__main__":  # Permet de démarrer le programme dans de bonnes conditions
-    screen_taille = pygame.display.Info() # On récupère la taille de l'écran du système
-    Long = screen_taille.current_w # On récupère la longueur de l'écran
-    larg = screen_taille.current_h # On récupère la hauteur de l'écran
-
-    screen = pygame.display.set_mode((Long, larg)) # On initialise l'écran avec les dimensions préalablement récupérer
-    pygame.display.set_caption("Let's Smash Up The Earth") # On donne un nom à la fenêtre
-
-    start_game = StartGame(screen)
-    start_game.run()
+        self.clock.tick(60)
+        self.temps_ecoule = (pygame.time.get_ticks() - self.start_time)/1000
+        self.exit()
+        self.draw()
