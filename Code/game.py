@@ -226,8 +226,8 @@ class Game:
         }
 
         self.flamme = Flamme(self.screen, self.grille, self.data, self.dico_UI_anim, self.dico_UI_interact, lambda: self.plan, self.notification) # On utilise lambda car le plan change dynamiquement
-        self.condamne = Condamne(self.screen, self.grille, self.data, self.dico_UI_anim, lambda: self.plan) # On utilise lambda car le plan change dynamiquement
-        self.pollue = Pollue(self.screen, self.grille, self.data, self.dico_UI_anim, lambda: self.plan) # On utilise lambda car le plan change dynamiquement
+        self.condamne = Condamne(self.screen, self.grille, self.data, self.dico_UI_anim, lambda: self.plan,) # On utilise lambda car le plan change dynamiquement
+        self.pollue = Pollue(self.screen, self.grille, self.data, self.dico_UI_anim, self.dico_UI_interact, lambda: self.plan, self.notification) # On utilise lambda car le plan change dynamiquement
         self.usine = Usine(self.screen, self.grille, self.data, self.dico_UI_anim, lambda: self.plan) # On utilise lambda car le plan change dynamiquement
 
         self.pouvoir_actif = None
@@ -282,7 +282,7 @@ class Game:
                     self.dico_UI_interact[0]["Bouton"]["Bouton_Maree_Noire"],
                     self.data,
                     self.grille,
-                    lambda l, c: self.pollue.ajout_pollue(l, c),
+                    lambda l, c: self.pollue.propagation_pollue(l, c, self.pollue.puissance_pollue(), spawn_anim = True),
                     self.notification,
                     cursor_sprite_prefix=os.path.join(self.BASE_DIR, "sprite\sprite_bouton_maree_noire\sprite_logo_maree_noire_"),
                     cursor_frame_count=1,
@@ -407,6 +407,8 @@ class Game:
 
                 self.flamme.update_propagation_feu()
                 self.flamme.update_extinction(self.meteo)
+                self.pollue.update_propagation_pollue()
+                self.pollue.update_extinction(self.meteo)
                 self.update_cases_brulees()
 
                 self.data.update_world(dt)
@@ -519,8 +521,10 @@ class Game:
         if self.plan == 0:
             self.flamme.animation.update()
             self.usine.animation.update()
+            self.pollue.animation.update()
 
         self.flamme.animation.draw()
+        self.pollue.animation.draw()
         self.usine.animation.draw()
 
         if self.plan == 1:

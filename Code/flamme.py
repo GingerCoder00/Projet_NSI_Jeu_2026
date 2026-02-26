@@ -40,7 +40,7 @@ class Flamme:
 
         flamme.frame = 0
         flamme.last_update = pygame.time.get_ticks()
-        flamme.vie = 100
+        flamme.vie = 175
         flamme.ligne = ligne
         flamme.colonne = colonne
 

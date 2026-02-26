@@ -12,8 +12,8 @@ class Data:
         
         self.pollution = 10
         self.temperature = 0
-        self.eau = 100
-        self.biodiversite = 100
+        self.eau = 20
+        self.biodiversite = 50
         self.stabilite = 100
         self.profit = 5
         self.augmentation_profil = 225
@@ -67,9 +67,9 @@ class Data:
             "Maree Noire": {
                 "cout": 25,
                 "effets": {
-                    "pollution": 7,
-                    "biodiversite": -7,
-                    "eau": -6
+                    "pollution": 4,
+                    "biodiversite": -3,
+                    "eau": -3
                 }
             },
             "desinformation": {
