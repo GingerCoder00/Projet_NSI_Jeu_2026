@@ -2,10 +2,11 @@ import pygame
 import os
 from random import randint, random
 from phrases_notif import PHRASES_METEO
+from animation import Animation
 
 class Meteo:
 
-    def __init__(self, screen, zone_grille_x, zone_grille_y, zone_largeur, zone_hauteur, plan_ref, data, grille, flamme, notification):
+    def __init__(self, screen, zone_grille_x, zone_grille_y, zone_largeur, zone_hauteur, plan_ref, data, grille, flamme, notification, dico_UI_anim):
 
         self.screen = screen
         self.plan_ref = plan_ref
@@ -13,13 +14,12 @@ class Meteo:
         self.grille = grille
         self.flamme = flamme
         self.notif = notification
+        self.animation = Animation(screen, plan_ref, dico_UI_anim, grille)
 
         self.zone_x = zone_grille_x
         self.zone_y = zone_grille_y
         self.zone_L = zone_largeur
         self.zone_l = zone_hauteur
-
-        print(self.zone_x, self.zone_y, self.zone_L, self.zone_l)
 
         self.start_time = pygame.time.get_ticks()
         self.last_frame = pygame.time.get_ticks()
@@ -29,13 +29,36 @@ class Meteo:
 
         # PLUIE SPRITES
         self.RAIN_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_effet_pluie", "sprite_pluie_")
-        self.sprite_pluie = [pygame.image.load(f"{self.RAIN_PATH}{str(i).zfill(2)}.png").convert() for i in range(23)]
-        self.sprite_pluie = [pygame.transform.scale(elt, (self.zone_L, self.zone_l)) for elt in self.sprite_pluie]
+        self.sprite_pluie = [pygame.transform.scale(elt, (self.zone_L, self.zone_l)) for elt in [pygame.image.load(f"{self.RAIN_PATH}{str(i).zfill(2)}.png").convert() for i in range(23)]]
         self.pluie_frame = 0
+
+        # SOLEIL SPRITES
+        self.SUN_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_effet_canicule", "sprite_effet_canicule_")
+        self.sprite_sun = [pygame.transform.scale(elt, (self.zone_L, self.zone_l)) for elt in [pygame.image.load(f"{self.SUN_PATH}{i}.png").convert() for i in range(1)]]
+
+        # ECLAIR SPRITES
+        self.sprite_eclair = [os.path.join(self.BASE_DIR, "sprite", "sprite_eclair", f"sprite_eclair_{i}.png") for i in range(4)]
+
+        # TORNADE SPRITES
+        self.sprite_tornade = [os.path.join(self.BASE_DIR, "sprite", "sprite_tornade", f"sprite_tornade_{str(i).zfill(2)}.png") for i in range(14)]
+
+        # Tornade mouvement
+        self.tornade_active = False
+        self.tornade_ligne = None
+        self.tornade_colonne = None
+        self.tornade_direction = 1  # 1 = droite, -1 = gauche
+        self.tornade_last_move = 0
+        self.tornade_move_delay = 250  # ms entre chaque case
+
+        # Animation tornade
+        self.tornade_frames = [pygame.image.load(path).convert_alpha()for path in self.sprite_tornade]
+        self.tornade_frame_index = 0
+        self.tornade_last_frame = 0
+        self.tornade_frame_delay = 80
 
         # ÉTATS
         self.current_event = None
-        self.event_duration = 4000
+        self.event_duration = 5000
 
         self.pluie_active = False
         self.canicule_active = False
@@ -54,11 +77,11 @@ class Meteo:
         self.flash_alpha = 0
 
         self.events = [
-                ["pluie", 1, PHRASES_METEO[0]],
-                ["canicule", 0.25, PHRASES_METEO[1]],
-                ["gel", 0.4, PHRASES_METEO[2]],
+                #["pluie", 1, PHRASES_METEO[0]],
+                #["canicule", 0.25, PHRASES_METEO[1]],
+                #["gel", 0.4, PHRASES_METEO[2]],
                 ["orage", 0.35, PHRASES_METEO[3]],
-                ["tornade", 0.3, PHRASES_METEO[4]],
+                ["tornade", 0.6, PHRASES_METEO[4]],
                 ["inondation", 0.2, PHRASES_METEO[5]],
                 ["reforestation", 0.7, PHRASES_METEO[6]],
                 ["intervention ecologiste", 0.45, PHRASES_METEO[7]],
@@ -77,7 +100,7 @@ class Meteo:
 
             self.last_event = now
 
-            index_event = randint(0, len(self.events)-1)
+            index_event = 1
             self.current_event = self.events[index_event][0]
 
             if random() < self.events[index_event][1]:
@@ -87,6 +110,8 @@ class Meteo:
                 self.gel_active = self.current_event == "gel"
                 self.orage_active = self.current_event == "orage"
                 self.tornade_active = self.current_event == "tornade"
+                if self.tornade_active:
+                    self.spawn_tornade()
                 self.inondation_active = self.current_event == "inondation"
                 self.reforestation_active = self.current_event == "reforestation"
                 self.intervention_ecologiste_active = self.current_event == "intervention ecologiste"
@@ -127,6 +152,10 @@ class Meteo:
         if not self.canicule_active:
             return
 
+        image = self.sprite_sun[0]
+        image.set_alpha(120)
+        self.screen.blit(image, (self.zone_x, self.zone_y))
+
         self.data.eau -= 0.04
         self.data.biodiversite -= 0.02
 
@@ -136,8 +165,17 @@ class Meteo:
             return
 
         # Flash visuel
-        if random() < 0.1:
+        if random() < 0.025:
             self.flash_alpha = 150
+
+            # Chance de déclencher un feu
+            if random() < 0.6:
+                ligne = randint(0, self.grille.lignes - 1)
+                colonne = randint(0, self.grille.colonnes - 1)
+
+                if not self.grille.grille[ligne][colonne] == (0,0,255):
+                    self.animation.ajouter_animation(self.sprite_eclair, self.animation.scale(6, ligne, colonne, from_top = 0.4)[1], self.animation.scale(6, ligne, colonne, from_top = 0.4)[0], frame_delay = 90)
+                    self.flamme.propagation_feu(ligne, colonne, puissance = 3, spawn_anim=False)
 
         if self.flash_alpha > 0:
             flash_surface = pygame.Surface((self.zone_L, self.zone_l))
@@ -146,20 +184,6 @@ class Meteo:
             self.screen.blit(flash_surface, (self.zone_x, self.zone_y))
             self.flash_alpha -= 10
 
-        # Chance de déclencher un feu
-        if random() < 0.08:
-
-            ligne = randint(0, self.grille.lignes - 1)
-            colonne = randint(0, self.grille.colonnes - 1)
-
-            if self.grille.grille[ligne][colonne] == (0,50,0):
-                self.flamme.propagation_feu(
-                    ligne,
-                    colonne,
-                    puissance=3,
-                    spawn_anim=True
-                )
-    
     def gel(self):
 
         if not self.gel_active:
@@ -167,6 +191,68 @@ class Meteo:
 
         # Ralentit propagation via malus
         pass
+
+    def tornade(self):
+        
+        if not self.tornade_active:
+            return
+
+        now = pygame.time.get_ticks()
+
+        # Animation des frames (boucle infinie)
+        if now - self.tornade_last_frame > self.tornade_frame_delay:
+            self.tornade_frame_index = (self.tornade_frame_index + 1) % len(self.tornade_frames)
+            self.tornade_last_frame = now
+
+        # Déplacement case par case
+        if now - self.tornade_last_move > self.tornade_move_delay:
+
+            self.tornade_colonne += self.tornade_direction
+            self.tornade_last_move = now
+
+            # Si sortie de la grille → fin
+            if self.tornade_colonne < 0 or self.tornade_colonne >= self.grille.colonnes:
+                self.tornade_active = False
+                return
+
+        # Impact 3x3
+        for i in range(-1, 2):
+            for j in range(-1, 2):
+
+                ligne = self.tornade_ligne + i
+                colonne = self.tornade_colonne + j
+
+                if 0 <= ligne < self.grille.lignes and 0 <= colonne < self.grille.colonnes:
+
+                    if self.grille.grille[ligne][colonne] == "usine":
+                        self.flamme.detruire_usine(ligne, colonne)
+
+        # Affichage
+        x, y = self.animation.scale(
+            6,
+            self.tornade_ligne,
+            self.tornade_colonne,
+            from_top=0.4
+        )
+
+        image = self.tornade_frames[self.tornade_frame_index]
+        self.screen.blit(image, (x, y))
+        
+    def spawn_tornade(self):
+
+        self.tornade_ligne = randint(0, self.grille.lignes - 1)
+
+        # Choix direction
+        if random() < 0.5:
+            self.tornade_direction = 1
+            self.tornade_colonne = 0
+        else:
+            self.tornade_direction = -1
+            self.tornade_colonne = self.grille.colonnes - 1
+
+        self.tornade_last_move = pygame.time.get_ticks()
+        self.tornade_frame_index = 0
+        
 
     def update(self):
 
@@ -179,3 +265,4 @@ class Meteo:
         self.canicule()
         self.gel()
         self.orage()
+        self.tornade()

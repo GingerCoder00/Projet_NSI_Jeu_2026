@@ -129,16 +129,8 @@ class Flamme:
         
         else:
             if spawn_anim:
-                frames = [
-                    os.path.join(self.BASE_DIR, "sprite", "sprite_feu", f"sprite_feu_spawn_{str(i).zfill(2)}.png")
-                    for i in range(18)
-                ]
-                self.animation.ajouter_animation(
-                    frames,
-                    self.animation.scale(5, ligne, colonne)[1],
-                    self.animation.scale(5, ligne, colonne)[0],
-                    frame_delay = 3
-                )
+                frames = [os.path.join(self.BASE_DIR, "sprite", "sprite_feu", f"sprite_feu_spawn_{str(i).zfill(2)}.png") for i in range(18)]
+                self.animation.ajouter_animation(frames, self.animation.scale(5, ligne, colonne)[1], self.animation.scale(5, ligne, colonne)[0], frame_delay = 5)
                 self.fire_sound = pygame.mixer.Sound(f"{self.SOUND_FIRE_PATH[randint(0,2)]}.wav")
                 self.fire_sound.set_volume(0.05)
                 self.fire_sound.play()
@@ -190,11 +182,7 @@ class Flamme:
             for i in range(24)
         ]
 
-        self.animation.ajouter_animation(
-            frames,
-            self.animation.scale(5, ligne, colonne, from_top = 0.4)[1],
-            self.animation.scale(5, ligne, colonne, from_top = 0.4)[0],
-            frame_delay=15
+        self.animation.ajouter_animation(frames, self.animation.scale(5, ligne, colonne, from_top = 0.4)[1], self.animation.scale(5, ligne, colonne, from_top = 0.4)[0], frame_delay=15
         )
 
         # Son explosion
