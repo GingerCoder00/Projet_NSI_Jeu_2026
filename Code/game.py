@@ -149,7 +149,6 @@ class Game:
 
 
         self.grille = Grille(self.screen, 19, 30, 3.5, self.resp.resp(self.ratio_objet["Rect_bouton"][0], self.ratio_objet["Rect_bouton"][1], self.ratio_objet["Rect_bouton"][2], self.ratio_objet["Rect_bouton"][3]), self.dico_UI_interact)
-        self.meteo = Meteo(self.screen, self.grille.zone_x, self.grille.zone_y, self.grille.zone_L, self.grille.zone_l, lambda: self.plan) # On utilise lambda car le plan change dynamiquement
 
 
         # Gestion des éléments graphiques non intéractif
@@ -229,6 +228,8 @@ class Game:
         self.condamne = Condamne(self.screen, self.grille, self.data, self.dico_UI_anim, lambda: self.plan,) # On utilise lambda car le plan change dynamiquement
         self.pollue = Pollue(self.screen, self.grille, self.data, self.dico_UI_anim, self.dico_UI_interact, lambda: self.plan, self.notification) # On utilise lambda car le plan change dynamiquement
         self.usine = Usine(self.screen, self.grille, self.data, self.dico_UI_anim, lambda: self.plan) # On utilise lambda car le plan change dynamiquement
+
+        self.meteo = Meteo(self.screen, self.grille.zone_x, self.grille.zone_y, self.grille.zone_L, self.grille.zone_l, lambda: self.plan, self.data, self.grille, self.flamme, self.notification) # On utilise lambda car le plan change dynamiquement
 
         self.pouvoir_actif = None
         self.pouvoirs = {
@@ -496,20 +497,6 @@ class Game:
                     jauge.texte_info.update()
                     jauge.texte_stats_info.update()
 
-        # Pouvoirs (pas de hover en pause)
-        for pouvoir in self.pouvoirs.values():
-            pouvoir.draw_cooldown(self.screen)
-
-        self.notification.draw()
-
-        if self.plan == 0:
-            if self.pouvoir_actif:
-                self.pouvoir_actif.draw_cursor(self.screen)
-
-            for pouvoir in self.pouvoirs.values():
-                pouvoir.hover_info()
-                pouvoir.draw_info()
-
         # Animations monde (SEULEMENT en jeu actif)
         if self.plan == 0:
             self.flamme.anim_feu()
@@ -522,10 +509,25 @@ class Game:
             self.flamme.animation.update()
             self.usine.animation.update()
             self.pollue.animation.update()
+            self.meteo.update()
+
+        # Pouvoirs (pas de hover en pause)
+        for pouvoir in self.pouvoirs.values():
+            pouvoir.draw_cooldown(self.screen)
+
+        self.notification.draw()
 
         self.flamme.animation.draw()
         self.pollue.animation.draw()
         self.usine.animation.draw()
+
+        if self.plan == 0:
+            if self.pouvoir_actif:
+                self.pouvoir_actif.draw_cursor(self.screen)
+
+            for pouvoir in self.pouvoirs.values():
+                pouvoir.hover_info()
+                pouvoir.draw_info()
 
         if self.plan == 1:
 

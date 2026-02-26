@@ -1,24 +1,27 @@
 import pygame
 import os
 from random import randint, random
+from phrases_notif import PHRASES_METEO
 
 class Meteo:
 
-    def __init__(self, screen, zone_grille_x, zone_grille_y,
-                 zone_largeur, zone_hauteur,
-                 plan_ref, data, grille, flamme):
+    def __init__(self, screen, zone_grille_x, zone_grille_y, zone_largeur, zone_hauteur, plan_ref, data, grille, flamme, notification):
 
         self.screen = screen
         self.plan_ref = plan_ref
         self.data = data
         self.grille = grille
         self.flamme = flamme
+        self.notif = notification
 
         self.zone_x = zone_grille_x
         self.zone_y = zone_grille_y
         self.zone_L = zone_largeur
         self.zone_l = zone_hauteur
 
+        print(self.zone_x, self.zone_y, self.zone_L, self.zone_l)
+
+        self.start_time = pygame.time.get_ticks()
         self.last_frame = pygame.time.get_ticks()
         self.last_event = pygame.time.get_ticks()
 
@@ -32,31 +35,37 @@ class Meteo:
 
         # ÉTATS
         self.current_event = None
-        self.event_duration = 9000
+        self.event_duration = 4000
 
         self.pluie_active = False
         self.canicule_active = False
-        self.vent_active = False
         self.gel_active = False
-        self.smog_active = False
         self.orage_active = False
+        self.tornade_active = False
+        self.inondation_active = False
+        self.reforestation_active = False
+        self.intervention_ecologiste_active = False
+        self.secheresse_ciblee_active = False
+        self.epidemie_active = False
+        self.meteorite_active = False
+        self.nuage_active = False
 
         # Orage visuel
         self.flash_alpha = 0
 
         self.events = [
-                ["pluie", 0.6],
-                ["canicule", 0.3],
-                ["gel", 0.45],
-                ["orage", 0.4],
-                ["tornade", 0.35],
-                ["inondation", 0.25],
-                ["reforestation", 0.8],
-                ["intervention ecologiste", 0.5],
-                ["sécheresse ciblée", 0.3],
-                ["epidemie", 0.4],
-                ["météorite", 0.1],
-                ["Nuage", 1],      # Les nuages sont des événements constant pendant tout le jeu pour apporter de la vie
+                ["pluie", 1, PHRASES_METEO[0]],
+                ["canicule", 0.25, PHRASES_METEO[1]],
+                ["gel", 0.4, PHRASES_METEO[2]],
+                ["orage", 0.35, PHRASES_METEO[3]],
+                ["tornade", 0.3, PHRASES_METEO[4]],
+                ["inondation", 0.2, PHRASES_METEO[5]],
+                ["reforestation", 0.7, PHRASES_METEO[6]],
+                ["intervention ecologiste", 0.45, PHRASES_METEO[7]],
+                ["sécheresse ciblée", 0.3, PHRASES_METEO[8]],
+                ["epidemie", 0.35, PHRASES_METEO[9]],
+                ["météorite", 0.1, PHRASES_METEO[10]],
+                ["nuage", 1],      # Les nuages sont des événements constant pendant tout le jeu pour apporter de la vie
                 [None, 1]
             ]
 
@@ -68,14 +77,30 @@ class Meteo:
 
             self.last_event = now
 
-            self.current_event = self.events[randint(0, len(self.events)-1)]
+            index_event = randint(0, len(self.events)-1)
+            self.current_event = self.events[index_event][0]
 
-            self.pluie_active = self.current_event == "pluie"
-            self.canicule_active = self.current_event == "canicule"
-            self.vent_active = self.current_event == "vent"
-            self.gel_active = self.current_event == "gel"
-            self.smog_active = self.current_event == "smog"
-            self.orage_active = self.current_event == "orage"
+            if random() < self.events[index_event][1]:
+
+                self.pluie_active = self.current_event == "pluie"
+                self.canicule_active = self.current_event == "canicule"
+                self.gel_active = self.current_event == "gel"
+                self.orage_active = self.current_event == "orage"
+                self.tornade_active = self.current_event == "tornade"
+                self.inondation_active = self.current_event == "inondation"
+                self.reforestation_active = self.current_event == "reforestation"
+                self.intervention_ecologiste_active = self.current_event == "intervention ecologiste"
+                self.secheresse_ciblee_active = self.current_event == "sécheresse ciblée"
+                self.epidemie_active = self.current_event == "epidemie"
+                self.meteorite_active = self.current_event == "météorite"
+                self.nuage_active = self.current_event == "nuage"
+                print(f"Evénement actif : {self.current_event} à {(now - self.start_time) / 1000}")
+
+                try:
+                    phrase = self.events[index_event][2]
+                    self.notif.ajouter(phrase)
+                except:
+                    pass
 
     def pluie(self):
 
@@ -83,7 +108,7 @@ class Meteo:
             return
 
         now = pygame.time.get_ticks()
-        rain_delay = 50
+        rain_delay = 30
 
         if now - self.last_frame >= rain_delay:
             self.pluie_frame = (self.pluie_frame + 1) % len(self.sprite_pluie)
@@ -111,7 +136,7 @@ class Meteo:
             return
 
         # Flash visuel
-        if random() < 0.05:
+        if random() < 0.1:
             self.flash_alpha = 150
 
         if self.flash_alpha > 0:
@@ -122,7 +147,7 @@ class Meteo:
             self.flash_alpha -= 10
 
         # Chance de déclencher un feu
-        if random() < 0.02:
+        if random() < 0.08:
 
             ligne = randint(0, self.grille.lignes - 1)
             colonne = randint(0, self.grille.colonnes - 1)

@@ -35,3 +35,29 @@ PHRASES_POUVOIR = [
     "Une guerre commerciale avec une entreprise voisine a commence",
     "Une grande vague de chaleur s'abat sur la region",
 ]
+
+PHRASES_METEO = [
+
+    # pluie
+    "Une pluie battante s'abat sur la région.",
+    # canicule
+    "Une chaleur étouffante envahit la région.",
+    # gel
+    "Un froid glacial recouvre la région d'un voile de givre.",
+    # orage
+    "Un violent orage éclate, le tonnerre gronde et les éclairs frappent le sol.",
+    # tornade
+    "Une tornade dévastatrice traverse la région en arrachant tout sur son passage.",
+    # inondation
+    "Une montée brutale des eaux submerge les terres les plus basses.",
+    # reforestation
+    "Un vaste programme de reforestation redonne vie aux forêts.",
+    # intervention ecologiste
+    "Des écologistes interviennent pour limiter les dégâts environnementaux...",
+    # sécheresse ciblée
+    "Une sécheresse ciblée assèche certaines zones stratégiques.",
+    # epidemie
+    "Une épidémie se propage rapidement et fragilise la population.",
+    # météorite
+    "Une météorite s'écrase violemment, laissant un cratère fumant.",
+]
