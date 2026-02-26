@@ -137,7 +137,7 @@ class Data:
             return False
         
         
-        if nom == "Maree Noire" and self.grille.grille[ligne][colonne] in [(0,255,0), (0,50,0), "pollue", "condamne"]:
+        if nom == "Maree Noire" and self.grille.grille[ligne][colonne] in [(0,255,0), (0,50,0), "pollue"]:
             phrase = PHRASES_POUVOIR[2]
             self.notif.ajouter(phrase)
             return False

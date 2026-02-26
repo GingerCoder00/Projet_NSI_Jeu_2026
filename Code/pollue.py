@@ -172,48 +172,69 @@ class Pollue:
 
     def update_extinction(self, meteo):
 
-        for key, pollue in list(self.dico_UI_anim[self.plan_ref()]["Poubelle"].items()):
+        plan = self.plan_ref()
 
-            # Vitesse de combustion de base
+        for key, pollue in list(self.dico_UI_anim[plan]["Poubelle"].items()):
+
+            # ================= VITESSE D'EXTINCTION =================
             perte = 0.9
 
-            # Température augmente durée de vie
+            # L'eau ralentit la pollution
             perte -= self.data.eau / 250
 
-            # Pluie accélère extinction
+            # La pluie accélère l’extinction
             if meteo.pluie_active:
                 perte += 4
 
-            # Minimum de perte
             perte = max(0.1, perte)
 
             pollue.vie -= perte
 
+            # ================= EXTINCTION =================
             if pollue.vie <= 0:
 
-                # Mettre la grille logique à brulee
-                self.grille.grille[pollue.ligne][pollue.colonne] = (0,0,255)
+                ligne = pollue.ligne
+                colonne = pollue.colonne
 
-                # Supprimer la flamme
-                del self.dico_UI_anim[self.plan_ref()]["Poubelle"][key]
+                # --- Mise à jour logique ---
+                self.grille.grille[ligne][colonne] = (0,0,255)
 
-                # Supprimer la case visuelle normale
-                for key_case, case in list(self.dico_UI_interact[self.plan_ref()]["Case"].items()):
-                    if case.ligne == pollue.ligne and case.colonne == pollue.colonne:
-                        del self.dico_UI_interact[self.plan_ref()]["Case"][key_case]
+                # --- Suppression pollution ---
+                del self.dico_UI_anim[plan]["Poubelle"][key]
+
+                # --- Suppression case visuelle existante ---
+                for key_case, case in list(self.dico_UI_interact[plan]["Case"].items()):
+                    if case.ligne == ligne and case.colonne == colonne:
+                        del self.dico_UI_interact[plan]["Case"][key_case]
                         break
 
-                # Créer une CaseBrulee
+                # --- Suppression croix condamnée éventuelle ---
+                #for key_croix, croix in list(self.dico_UI_anim[plan]["Croix"].items()):
+                    #if croix.ligne == ligne and croix.colonne == colonne:
+                        #del self.dico_UI_anim[plan]["Croix"][key_croix]
+                        #break
 
-                x, y = self.grille.placement_grille(pollue.colonne, pollue.ligne)
+                # --- Création nouvelle case eau ---
+                x, y = self.grille.placement_grille(colonne, ligne)
 
-                case_eau = UI_PNG(self.screen, self.dico_info.type_cases[(0,0,255)][randint(0, len(self.dico_info.type_cases[(0,0,255)]) - 1)], (x, y, self.grille.case_Long, self.grille.case_larg), 5, 0.01)
-                plan = self.plan_ref()
-                key = pollue.ligne * self.grille.colonnes + pollue.colonne
-                self.dico_UI_interact[plan]["Case"][key] = case_eau
+                sprite = self.dico_info.type_cases[(0,0,255)]
+                img = sprite[randint(0, len(sprite) - 1)]
 
-                # Ajustement stats
+                case_eau = UI_PNG(
+                    self.screen,
+                    img,
+                    (x, y, self.grille.case_Long, self.grille.case_larg),
+                    5,
+                    0.01
+                )
 
+                case_eau.ligne = ligne
+                case_eau.colonne = colonne
+
+                new_key = ligne * self.grille.colonnes + colonne
+                self.dico_UI_interact[plan]["Case"][new_key] = case_eau
+
+                # --- Ajustement stats ---
                 self.data.eau += 1
                 self.data.biodiversite += 2
                 self.data.pollution -= 0.8

@@ -188,9 +188,9 @@ class Game:
             0:{
                 "Flamme" : {
                 },
-                "Croix" : {
-                },
                 "Poubelle" : {
+                },
+                "Croix" : {
                 },
                 "Usine" : {
                 },
@@ -207,9 +207,9 @@ class Game:
             1:{
                 "Flamme" : {
                 },
-                "Croix" : {
-                },
                 "Poubelle" : {
+                },
+                "Croix" : {
                 },
                 "Usine" : {
                 },
@@ -513,8 +513,8 @@ class Game:
         # Animations monde (SEULEMENT en jeu actif)
         if self.plan == 0:
             self.flamme.anim_feu()
-            self.condamne.anim_condamne()
             self.pollue.anim_pollue()
+            self.condamne.anim_condamne()
             self.usine.anim_usine()
 
         # Animations principales
