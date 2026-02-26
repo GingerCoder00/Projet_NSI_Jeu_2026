@@ -6,7 +6,7 @@ from animation import Animation
 
 class Meteo:
 
-    def __init__(self, screen, zone_grille_x, zone_grille_y, zone_largeur, zone_hauteur, plan_ref, data, grille, flamme, notification, dico_UI_anim):
+    def __init__(self, screen, zone_grille_x, zone_grille_y, zone_largeur, zone_hauteur, plan_ref, data, grille, flamme, notification, dico_UI_anim, dico_UI_interact):
 
         self.screen = screen
         self.plan_ref = plan_ref
@@ -15,6 +15,7 @@ class Meteo:
         self.flamme = flamme
         self.notif = notification
         self.animation = Animation(screen, plan_ref, dico_UI_anim, grille)
+        self.dico_UI_interact = dico_UI_interact
 
         self.zone_x = zone_grille_x
         self.zone_y = zone_grille_y
@@ -43,24 +44,29 @@ class Meteo:
         self.sprite_meteorite = [os.path.join(self.BASE_DIR, "sprite", "sprite_meteorite", f"sprite_meteorite_{str(i).zfill(2)}.png") for i in range(18)]
         self.meteorite_spawn = False
         self.flag_flash = False
+        self.meteorite_anim_id = None
 
         # TORNADE SPRITES
         self.sprite_tornade = [os.path.join(self.BASE_DIR, "sprite", "sprite_tornade", f"sprite_tornade_{str(i).zfill(2)}.png") for i in range(14)]
+        self.tornade_spawn = False
 
         # Tornade mouvement
-        self.tornade_direction = 1  # 1 = droite, -1 = gauche
-        self.tornade_last_move = 0
         self.tornade_move_delay = 250  # ms entre chaque case
-
+        
         # Animation tornade
         self.tornade_frames = [pygame.transform.scale(elt, (self.grille.case_Long * 5, self.grille.case_larg * 5)) for elt in [pygame.image.load(i).convert_alpha() for i in self.sprite_tornade]]
-        self.tornade_frame_index = 0
         self.tornade_last_frame = 0
         self.tornade_frame_delay = 80
 
+        # NUAGE SPRITES
+        self.sprite_nuage = [os.path.join(self.BASE_DIR, "sprite", "sprite_nuage", f"sprite_nuage_{i}.png") for i in range(4)]
+
+        # Nuage mouvement
+        self.tornade_move_delay = 150  # ms entre chaque case
+
         # ÉTATS
         self.current_event = None
-        self.event_duration = 5000
+        self.event_duration = 6000
 
         self.pluie_active = False
         self.canicule_active = False
@@ -82,16 +88,15 @@ class Meteo:
                 #["pluie", 1, PHRASES_METEO[0]],
                 #["canicule", 0.25, PHRASES_METEO[1]],
                 #["gel", 0.4, PHRASES_METEO[2]],
-                ["orage", 0.35, PHRASES_METEO[3]],
-                ["tornade", 0.6, PHRASES_METEO[4]],
-                #["inondation", 0.2, PHRASES_METEO[5]],
-                #["reforestation", 0.7, PHRASES_METEO[6]],
+                ["orage", 0.9, PHRASES_METEO[3]],
+                ["tornade", 0.8, PHRASES_METEO[4]],
+                #["inondation", 1, PHRASES_METEO[5]],
+                #["reforestation", 1, PHRASES_METEO[6]],
                 #["intervention ecologiste", 0.45, PHRASES_METEO[7]],
-                #["sécheresse ciblée", 0.3, PHRASES_METEO[8]],
+                #["sécheresse ciblée", 1, PHRASES_METEO[8]],
                 #["epidemie", 0.35, PHRASES_METEO[9]],
-                ["météorite", 0.8, PHRASES_METEO[10]],
-                #["nuage", 1],      # Les nuages sont des événements constant pendant tout le jeu pour apporter de la vie
-                [None, 1]
+                ["météorite", 0.5, PHRASES_METEO[10]],
+                #[None, 1]
             ]
 
     def update_event(self):
@@ -102,7 +107,7 @@ class Meteo:
 
             self.last_event = now
 
-            index_event = 2
+            index_event = randint(0, 2)
             self.current_event = self.events[index_event][0]
 
             if random() < self.events[index_event][1]:
@@ -114,7 +119,6 @@ class Meteo:
 
                 if self.current_event == "tornade":
                     self.tornade_active = True
-                    self.spawn_tornade()
                 else:
                     self.tornade_active = False
 
@@ -123,13 +127,13 @@ class Meteo:
                 self.intervention_ecologiste_active = self.current_event == "intervention ecologiste"
                 self.secheresse_ciblee_active = self.current_event == "sécheresse ciblée"
                 self.epidemie_active = self.current_event == "epidemie"
+
                 if self.current_event == "météorite":
                     self.meteorite_active = True
                     self.meteorite_spawn = False
                 else:
                     self.meteorite_active = False
-                
-                self.nuage_active = self.current_event == "nuage"
+            
                 print(f"Evénement actif : {self.current_event} à {(now - self.start_time) / 1000}")
 
                 try:
@@ -176,11 +180,11 @@ class Meteo:
             return
 
         # Flash visuel
-        if random() < 0.025:
+        if random() < 0.035:
             self.flash_alpha = 150
 
             # Chance de déclencher un feu
-            if random() < 0.6:
+            if random() < 0.8:
                 ligne = randint(0, self.grille.lignes - 1)
                 colonne = randint(0, self.grille.colonnes - 1)
 
@@ -204,26 +208,43 @@ class Meteo:
         pass
 
     def tornade(self):
-        
+
         if not self.tornade_active:
+            self.tornade_spawn = False
             return
 
         now = pygame.time.get_ticks()
 
-        # Animation des frames (boucle infinie)
+        # SPAWN UNE SEULE FOIS
+        if not self.tornade_spawn:
+
+            self.tornade_ligne = randint(2, self.grille.lignes - 3)
+
+            if random() < 0.5:
+                self.tornade_direction = 1
+                self.tornade_colonne = 0
+            else:
+                self.tornade_direction = -1
+                self.tornade_colonne = self.grille.colonnes - 1
+
+            self.tornade_last_move = now
+            self.tornade_frame_index = 0
+            self.tornade_spawn = True
+
+        # Animation
         if now - self.tornade_last_frame > self.tornade_frame_delay:
             self.tornade_frame_index = (self.tornade_frame_index + 1) % len(self.tornade_frames)
             self.tornade_last_frame = now
 
-        # Déplacement case par case
+        # Déplacement
         if now - self.tornade_last_move > self.tornade_move_delay:
 
             self.tornade_colonne += self.tornade_direction
             self.tornade_last_move = now
 
-            # Si sortie de la grille → fin
             if self.tornade_colonne < 0 or self.tornade_colonne >= self.grille.colonnes:
                 self.tornade_active = False
+                self.tornade_spawn = False
                 return
 
         # Impact 5x5
@@ -234,30 +255,12 @@ class Meteo:
                 colonne = self.tornade_colonne + j
 
                 if 0 <= ligne < self.grille.lignes and 0 <= colonne < self.grille.colonnes:
-
                     if self.grille.grille[ligne][colonne] == "usine":
                         self.flamme.detruire_usine(ligne, colonne)
 
         # Affichage
         x, y = self.grille.placement_grille(self.tornade_colonne - 2, self.tornade_ligne - 4)
-
         self.screen.blit(self.tornade_frames[self.tornade_frame_index], (x, y))
-        
-    def spawn_tornade(self):
-
-        self.tornade_ligne = randint(2, self.grille.lignes - 3)
-
-        # Choix direction
-        if random() < 0.5:
-            self.tornade_direction = 1
-            self.tornade_colonne = 0
-        else:
-            self.tornade_direction = -1
-            self.tornade_colonne = self.grille.colonnes - 1
-
-        self.tornade_last_move = pygame.time.get_ticks()
-        self.tornade_frame_index = 0
-
 
     def meteorite(self):
 
@@ -277,14 +280,12 @@ class Meteo:
                 self.meteorite_spawn = True
                 self.flag_flash = False
 
-
         # Si animation supprimée → stop
         if self.meteorite_anim_id not in self.animation.animations:
             return
 
         anim = self.animation.animations[self.meteorite_anim_id]
         current_frame = anim.frame_index
-
 
         # IMPACT FRAME 8
         if current_frame >= 8 and not self.flag_flash:
@@ -294,8 +295,12 @@ class Meteo:
 
             for i in range(-2, 3):
                 for j in range(-2, 3):
-                    self.flamme.propagation_feu(self.meteorite_ligne + i, self.meteorite_colonne + j, puissance=6, spawn_anim=False)
 
+                    ligne = self.meteorite_ligne + i
+                    colonne = self.meteorite_colonne + j
+
+                    if 0 <= ligne < self.grille.lignes and 0 <= colonne < self.grille.colonnes:
+                        self.flamme.propagation_feu(ligne, colonne, puissance=6, spawn_anim=False)
 
         # FLASH
         if self.flash_alpha > 0:
@@ -308,12 +313,94 @@ class Meteo:
 
             self.flash_alpha -= 15
 
+    def reforestation_naturelle(self):
 
-    def update(self):
-
-        if self.plan_ref() != 0:
+        if not self.reforestation_active:
             return
 
+        cases_changees = 0
+        objectif = randint(4, 8)
+
+        for ligne in range(self.grille.lignes):
+            for colonne in range(self.grille.colonnes):
+
+                if cases_changees >= objectif:
+                    return
+
+                # Si c'est de l'herbe
+                if self.grille.grille[ligne][colonne] == (0,255,0):
+
+                    # Vérifie les 4 voisins
+                    voisins = [(ligne-1, colonne), (ligne+1, colonne), (ligne, colonne-1), (ligne, colonne+1)]
+
+                    for l, c in voisins:
+                        if 0 <= l < self.grille.lignes and 0 <= c < self.grille.colonnes:
+                            if self.grille.grille[l][c] == (0,50,0):
+
+                                # Transformation
+                                self.grille.grille[ligne][colonne] = (0,50,0)
+                                cases_changees += 1
+                                break
+
+    def inondation(self):
+
+        if not self.inondation_active:
+            return
+
+        cases_changees = 0
+        objectif = randint(4, 8)
+
+        for ligne in range(self.grille.lignes):
+            for colonne in range(self.grille.colonnes):
+
+                if cases_changees >= objectif:
+                    return
+
+                case = self.grille.grille[ligne][colonne]
+
+                # Si herbe ou forêt
+                if case == (0,255,0) or case == (0,50,0):
+
+                    voisins = [(ligne-1, colonne), (ligne+1, colonne), (ligne, colonne-1), (ligne, colonne+1)]
+
+                    for l, c in voisins:
+                        if 0 <= l < self.grille.lignes and 0 <= c < self.grille.colonnes:
+                            if self.grille.grille[l][c] == (0,0,255):
+
+                                self.grille.grille[ligne][colonne] = (0,0,255)
+                                cases_changees += 1
+                                break
+
+    def secheresse_naturelle(self):
+
+        if not self.secheresse_ciblee_active:
+            return
+
+        cases_changees = 0
+        objectif = randint(4, 8)
+
+        for ligne in range(self.grille.lignes):
+            for colonne in range(self.grille.colonnes):
+
+                if cases_changees >= objectif:
+                    return
+
+                # Si c'est de l'eau
+                if self.grille.grille[ligne][colonne] == (0,0,255):
+
+                    # 4 voisins (adjacence simple)
+                    voisins = [(ligne-1, colonne), (ligne+1, colonne), (ligne, colonne-1), (ligne, colonne+1)]
+
+                    for l, c in voisins:
+                        if 0 <= l < self.grille.lignes and 0 <= c < self.grille.colonnes:
+                            if self.grille.grille[l][c] == (0,255,0):  # herbe
+
+                                # Transformation eau → herbe
+                                self.grille.grille[ligne][colonne] = (0,255,0)
+                                cases_changees += 1
+                                break
+
+    def update(self):
         self.update_event()
 
         self.pluie()
@@ -322,3 +409,6 @@ class Meteo:
         self.orage()
         self.tornade()
         self.meteorite()
+        self.reforestation_naturelle()
+        self.inondation()
+        self.secheresse_naturelle()

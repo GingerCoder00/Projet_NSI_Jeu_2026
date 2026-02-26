@@ -229,7 +229,7 @@ class Game:
         self.pollue = Pollue(self.screen, self.grille, self.data, self.dico_UI_anim, self.dico_UI_interact, lambda: self.plan, self.notification) # On utilise lambda car le plan change dynamiquement
         self.usine = Usine(self.screen, self.grille, self.data, self.dico_UI_anim, lambda: self.plan) # On utilise lambda car le plan change dynamiquement
 
-        self.meteo = Meteo(self.screen, self.grille.zone_x, self.grille.zone_y, self.grille.zone_L, self.grille.zone_l, lambda: self.plan, self.data, self.grille, self.flamme, self.notification, self.dico_UI_anim) # On utilise lambda car le plan change dynamiquement
+        self.meteo = Meteo(self.screen, self.grille.zone_x, self.grille.zone_y, self.grille.zone_L, self.grille.zone_l, lambda: self.plan, self.data, self.grille, self.flamme, self.notification, self.dico_UI_anim, self.dico_UI_interact) # On utilise lambda car le plan change dynamiquement
 
         self.pouvoir_actif = None
         self.pouvoirs = {
