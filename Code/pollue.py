@@ -36,7 +36,7 @@ class Pollue:
 
         pollue.frame = 0
         pollue.last_update = pygame.time.get_ticks()
-        pollue.vie = 350
+        pollue.vie = randint(350, 450)
         pollue.ligne = ligne
         pollue.colonne = colonne
 
@@ -207,12 +207,6 @@ class Pollue:
                     if case.ligne == ligne and case.colonne == colonne:
                         del self.dico_UI_interact[plan]["Case"][key_case]
                         break
-
-                # --- Suppression croix condamnée éventuelle ---
-                #for key_croix, croix in list(self.dico_UI_anim[plan]["Croix"].items()):
-                    #if croix.ligne == ligne and croix.colonne == colonne:
-                        #del self.dico_UI_anim[plan]["Croix"][key_croix]
-                        #break
 
                 # --- Création nouvelle case eau ---
                 x, y = self.grille.placement_grille(colonne, ligne)

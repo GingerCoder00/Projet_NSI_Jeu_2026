@@ -24,22 +24,19 @@ class Animation:
         x, y = position
         w, h = taille
 
-        animation = UI_PNG(
-            self.screen,
-            frames_paths[0],
-            (x, y, w, h),
-            5,
-            0
-        )
+        animation = UI_PNG(self.screen, frames_paths[0], (x, y, w, h), 5, 0)
 
         animation.frames = [pygame.image.load(path).convert_alpha() for path in frames_paths]
         animation.frame_index = 0
         animation.last_update = pygame.time.get_ticks()
         animation.frame_delay = frame_delay
         animation.total_frames = len(animation.frames)
+        anim_id = self.next_id
 
         self.animations[self.next_id] = animation
         self.next_id += 1
+
+        return anim_id
 
     def update(self):
         now = pygame.time.get_ticks()

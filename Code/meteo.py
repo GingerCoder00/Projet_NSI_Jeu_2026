@@ -39,19 +39,21 @@ class Meteo:
         # ECLAIR SPRITES
         self.sprite_eclair = [os.path.join(self.BASE_DIR, "sprite", "sprite_eclair", f"sprite_eclair_{i}.png") for i in range(4)]
 
+        # METEORITE SPRITES
+        self.sprite_meteorite = [os.path.join(self.BASE_DIR, "sprite", "sprite_meteorite", f"sprite_meteorite_{str(i).zfill(2)}.png") for i in range(18)]
+        self.meteorite_spawn = False
+        self.flag_flash = False
+
         # TORNADE SPRITES
         self.sprite_tornade = [os.path.join(self.BASE_DIR, "sprite", "sprite_tornade", f"sprite_tornade_{str(i).zfill(2)}.png") for i in range(14)]
 
         # Tornade mouvement
-        self.tornade_active = False
-        self.tornade_ligne = None
-        self.tornade_colonne = None
         self.tornade_direction = 1  # 1 = droite, -1 = gauche
         self.tornade_last_move = 0
         self.tornade_move_delay = 250  # ms entre chaque case
 
         # Animation tornade
-        self.tornade_frames = [pygame.image.load(path).convert_alpha()for path in self.sprite_tornade]
+        self.tornade_frames = [pygame.transform.scale(elt, (self.grille.case_Long * 5, self.grille.case_larg * 5)) for elt in [pygame.image.load(i).convert_alpha() for i in self.sprite_tornade]]
         self.tornade_frame_index = 0
         self.tornade_last_frame = 0
         self.tornade_frame_delay = 80
@@ -82,13 +84,13 @@ class Meteo:
                 #["gel", 0.4, PHRASES_METEO[2]],
                 ["orage", 0.35, PHRASES_METEO[3]],
                 ["tornade", 0.6, PHRASES_METEO[4]],
-                ["inondation", 0.2, PHRASES_METEO[5]],
-                ["reforestation", 0.7, PHRASES_METEO[6]],
-                ["intervention ecologiste", 0.45, PHRASES_METEO[7]],
-                ["sécheresse ciblée", 0.3, PHRASES_METEO[8]],
-                ["epidemie", 0.35, PHRASES_METEO[9]],
-                ["météorite", 0.1, PHRASES_METEO[10]],
-                ["nuage", 1],      # Les nuages sont des événements constant pendant tout le jeu pour apporter de la vie
+                #["inondation", 0.2, PHRASES_METEO[5]],
+                #["reforestation", 0.7, PHRASES_METEO[6]],
+                #["intervention ecologiste", 0.45, PHRASES_METEO[7]],
+                #["sécheresse ciblée", 0.3, PHRASES_METEO[8]],
+                #["epidemie", 0.35, PHRASES_METEO[9]],
+                ["météorite", 0.8, PHRASES_METEO[10]],
+                #["nuage", 1],      # Les nuages sont des événements constant pendant tout le jeu pour apporter de la vie
                 [None, 1]
             ]
 
@@ -96,11 +98,11 @@ class Meteo:
 
         now = pygame.time.get_ticks()
 
-        if now - self.last_event > self.event_duration:
+        if now - self.last_event > self.event_duration and not self.tornade_active:
 
             self.last_event = now
 
-            index_event = 1
+            index_event = 2
             self.current_event = self.events[index_event][0]
 
             if random() < self.events[index_event][1]:
@@ -109,15 +111,24 @@ class Meteo:
                 self.canicule_active = self.current_event == "canicule"
                 self.gel_active = self.current_event == "gel"
                 self.orage_active = self.current_event == "orage"
-                self.tornade_active = self.current_event == "tornade"
-                if self.tornade_active:
+
+                if self.current_event == "tornade":
+                    self.tornade_active = True
                     self.spawn_tornade()
+                else:
+                    self.tornade_active = False
+
                 self.inondation_active = self.current_event == "inondation"
                 self.reforestation_active = self.current_event == "reforestation"
                 self.intervention_ecologiste_active = self.current_event == "intervention ecologiste"
                 self.secheresse_ciblee_active = self.current_event == "sécheresse ciblée"
                 self.epidemie_active = self.current_event == "epidemie"
-                self.meteorite_active = self.current_event == "météorite"
+                if self.current_event == "météorite":
+                    self.meteorite_active = True
+                    self.meteorite_spawn = False
+                else:
+                    self.meteorite_active = False
+                
                 self.nuage_active = self.current_event == "nuage"
                 print(f"Evénement actif : {self.current_event} à {(now - self.start_time) / 1000}")
 
@@ -215,9 +226,9 @@ class Meteo:
                 self.tornade_active = False
                 return
 
-        # Impact 3x3
-        for i in range(-1, 2):
-            for j in range(-1, 2):
+        # Impact 5x5
+        for i in range(-2, 3):
+            for j in range(-2, 3):
 
                 ligne = self.tornade_ligne + i
                 colonne = self.tornade_colonne + j
@@ -228,19 +239,13 @@ class Meteo:
                         self.flamme.detruire_usine(ligne, colonne)
 
         # Affichage
-        x, y = self.animation.scale(
-            6,
-            self.tornade_ligne,
-            self.tornade_colonne,
-            from_top=0.4
-        )
+        x, y = self.grille.placement_grille(self.tornade_colonne - 2, self.tornade_ligne - 4)
 
-        image = self.tornade_frames[self.tornade_frame_index]
-        self.screen.blit(image, (x, y))
+        self.screen.blit(self.tornade_frames[self.tornade_frame_index], (x, y))
         
     def spawn_tornade(self):
 
-        self.tornade_ligne = randint(0, self.grille.lignes - 1)
+        self.tornade_ligne = randint(2, self.grille.lignes - 3)
 
         # Choix direction
         if random() < 0.5:
@@ -252,7 +257,57 @@ class Meteo:
 
         self.tornade_last_move = pygame.time.get_ticks()
         self.tornade_frame_index = 0
-        
+
+
+    def meteorite(self):
+
+        if not self.meteorite_active:
+            return
+
+        # SPAWN UNE SEULE FOIS
+        if not self.meteorite_spawn:
+
+            self.meteorite_ligne = randint(2, self.grille.lignes - 3)
+            self.meteorite_colonne = randint(2, self.grille.colonnes - 3)
+
+            if self.grille.grille[self.meteorite_ligne][self.meteorite_colonne] != (0,0,255):
+
+                self.meteorite_anim_id = self.animation.ajouter_animation(self.sprite_meteorite, self.animation.scale(9, self.meteorite_ligne, self.meteorite_colonne, from_top=0.4)[1], self.animation.scale(9, self.meteorite_ligne, self.meteorite_colonne, from_top=0.4)[0], frame_delay=90)
+
+                self.meteorite_spawn = True
+                self.flag_flash = False
+
+
+        # Si animation supprimée → stop
+        if self.meteorite_anim_id not in self.animation.animations:
+            return
+
+        anim = self.animation.animations[self.meteorite_anim_id]
+        current_frame = anim.frame_index
+
+
+        # IMPACT FRAME 8
+        if current_frame >= 8 and not self.flag_flash:
+
+            self.flash_alpha = 200
+            self.flag_flash = True
+
+            for i in range(-2, 3):
+                for j in range(-2, 3):
+                    self.flamme.propagation_feu(self.meteorite_ligne + i, self.meteorite_colonne + j, puissance=6, spawn_anim=False)
+
+
+        # FLASH
+        if self.flash_alpha > 0:
+
+            flash_surface = pygame.Surface((self.zone_L, self.zone_l))
+            flash_surface.fill((255,255,255))
+            flash_surface.set_alpha(self.flash_alpha)
+
+            self.screen.blit(flash_surface, (self.zone_x, self.zone_y))
+
+            self.flash_alpha -= 15
+
 
     def update(self):
 
@@ -266,3 +321,4 @@ class Meteo:
         self.gel()
         self.orage()
         self.tornade()
+        self.meteorite()
