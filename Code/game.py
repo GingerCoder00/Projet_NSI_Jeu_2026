@@ -15,6 +15,7 @@ from pouvoir import *
 from animation import *
 from notification import *
 from start_game import StartGame
+from endgame import EndGame
 
 pygame.init()
 pygame.mixer.init()
@@ -31,6 +32,7 @@ class Game:
         self.screen = screen
 
         self.start_game = StartGame(self.screen)
+        self.end_game = EndGame(self.screen)
 
         # Gestion du temps
         self.start_time = pygame.time.get_ticks()  # Temps de départ après l'initialisation de pygame
@@ -413,6 +415,10 @@ class Game:
                 self.update_cases_brulees()
 
                 self.data.update_world(dt)
+
+                if self.data.destruction >= 100:
+                    self.end_game.run()
+                    self.running = False  # quitte la boucle principale
 
                 current_time = pygame.time.get_ticks() / 1000
 
