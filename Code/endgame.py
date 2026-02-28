@@ -48,6 +48,20 @@ class EndGame:
         self.spawn_timer = 0
         self.spawn_interval = 0.3  # secondes entre les explosions
 
+        # Timer global
+        self.total_time = 0
+        self.overlay_alpha = 0
+        self.overlay_active = False
+        self.overlay_done = False
+
+        # Surface overlay noir
+        self.overlay = pygame.Surface((self.width, self.height))
+        self.overlay.fill((0, 0, 0))
+        self.overlay.set_alpha(self.overlay_alpha)
+
+        # Police pour le chrono
+        self.font = pygame.font.SysFont("arial", 80)
+
         # Boutons ou actions
         self.running = True
         self.return_to_menu = False
@@ -78,6 +92,22 @@ class EndGame:
                     self.return_to_menu = True
 
     def update(self, dt):
+
+        # Temps total écoulé
+        self.total_time += dt
+
+        # Activation overlay après 5 secondes
+        if self.total_time >= 5:
+            self.overlay_active = True
+        
+        if self.overlay_active:
+            if self.overlay_alpha < 200:
+                self.overlay_alpha += 60 * dt
+                if self.overlay_alpha >= 200:
+                    self.overlay_alpha = 200
+                    self.overlay_done = True
+                self.overlay.set_alpha(int(self.overlay_alpha))
+
         # Spawn automatique des explosions
         self.spawn_timer += dt
         if self.spawn_timer >= self.spawn_interval:
@@ -94,15 +124,26 @@ class EndGame:
                 else:
                     explosion["finished"] = True
 
-        # Supprimer les explosions terminées
         self.explosions = [e for e in self.explosions if not e["finished"]]
 
     def draw(self):
         self.screen.blit(self.bg_image, (0, 0))
+
         for explosion in self.explosions:
             img = self.explosion_images[explosion["frame"]]
             rect = img.get_rect(center=explosion["pos"])
             self.screen.blit(img, rect)
+
+        # Overlay noir progressive
+        if self.overlay_active:
+            self.screen.blit(self.overlay, (0, 0))
+
+            if self.overlay_done:
+                time_text = f"{round(self.total_time, 2)} s"
+                text_surface = self.font.render(time_text, True, (255, 255, 255))
+                text_rect = text_surface.get_rect(center=(self.width // 2, self.height // 2))
+                self.screen.blit(text_surface, text_rect)
+
         pygame.display.flip()
 
     def run(self):
