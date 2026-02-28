@@ -343,7 +343,7 @@ class Game:
             self.screen.blit(self.font.render(f"Taux de biodiversité : {self.data.biodiversite}", True, (0,0,0)), (0,150)) # Taux de biodiversité
             self.screen.blit(self.font.render(f"Taux de stabilité : {self.data.stabilite}", True, (0,0,0)), (0,175)) # Taux de stabilité
             self.screen.blit(self.font.render(f"Taux de profit : {self.data.profit}", True, (0,0,0)), (0,200)) # Taux de profit
-            self.screen.blit(self.font.render(f"Taux de d'augmentation de profit : {self.data.augmentation_profil}", True, (0,0,0)), (0,225)) # Taux de d'augmentation de profit
+            self.screen.blit(self.font.render(f"Taux de d'augmentation de profit : {self.data.augmentation_profit}", True, (0,0,0)), (0,225)) # Taux de d'augmentation de profit
             self.screen.blit(self.font.render(f"Taux de destruction : {self.data.destruction}", True, (0,0,0)), (0,250)) # Taux de destruction
 
     def modif_chrono(self):

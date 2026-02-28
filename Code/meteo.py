@@ -4,6 +4,7 @@ from random import randint, random, shuffle
 from phrases_notif import PHRASES_METEO
 from animation import Animation
 from dico_info_game import *
+import math
 
 class Meteo:
 
@@ -39,6 +40,10 @@ class Meteo:
         self.SUN_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_effet_canicule", "sprite_effet_canicule_")
         self.sprite_sun = [pygame.transform.scale(elt, (self.zone_L, self.zone_l)) for elt in [pygame.image.load(f"{self.SUN_PATH}{i}.png").convert() for i in range(1)]]
 
+        # GEL SPRITES
+        self.GEL_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_effet_gel", "sprite_effet_gel_")
+        self.sprite_gel = [pygame.transform.scale(elt, (self.zone_L, self.zone_l)) for elt in [pygame.image.load(f"{self.GEL_PATH}{i}.png").convert() for i in range(1)]]
+
         # ECLAIR SPRITES
         self.sprite_eclair = [os.path.join(self.BASE_DIR, "sprite", "sprite_eclair", f"sprite_eclair_{i}.png") for i in range(4)]
 
@@ -67,9 +72,27 @@ class Meteo:
         self.inondation_done = False
         self.secheresse_done = False
 
+        # IMAGES EPIDEMIE 
+        self.EPIDEMIE_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_emoji2", "sprite_emoji2_")
+        self.sprite_epidemie = [pygame.image.load(f"{self.EPIDEMIE_PATH}{i}.png").convert_alpha() for i in range(4)]
+
+        # IMAGES ECOLOGISTE 
+        self.ECO_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_emoji", "sprite_emoji_")
+        self.sprite_eco = [pygame.image.load(f"{self.ECO_PATH}{i}.png").convert_alpha() for i in range(4)]
+
+        # Particules
+        self.image_particles = []
+        self.spawn_timer = 0
+        self.spawn_delay = 300
+        self.particle_lifetime = 4000
+
+        # Gestion des événements
+        self.epidemie_active = True  # True si tu veux déclencher l'épidémie
+        self.intervention_ecologiste_active = True  # True si tu veux déclencher l'intervention écolo
+
         # ÉTATS
         self.current_event = None
-        self.event_duration = 6000
+        self.event_duration = 9000
 
         self.pluie_active = False
         self.canicule_active = False
@@ -88,79 +111,120 @@ class Meteo:
         self.flash_alpha = 0
 
         self.events = [
-                #["pluie", 1, PHRASES_METEO[0]],
-                #["canicule", 0.25, PHRASES_METEO[1]],
-                #["gel", 0.4, PHRASES_METEO[2]],
+                ["pluie", 0.8, PHRASES_METEO[0]],
+                ["canicule", 0.8, PHRASES_METEO[1]],
+                ["gel", 0.4, PHRASES_METEO[2]],
                 ["orage", 0.9, PHRASES_METEO[3]],
                 ["tornade", 0.8, PHRASES_METEO[4]],
-                #["inondation", 1, PHRASES_METEO[5]],
-                #["reforestation", 1, PHRASES_METEO[6]],
-                #["intervention ecologiste", 0.45, PHRASES_METEO[7]],
+                ["inondation", 1, PHRASES_METEO[5]],
+                ["reforestation", 1, PHRASES_METEO[6]],
+                ["intervention ecologiste", 0.8, PHRASES_METEO[7]],
                 ["sécheresse ciblée", 1, PHRASES_METEO[8]],
-                #["epidemie", 0.35, PHRASES_METEO[9]],
-                ["météorite", 0.5, PHRASES_METEO[10]],
-                #[None, 1]
+                ["epidemie", 0.6, PHRASES_METEO[9]],
+                ["météorite", 0.15, PHRASES_METEO[10]],
+                [None, 1]
             ]
+        
+        # Coefficients par événement : +1 = augmente la probabilité, -1 = la diminue
+        self.event_coeffs = {
+            "epidemie": {"pollution": 0.01, "biodiversite": -0.005},   # pollution ↑ → épidémie ↑
+            "intervention ecologiste": {"pollution": -0.01, "biodiversite": 0.01}, # pollution ↑ → intervention ↑
+            "canicule": {"temperature": 0.02, "eau": -0.01},
+            "inondation": {"eau": 0.02},
+            "sécheresse ciblée": {"eau": -0.02},
+            "reforestation": {"biodiversite": 0.01},
+            "pluie": {"eau": 0.01},
+            "gel": {"temperature": -0.02},
+            "orage": {"temperature": 0.01, "eau": 0.01},
+            "tornade": {"stabilite": -0.01},
+            "météorite": {}  # événement rare, reste fixe
+        }
+
+        self.event_effects = {
+            "pluie": {"eau": 0.08, "biodiversite": 0.05, "pollution": -0.03},
+            "canicule": {"temperature": 0.05, "eau": -0.055, "biodiversite": -0.029},
+            "gel": {"temperature": -0.09, "eau": -0.055, "biodiversite": -0.029},
+            "orage": {"stabilite": -0.39},  # autres effets spéciaux gérés à part
+            "tornade": {"stabilite": -5, "temperature": -2, "destruction": -3},
+            "inondation": {"temperature": -1.15, "stabilite": -2, "eau": 3},
+            "reforestation": {"biodiversite": 3, "stabilite": 2, "augmentation_profit": -3},
+            "intervention ecologiste": {"biodiversite": 0.15, "profit": -0.35, "augmentation_profit": -1.5},
+            "sécheresse ciblée": {},
+            "epidemie": {"pollution": 0.05, "eau": -0.05, "profit": -0.5, "augmentation_profit": -1},
+            "météorite": {"stabilite": -8, "destruction": -5, "pollution": -4, "profit": -10}
+        }
+        
+    def calculer_prob_event(self, event_name):
+        # Récupérer la proba de base
+        base_prob = next((e[1] for e in self.events if e[0] == event_name), 0)
+        
+        # Ajuster selon les jauges
+        coeffs = self.event_coeffs.get(event_name, {})
+        modif = 0
+        for jauge, coef in coeffs.items():
+            valeur = getattr(self, jauge)
+            modif += coef * valeur  # valeur de la jauge * coefficient
+
+        prob_finale = max(0, min(1, base_prob + modif))
+        return prob_finale
 
     def update_event(self):
-
         now = pygame.time.get_ticks()
 
-        if now - self.last_event > self.event_duration and not self.tornade_active and not self.meteorite_active:
+        # On ne fait rien si l'événement actuel n'est pas encore terminé
+        # ou s'il y a déjà une tornade ou une météorite en cours
+        if now - self.last_event <= self.event_duration or self.tornade_active or self.meteorite_active:
+            return
 
-            self.last_event = now
+        # On note le moment où l'on déclenche un nouvel événement
+        self.last_event = now
 
-            index_event = 2
-            self.current_event = self.events[index_event][0]
+        # On choisit un événement au hasard dans la liste
+        index_event = randint(0, len(self.events) - 1)
+        self.current_event = self.events[index_event][0]
 
-            if random() < self.events[index_event][1]:
+        # Vérifier si l'événement se déclenche selon sa probabilité
+        if random() >= self.events[index_event][1]:
+            # L'événement ne se déclenche pas
+            self.current_event = None
+            return
 
-                self.pluie_active = self.current_event == "pluie"
-                self.canicule_active = self.current_event == "canicule"
-                self.gel_active = self.current_event == "gel"
-                self.orage_active = self.current_event == "orage"
+        # On met à jour l'état de chaque événement (vrai si c'est l'événement actuel, sinon faux)
+        self.pluie_active = (self.current_event == "pluie")
+        self.canicule_active = (self.current_event == "canicule")
+        self.gel_active = (self.current_event == "gel")
+        self.orage_active = (self.current_event == "orage")
+        self.tornade_active = (self.current_event == "tornade")
+        self.inondation_active = (self.current_event == "inondation")
+        self.reforestation_active = (self.current_event == "reforestation")
+        self.intervention_ecologiste_active = (self.current_event == "intervention ecologiste")
+        self.secheresse_ciblee_active = (self.current_event == "sécheresse ciblée")
+        self.epidemie_active = (self.current_event == "epidemie")
+        self.meteorite_active = (self.current_event == "météorite")
 
-                if self.current_event == "tornade":
-                    self.tornade_active = True
-                else:
-                    self.tornade_active = False
+        # Réinitialiser les flags et compteurs pour certains événements
+        if not self.tornade_active:
+            self.tornade_spawn = False
+        if self.inondation_active:
+            self.inondation_done = False
+        if self.reforestation_active:
+            self.reforestation_done = False
+        if self.secheresse_ciblee_active:
+            self.secheresse_done = False
+        if not self.meteorite_active:
+            self.meteorite_spawn = False
+        if self.meteorite_active:
+            self.flag_flash = False
 
-                if self.current_event == "inondation":
-                    self.inondation_active = True
-                    self.inondation_done = False
-                else:
-                    self.inondation_active = False
+        # Afficher la phrase de notification si elle existe
+        try:
+            phrase = self.events[index_event][2]
+            self.notif.ajouter(phrase)
+        except:
+            pass
 
-                if self.current_event == "reforestation":
-                    self.reforestation_active = True
-                    self.reforestation_done = False
-                else:
-                    self.reforestation_active = False
-    
-                
-                self.intervention_ecologiste_active = self.current_event == "intervention ecologiste"
-
-                if self.current_event == "sécheresse ciblée":
-                    self.secheresse_ciblee_active = True
-                    self.secheresse_done = False
-                else:
-                    self.secheresse_done = False
-
-                self.epidemie_active = self.current_event == "epidemie"
-
-                if self.current_event == "météorite":
-                    self.meteorite_active = True
-                    self.meteorite_spawn = False
-                else:
-                    self.meteorite_active = False
-            
-                print(f"Evénement actif : {self.current_event} à {(now - self.start_time) / 1000}")
-
-                try:
-                    phrase = self.events[index_event][2]
-                    self.notif.ajouter(phrase)
-                except:
-                    pass
+        # Affichage dans la console pour suivre les événements
+        print(f"Evénement actif : {self.current_event} à {round((now - self.start_time) / 1000, 2)} secondes")
 
     def pluie(self):
 
@@ -178,10 +242,6 @@ class Meteo:
         image.set_alpha(120)
         self.screen.blit(image, (self.zone_x, self.zone_y))
 
-        # Effets gameplay
-        self.data.eau += 0.03
-        self.data.biodiversite += 0.02
-
     def canicule(self):
 
         if not self.canicule_active:
@@ -190,9 +250,6 @@ class Meteo:
         image = self.sprite_sun[0]
         image.set_alpha(120)
         self.screen.blit(image, (self.zone_x, self.zone_y))
-
-        self.data.eau -= 0.04
-        self.data.biodiversite -= 0.02
 
     def orage(self):
 
@@ -222,8 +279,9 @@ class Meteo:
         if not self.gel_active:
             return
 
-        # Ralentit propagation via malus
-        pass
+        image = self.sprite_gel[0]
+        image.set_alpha(120)
+        self.screen.blit(image, (self.zone_x, self.zone_y))
 
     def tornade(self):
 
@@ -439,6 +497,82 @@ class Meteo:
 
         self.secheresse_done = True  # Marquer comme fait pour cet événement
 
+    def epidemie(self):
+
+        if not self.epidemie_active:
+            return
+        
+        now = pygame.time.get_ticks()
+        if now - self.spawn_timer > self.spawn_delay:
+            self.spawn_timer = now
+
+            # Créer une particule épidémie
+            base_image = self.sprite_epidemie[randint(0, len(self.sprite_epidemie) - 1)]
+            ligne = randint(0, self.grille.lignes - 1)
+            colonne = randint(0, self.grille.colonnes - 1)
+            x, y = self.grille.placement_grille(colonne, ligne)
+            scale = random() * 0.8 + 0.4
+            image = pygame.transform.smoothscale(base_image, (int(base_image.get_width() * scale), int(base_image.get_height() * scale)))
+            image.set_alpha(randint(100, 170))
+            self.image_particles.append({
+                "type": "epidemie",
+                "image": image,
+                "x": x + self.grille.case_Long // 2,
+                "y": y + self.grille.case_larg // 2,
+                "angle_offset": random() * math.pi,
+                "birth": now
+            })
+
+        # Affichage des particules épidémie
+        for particle in self.image_particles[:]:
+            if particle["type"] != "epidemie":
+                continue
+            age = now - particle["birth"]
+            angle = 15 * math.sin(now * 0.003 + particle["angle_offset"])
+            rotated = pygame.transform.rotate(particle["image"], angle)
+            rect = rotated.get_rect(center=(particle["x"], particle["y"]))
+            self.screen.blit(rotated, rect)
+            if age > self.particle_lifetime:
+                self.image_particles.remove(particle)
+
+    def intervention_ecologiste(self):
+
+        if not self.intervention_ecologiste_active:
+            return
+
+        now = pygame.time.get_ticks()
+        if now - self.spawn_timer > self.spawn_delay:
+            self.spawn_timer = now
+
+            # Créer une particule intervention écolo
+            base_image = self.sprite_eco[randint(0, len(self.sprite_eco) - 1)]
+            ligne = randint(0, self.grille.lignes - 1)
+            colonne = randint(0, self.grille.colonnes - 1)
+            x, y = self.grille.placement_grille(colonne, ligne)
+            scale = random() * 0.8 + 0.4
+            image = pygame.transform.smoothscale(base_image, (int(base_image.get_width() * scale), int(base_image.get_height() * scale)))
+            image.set_alpha(randint(100, 170))
+            self.image_particles.append({
+                "type": "ecolo",
+                "image": image,
+                "x": x + self.grille.case_Long // 2,
+                "y": y + self.grille.case_larg // 2,
+                "angle_offset": random() * math.pi,
+                "birth": now
+            })
+
+        # Affichage des particules écolo
+        for particle in self.image_particles[:]:
+            if particle["type"] != "ecolo":
+                continue
+            age = now - particle["birth"]
+            angle = 15 * math.sin(now * 0.003 + particle["angle_offset"])
+            rotated = pygame.transform.rotate(particle["image"], angle)
+            rect = rotated.get_rect(center=(particle["x"], particle["y"]))
+            self.screen.blit(rotated, rect)
+            if age > self.particle_lifetime:
+                self.image_particles.remove(particle)
+
     def update(self):
         self.update_event()
 
@@ -451,3 +585,5 @@ class Meteo:
         self.reforestation_naturelle()
         self.inondation()
         self.secheresse_naturelle()
+        self.intervention_ecologiste()
+        self.epidemie()

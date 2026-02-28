@@ -11,12 +11,12 @@ class Data:
         # JAUGES PRINCIPALES
         
         self.pollution = 10
-        self.temperature = 0
-        self.eau = 20
-        self.biodiversite = 50
+        self.temperature = 10
+        self.eau = 90
+        self.biodiversite = 95
         self.stabilite = 100
-        self.profit = 5
-        self.augmentation_profil = 225
+        self.profit = 0
+        self.augmentation_profit = 35
         self.destruction = 0
 
         # PARAMÈTRES MONDE
@@ -30,6 +30,7 @@ class Data:
         self.coeff_pollution_from_stab = 0.0004
         self.coeff_profit_from_profit = 0.04
         self.coeff_pollution_from_profit = 0.00015
+        self.coeff_stab_from_stab = 0.00009
 
         # POUVOIRS
         
@@ -47,7 +48,7 @@ class Data:
                 "cout": 18,
                 "effets": {
                     "pollution": 7,
-                    "augmentation_profil": 4
+                    "augmentation_profit": 4
                 }
             },
             "guerre": {
@@ -76,7 +77,7 @@ class Data:
                 "cout": 30,
                 "effets": {
                     "stabilite": -6,
-                    "augmentation_profil": 7
+                    "augmentation_profit": 7
                 }
             }
         }
@@ -110,10 +111,13 @@ class Data:
             self.pollution += (30 - self.stabilite) * self.coeff_pollution_from_stab * temps
 
         # Augmentation des profits
-        self.profit += self.augmentation_profil * self.coeff_profit_from_profit * temps
+        self.profit += self.augmentation_profit * self.coeff_profit_from_profit * temps
 
         # Profit génère pollution passive
-        self.pollution += self.augmentation_profil * self.coeff_pollution_from_profit * temps
+        self.pollution += self.augmentation_profit * self.coeff_pollution_from_profit * temps
+
+        # Plus le temps passe plus la stabilite augmente
+        self.stabilite += self.stabilite * self.coeff_stab_from_stab * temps
 
         # Clamp des valeurs
         self.clamp_values()
