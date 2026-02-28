@@ -1,0 +1,7 @@
+best_time=128.4
+incendie_declaree=45
+case_polluees=82
+arbre_brules=60
+usine_creee=12
+desinformation_creee=3
+guerre_declaree=1

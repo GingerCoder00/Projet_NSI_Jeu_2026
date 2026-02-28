@@ -16,6 +16,7 @@ from animation import *
 from notification import *
 from start_game import StartGame
 from endgame import EndGame
+from save import score
 
 pygame.init()
 pygame.mixer.init()
@@ -369,6 +370,19 @@ class Game:
         for key, case in list(self.dico_UI_interact[plan]["CaseBrulee"].items()):
             if case.update(self.meteo):
                 del self.dico_UI_interact[plan]["CaseBrulee"][key]
+
+    def save_score(self):
+
+        # Temps survécu
+        score["best_time"] = round(self.chrono, 3)
+
+        # Stats monde
+        score["incendie_declaree"] = self.data.incendie_declaree
+        score["case_polluees"] = self.data.case_polluees
+        score["arbre_brules"] = self.data.arbre_brules
+        score["usine_creee"] = self.data.usine_creee
+        score["desinformation creee"] = self.data.desinformation_creee
+        score["guerre_declaree"] = self.data.guerre_declaree
 
     def run(self):
 
