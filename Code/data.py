@@ -10,14 +10,14 @@ class Data:
 
         # JAUGES PRINCIPALES
         
-        self.pollution = 100
-        self.temperature = 100
+        self.pollution = 80
+        self.temperature = 80
         self.eau = 0
         self.biodiversite = 0
-        self.stabilite = 100
+        self.stabilite = 80
         self.profit = 0
         self.augmentation_profit = 35
-        self.destruction = 95
+        self.destruction = 50
 
         # PARAMÈTRES MONDE
         
@@ -81,6 +81,13 @@ class Data:
                 }
             }
         }
+
+        self.incendie_declaree = 0
+        self.case_polluees = 0
+        self.arbre_brules = 0
+        self.usine_creee = 0
+        self.desinformation_creee = 0
+        self.guerre_declaree = 0
 
     # UPDATE MONDE
     
