@@ -117,7 +117,11 @@ class EndGame:
             old_value = current_best.get(key, 0)
             new_value = score[key]
 
-            if new_value > old_value:
+            if key == "temps":
+                if new_value < old_value:
+                    updated = True
+                    self.new_records[key] = True
+            elif new_value > old_value:
                 updated = True
                 self.new_records[key] = True
 
