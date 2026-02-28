@@ -10,14 +10,14 @@ class Data:
 
         # JAUGES PRINCIPALES
         
-        self.pollution = 80
-        self.temperature = 80
-        self.eau = 0
-        self.biodiversite = 0
-        self.stabilite = 80
+        self.pollution = 10
+        self.temperature = 20
+        self.eau = 90
+        self.biodiversite = 95
+        self.stabilite = 95
         self.profit = 0
-        self.augmentation_profit = 35
-        self.destruction = 50
+        self.augmentation_profit = 40
+        self.destruction = 0
 
         # PARAMÈTRES MONDE
         
@@ -30,7 +30,7 @@ class Data:
         self.coeff_pollution_from_stab = 0.0004
         self.coeff_profit_from_profit = 0.04
         self.coeff_pollution_from_profit = 0.00015
-        self.coeff_stab_from_stab = 0.00009
+        self.coeff_stab_from_stab = 0.00011
 
         # POUVOIRS
         

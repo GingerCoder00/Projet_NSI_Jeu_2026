@@ -204,7 +204,7 @@ class Flamme:
 
         # Perte économique
         self.data.profit = max(0, self.data.profit - 8)
-        self.data.augmentation_profil = max(0, self.data.augmentation_profil - 7)
+        self.data.augmentation_profit = max(0, self.data.augmentation_profit - 7)
 
         # La case usine devient feu
         self.grille.grille[ligne][colonne] = "feu"

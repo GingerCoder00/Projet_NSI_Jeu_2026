@@ -1,4 +1,4 @@
-temps=999999
+temps=0
 incendie_declaree=0
 case_polluees=0
 arbre_brules=0
