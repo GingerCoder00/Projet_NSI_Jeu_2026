@@ -149,14 +149,14 @@ class Meteo:
             "inondation": {"temperature": -1.15, "stabilite": -2, "eau": 3},
             "reforestation": {"biodiversite": 3, "stabilite": 2, "augmentation_profit": -3},
             "intervention ecologiste": {"biodiversite": 0.15, "profit": -0.35, "augmentation_profit": -1.5},
-            "sécheresse ciblée": {},
+            "sécheresse ciblée": {"eau": -0.1},
             "epidemie": {"pollution": 0.05, "eau": -0.05, "profit": -0.5, "augmentation_profit": -1},
             "météorite": {"stabilite": -8, "destruction": -5, "pollution": -4, "profit": -10}
         }
         
     def calculer_prob_event(self, event_name):
         # Récupérer la proba de base
-        base_prob = next((e[1] for e in self.events if e[0] == event_name), 0)
+        base_prob = next((elt[1] for elt in self.events if elt[0] == event_name), 0)
         
         # Ajuster selon les jauges
         coeffs = self.event_coeffs.get(event_name, {})
@@ -167,6 +167,13 @@ class Meteo:
 
         prob_finale = max(0, min(1, base_prob + modif))
         return prob_finale
+    
+    def appliquer_effets(self):
+        if self.current_event in self.event_effects:
+            effets = self.event_effects[self.current_event]
+            for jauge, valeur in effets.items():
+                if hasattr(self, jauge):
+                    setattr(self, jauge, getattr(self, jauge) + valeur)
 
     def update_event(self):
         now = pygame.time.get_ticks()
@@ -575,6 +582,8 @@ class Meteo:
 
     def update(self):
         self.update_event()
+
+        self.appliquer_effets()  # <-- applique les jauges
 
         self.pluie()
         self.canicule()
