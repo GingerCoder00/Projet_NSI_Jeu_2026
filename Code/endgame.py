@@ -4,6 +4,7 @@ import os
 from resp_tools import *
 from save import score
 import math
+from ui_tools import Texte
 
 pygame.init()
 
@@ -25,8 +26,24 @@ class EndGame:
         self.EXPLOSION_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_explosion2", "sprite_explosion3_")
 
         self.ratio_objet = {
-            "spawn_zone" : (0.2, 0.2, 0.6, 0.8)
+            "spawn_zone" : (0.2, 0.2, 0.6, 0.8),
+            "Texte_Temps" : (0.15, 0.15, 0.4),
+            "Texte_Incendie" : (0.15, 0.3, 0.15),
+            "Texte_Polluee" : (0.15, 0.4, 0.15),
+            "Texte_Brulee" : (0.15, 0.5, 0.15),
+            "Texte_Usine" : (0.15, 0.6, 0.15),
+            "Texte_Desinformation" : (0.15, 0.7, 0.15),
+            "Texte_Guerre" : (0.15, 0.8, 0.15),
+            "Best_Temps": (0.6, 0.17, 0.08),
+            "Best_Incendie": (0.6, 0.29, 0.08),
+            "Best_Polluee": (0.6, 0.39, 0.08),
+            "Best_Brulee": (0.6, 0.49, 0.08),
+            "Best_Usine": (0.6, 0.59, 0.08),
+            "Best_Desinformation": (0.6, 0.69, 0.08),
+            "Best_Guerre": (0.6, 0.79, 0.08),
         }
+
+        self.dico_stats = {}
 
         self.spawn_zone = self.resp.resp(self.ratio_objet["spawn_zone"][0], self.ratio_objet["spawn_zone"][1], self.ratio_objet["spawn_zone"][2], self.ratio_objet["spawn_zone"][3])
         
@@ -63,13 +80,71 @@ class EndGame:
         self.score_saved = False
         self.new_records = {}  # Pour savoir quelles stats ont battu un record
 
-        # Police pour le chrono
-        self.font = pygame.font.SysFont("arial", 80)
-        self.best_font_base = pygame.font.SysFont("arial", 60)
-
         # Boutons ou actions
         self.running = True
         self.return_to_menu = False
+
+    def create_stat_ui(self):
+
+        self.dico_stats = {}
+
+        mapping = {
+            "temps": ("Texte_Temps", "Best_Temps"),
+            "incendie_declaree": ("Texte_Incendie", "Best_Incendie"),
+            "case_polluees": ("Texte_Polluee", "Best_Polluee"),
+            "arbre_brules": ("Texte_Brulee", "Best_Brulee"),
+            "usine_creee": ("Texte_Usine", "Best_Usine"),
+            "desinformation_creee": ("Texte_Desinformation", "Best_Desinformation"),
+            "guerre_declaree": ("Texte_Guerre", "Best_Guerre"),
+        }
+
+        index = 0
+
+        for key, value in score.items():
+
+            if key not in mapping:
+                continue
+
+            text_ratio, best_ratio = mapping[key]
+
+            # Position texte principal
+            position = self.resp.resp_text(
+                self.ratio_objet[text_ratio][0],
+                self.ratio_objet[text_ratio][1]
+            )
+
+            size = self.resp.resp_font(
+                self.ratio_objet[text_ratio][0],
+                self.ratio_objet[text_ratio][2]
+            )
+
+            self.dico_stats[index] = {"text": Texte(self.screen, position, size, (255,255,255), f"{key.upper()} : {value}",font_type="font/font_retro.ttf")
+            }
+
+            # BEST SCORE responsive
+            if key in self.new_records:
+
+                best_position = self.resp.resp_text(
+                    self.ratio_objet[best_ratio][0],
+                    self.ratio_objet[best_ratio][1]
+                )
+
+                best_size = self.resp.resp_font(
+                    self.ratio_objet[best_ratio][0],
+                    self.ratio_objet[best_ratio][2]
+                )
+
+                self.dico_stats[index]["best"] = Texte(
+                    self.screen,
+                    best_position,
+                    best_size,
+                    [255,215,0],
+                    "BEST !",
+                    sin_effect=True,
+                    font_type="font/font_retro.ttf"
+                )
+
+            index += 1
 
     def load_best_score_from_file(self):
         best_score_file = {}
@@ -178,6 +253,7 @@ class EndGame:
 
         if self.overlay_done and not self.score_saved:
             self.update_best_score_file()
+            self.create_stat_ui()
             self.score_saved = True
 
         # Update des explosions
@@ -190,7 +266,7 @@ class EndGame:
                 else:
                     explosion["finished"] = True
 
-        self.explosions = [e for e in self.explosions if not e["finished"]]
+        self.explosions = [elt for elt in self.explosions if not elt["finished"]]
 
     def draw(self):
         self.screen.blit(self.bg_image, (0, 0))
@@ -205,26 +281,11 @@ class EndGame:
             self.screen.blit(self.overlay, (0, 0))
 
             if self.overlay_done:
-                y_offset = self.height // 2 - 150
+                for index in self.dico_stats:
+                    self.dico_stats[index]["text"].update()
 
-                for key, value in score.items():
-
-                    stat_text = f"{key} : {value}"
-                    text_surface = self.font.render(stat_text, True, (255, 255, 255))
-                    text_rect = text_surface.get_rect(center=(self.width // 2, y_offset))
-                    self.screen.blit(text_surface, text_rect)
-
-                    # Si record battu → afficher BEST SCORE !
-                    if key in self.new_records:
-                        pulse = 1 + 0.15 * math.sin(pygame.time.get_ticks() * 0.01)
-                        size = int(60 * pulse)
-
-                        best_font = pygame.font.SysFont("arial", size)
-                        best_surface = best_font.render("BEST SCORE !", True, (255, 215, 0))
-                        best_rect = best_surface.get_rect(center=(self.width // 2, y_offset + 40))
-                        self.screen.blit(best_surface, best_rect)
-
-                    y_offset += 100
+                    if "best" in self.dico_stats[index]:
+                        self.dico_stats[index]["best"].update()
 
         pygame.display.flip()
 

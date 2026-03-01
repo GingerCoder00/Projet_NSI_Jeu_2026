@@ -55,7 +55,7 @@ class Grille:
                 self.MAP_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_map", f"sprite_map_{self.num_map}.png")
                 color = self.color_pixel_map(self.MAP_PATH, colonnes, lignes)
                 index_randint = randint(0, len(self.dico_info.type_cases[color]) - 1)
-                case = UI_PNG(self.screen, self.dico_info.type_cases[color][index_randint], (x, y, self.case_Long, self.case_larg), 5, 0.01)
+                case = UI_PNG(self.screen, self.dico_info.type_cases[color][index_randint], (x, y, self.case_Long, self.case_larg), 5, 0)
                 self.dico_interact[0]["Case"][index] = case
                 self.dico_interact[1]["Case"][index] = case
 

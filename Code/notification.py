@@ -2,7 +2,7 @@ import pygame
 import os
 
 class Notification_gestion:
-    def __init__(self, screen, rect_ui, color=(255, 255, 255), font_size_ratio=0.23, diff_y=15, volume_sound = 0.2):
+    def __init__(self, screen, rect_ui, color=(255, 255, 255), font_size_ratio=0.19, diff_y=15, volume_sound = 0.2):
         self.screen = screen
         self.rect_ui = rect_ui
         self.color = color
@@ -10,7 +10,7 @@ class Notification_gestion:
         self.diff_y = diff_y
 
         self.BASE_DIR = os.path.dirname(__file__)
-        self.FONT_PATH = os.path.join(self.BASE_DIR, "font", "font_retro2.ttf")
+        self.FONT_PATH = os.path.join(self.BASE_DIR, "font", "retro_notif.ttf")
 
         self.NOTIF_SONG_PATH = os.path.join(self.BASE_DIR, "sound", "notif.wav")
         self.notif_sound = pygame.mixer.Sound(self.NOTIF_SONG_PATH)

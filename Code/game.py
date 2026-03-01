@@ -198,13 +198,13 @@ class Game:
                 "Usine" : {
                 },
                 "Jauge" : {
-                    "Jauge_pollution" : Jauge(self.screen, self.JAUGE_POLLUTION_PATH, "pollution", lambda: self.data, self.resp.resp(self.ratio_objet["Jauge_pollution"][0], self.ratio_objet["Jauge_pollution"][1], self.ratio_objet["Jauge_pollution"][2], self.ratio_objet["Jauge_pollution"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.pollution)),
-                    "Jauge_bio" : Jauge(self.screen, self.JAUGE_BIO_PATH, "biodiversite", lambda : self.data, self.resp.resp(self.ratio_objet["Jauge_bio"][0], self.ratio_objet["Jauge_bio"][1], self.ratio_objet["Jauge_bio"][2], self.ratio_objet["Jauge_bio"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.biodiversite)),
-                    "Jauge_niv_ocean" : Jauge(self.screen, self.JAUGE_NIV_OCEAN_PATH, "eau", lambda : self.data, self.resp.resp(self.ratio_objet["Jauge_niv_ocean"][0], self.ratio_objet["Jauge_niv_ocean"][1], self.ratio_objet["Jauge_niv_ocean"][2], self.ratio_objet["Jauge_niv_ocean"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.eau)),
-                    "Jauge_social" : Jauge(self.screen, self.JAUGE_SOCIAL_PATH, "stabilite", lambda : self.data, self.resp.resp(self.ratio_objet["Jauge_social"][0], self.ratio_objet["Jauge_social"][1], self.ratio_objet["Jauge_social"][2], self.ratio_objet["Jauge_social"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.stabilite)),
-                    "Jauge_temp" : Jauge(self.screen, self.JAUGE_TEMP_PATH, "temperature", lambda : self.data, self.resp.resp(self.ratio_objet["Jauge_temp"][0], self.ratio_objet["Jauge_temp"][1], self.ratio_objet["Jauge_temp"][2], self.ratio_objet["Jauge_temp"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.temperature)),
-                    "Jauge_nourriture" : Jauge(self.screen, self.JAUGE_NOURRITURE_PATH, "profit", lambda : self.data, self.resp.resp(self.ratio_objet["Jauge_nourriture"][0], self.ratio_objet["Jauge_nourriture"][1], self.ratio_objet["Jauge_nourriture"][2], self.ratio_objet["Jauge_nourriture"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.profit)),
-                    "Jauge_total" : Jauge(self.screen, self.JAUGE_TOTAL_PATH, "destruction", lambda : self.data, self.resp.resp(self.ratio_objet["Jauge_total"][0], self.ratio_objet["Jauge_total"][1], self.ratio_objet["Jauge_total"][2], self.ratio_objet["Jauge_total"][3]), 7, 0.03, self.converte_data_into_frame(11, self.data.destruction), "0", nbr_frames = 11)
+                    "Jauge_pollution" : Jauge(self.screen, self.JAUGE_POLLUTION_PATH, "pollution", lambda: self.data, self.resp.resp(self.ratio_objet["Jauge_pollution"][0], self.ratio_objet["Jauge_pollution"][1], self.ratio_objet["Jauge_pollution"][2], self.ratio_objet["Jauge_pollution"][3]), 7, 0.01, self.converte_data_into_frame(7, self.data.pollution)),
+                    "Jauge_bio" : Jauge(self.screen, self.JAUGE_BIO_PATH, "biodiversite", lambda : self.data, self.resp.resp(self.ratio_objet["Jauge_bio"][0], self.ratio_objet["Jauge_bio"][1], self.ratio_objet["Jauge_bio"][2], self.ratio_objet["Jauge_bio"][3]), 7, 0.01, self.converte_data_into_frame(7, self.data.biodiversite)),
+                    "Jauge_niv_ocean" : Jauge(self.screen, self.JAUGE_NIV_OCEAN_PATH, "eau", lambda : self.data, self.resp.resp(self.ratio_objet["Jauge_niv_ocean"][0], self.ratio_objet["Jauge_niv_ocean"][1], self.ratio_objet["Jauge_niv_ocean"][2], self.ratio_objet["Jauge_niv_ocean"][3]), 7, 0.01, self.converte_data_into_frame(7, self.data.eau)),
+                    "Jauge_social" : Jauge(self.screen, self.JAUGE_SOCIAL_PATH, "stabilite", lambda : self.data, self.resp.resp(self.ratio_objet["Jauge_social"][0], self.ratio_objet["Jauge_social"][1], self.ratio_objet["Jauge_social"][2], self.ratio_objet["Jauge_social"][3]), 7, 0.01, self.converte_data_into_frame(7, self.data.stabilite)),
+                    "Jauge_temp" : Jauge(self.screen, self.JAUGE_TEMP_PATH, "temperature", lambda : self.data, self.resp.resp(self.ratio_objet["Jauge_temp"][0], self.ratio_objet["Jauge_temp"][1], self.ratio_objet["Jauge_temp"][2], self.ratio_objet["Jauge_temp"][3]), 7, 0.01, self.converte_data_into_frame(7, self.data.temperature)),
+                    "Jauge_nourriture" : Jauge(self.screen, self.JAUGE_NOURRITURE_PATH, "profit", lambda : self.data, self.resp.resp(self.ratio_objet["Jauge_nourriture"][0], self.ratio_objet["Jauge_nourriture"][1], self.ratio_objet["Jauge_nourriture"][2], self.ratio_objet["Jauge_nourriture"][3]), 7, 0.01, self.converte_data_into_frame(7, self.data.profit)),
+                    "Jauge_total" : Jauge(self.screen, self.JAUGE_TOTAL_PATH, "destruction", lambda : self.data, self.resp.resp(self.ratio_objet["Jauge_total"][0], self.ratio_objet["Jauge_total"][1], self.ratio_objet["Jauge_total"][2], self.ratio_objet["Jauge_total"][3]), 7, 0.01, self.converte_data_into_frame(11, self.data.destruction), "0", nbr_frames = 11)
                 },
             },
             1:{
@@ -478,7 +478,7 @@ class Game:
 
     def draw(self):
 
-        self.screen.fill((0, 0, 0))
+        self.screen.fill((201, 254, 255))
         if self.plan == -1:
 
             self.start_game.draw()
@@ -486,15 +486,29 @@ class Game:
             return
 
         # Interfaces
-        for interfaces in self.dico_UI[0].values():
-            interfaces.update()
+        if self.plan == 0:
+            for interfaces in self.dico_UI[0].values():
+                interfaces.update()
+
+        else:
+            for interfaces in self.dico_UI[0].values():
+                interfaces.create()
+
 
         # Grille
-        for case in self.dico_UI_interact[0]["Case"].values():
-            case.update()
+        if self.plan == 0:
+            for case in self.dico_UI_interact[0]["Case"].values():
+                case.update()
 
-        for case_brulee in self.dico_UI_interact[0]["CaseBrulee"].values():
-            case_brulee.img.update()
+            for case_brulee in self.dico_UI_interact[0]["CaseBrulee"].values():
+                case_brulee.img.update()
+
+        elif self.plan == 1:
+            for case in self.dico_UI_interact[0]["Case"].values():
+                case.create()
+
+            for case_brulee in self.dico_UI_interact[0]["CaseBrulee"].values():
+                case_brulee.img.create()
 
         # Boutons jeu (pas interactifs en pause)
         if self.plan == 0:

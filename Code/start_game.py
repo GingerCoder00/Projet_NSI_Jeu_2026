@@ -69,10 +69,10 @@ class StartGame:
             "Bouton_Guerre" : UI_PNG(self.screen, self.BOUTON_GUERRE_PATH, self.resp.resp(self.ratio_objet["Bouton_Guerre"][0], self.ratio_objet["Bouton_Guerre"][1], self.ratio_objet["Bouton_Guerre"][2], self.ratio_objet["Bouton_Guerre"][3]), 0, 0, hover_on = False),
         }
 
-        self.notification1 = Notification_gestion(self.screen, self.dico_UI["Rect_Regle"], (0, 0, 0), font_size_ratio = 0.09, diff_y = 25, volume_sound = 0)
-        self.notification2 = Notification_gestion(self.screen, self.dico_UI["Rect_Jauge"], (0, 0, 0), font_size_ratio = 0.13, diff_y = 25, volume_sound = 0)
-        self.notification3 = Notification_gestion(self.screen, self.dico_UI["Rect_Pouvoir_Feu"], (0, 0, 0), font_size_ratio = 0.16, diff_y = 25, volume_sound = 0)
-        self.notification4 = Notification_gestion(self.screen, self.dico_UI["Rect_Pouvoir_Guerre"], (0, 0, 0), font_size_ratio = 0.16, diff_y = 25, volume_sound = 0)
+        self.notification1 = Notification_gestion(self.screen, self.dico_UI["Rect_Regle"], (0, 0, 0), font_size_ratio = 0.065, diff_y = 25, volume_sound = 0)
+        self.notification2 = Notification_gestion(self.screen, self.dico_UI["Rect_Jauge"], (0, 0, 0), font_size_ratio = 0.1, diff_y = 25, volume_sound = 0)
+        self.notification3 = Notification_gestion(self.screen, self.dico_UI["Rect_Pouvoir_Feu"], (0, 0, 0), font_size_ratio = 0.123, diff_y = 25, volume_sound = 0)
+        self.notification4 = Notification_gestion(self.screen, self.dico_UI["Rect_Pouvoir_Guerre"], (0, 0, 0), font_size_ratio = 0.123, diff_y = 25, volume_sound = 0)
 
         phrases = PHRASES_AIDE_START
         self.notification1.ajouter(phrases[0])
