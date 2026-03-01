@@ -92,7 +92,7 @@ class Meteo:
 
         # ÉTATS
         self.current_event = None
-        self.event_duration = 9000
+        self.event_duration = 12000
 
         self.pluie_active = False
         self.canicule_active = False
