@@ -29,12 +29,12 @@ class EndGame:
         self.GLITCH_SFX_PATH1 = os.path.join(self.BASE_DIR, "sound", "glitch1.mp3")
         self.flag_glitch1 = False
         self.glitch1 = pygame.mixer.Sound(self.GLITCH_SFX_PATH1)
-        self.glitch1.set_volume(0.02)
+        self.glitch1.set_volume(0.03)
 
         self.CLAP_SFX_PATH = os.path.join(self.BASE_DIR, "sound", "clap1.mp3")
         self.flag_clap = False
         self.clap = pygame.mixer.Sound(self.CLAP_SFX_PATH)
-        self.clap.set_volume(0.06)
+        self.clap.set_volume(0.08)
 
         self.EXPLOSION_SFX_PATH = [os.path.join(self.BASE_DIR, "sound", f"explosion{i}.wav") for i in range(5)]
         
