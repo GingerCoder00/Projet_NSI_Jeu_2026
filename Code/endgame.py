@@ -58,13 +58,13 @@ class EndGame:
             "Texte_Usine" : (0.15, 0.6, 0.15),
             "Texte_Desinformation" : (0.15, 0.7, 0.15),
             "Texte_Guerre" : (0.15, 0.8, 0.15),
-            "Best_Temps": (0.6, 0.17, 0.08),
-            "Best_Incendie": (0.6, 0.29, 0.08),
-            "Best_Polluee": (0.6, 0.39, 0.08),
-            "Best_Brulee": (0.6, 0.49, 0.08),
-            "Best_Usine": (0.6, 0.59, 0.08),
-            "Best_Desinformation": (0.6, 0.69, 0.08),
-            "Best_Guerre": (0.6, 0.79, 0.08),
+            "Best_Temps": (0.7, 0.135, 0.08),
+            "Best_Incendie": (0.7, 0.29, 0.08),
+            "Best_Polluee": (0.7, 0.39, 0.08),
+            "Best_Brulee": (0.7, 0.49, 0.08),
+            "Best_Usine": (0.7, 0.59, 0.08),
+            "Best_Desinformation": (0.7, 0.69, 0.08),
+            "Best_Guerre": (0.7, 0.79, 0.08),
         }
 
         self.dico_stats = {}
@@ -142,12 +142,12 @@ class EndGame:
 
         dico_name = {
             "temps": "temps",
-            "incendie_declaree": "incendie déclarés",
-            "case_polluees": "case polluées",
-            "arbre_brules": "arbre brulés",
+            "incendie_declaree": "incendies déclarés",
+            "case_polluees": "cases polluées",
+            "arbre_brules": "arbres brûlés",
             "usine_creee": "usines créées",
             "desinformation_creee": "désinformations divulguées",
-            "guerre_declaree": "guerre déclarées",
+            "guerre_declaree": "guerres déclarées",
         }
 
         index = 0

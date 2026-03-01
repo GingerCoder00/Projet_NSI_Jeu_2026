@@ -1,10 +1,10 @@
 
 score = {
-    "temps" : -12,
-    "incendie_declaree" : 12,
-    "case_polluees" : 0,
-    "arbre_brules" : 5,
+    "temps" : 20,
+    "incendie_declaree" : 50,
+    "case_polluees" : 23,
+    "arbre_brules" : 0,
     "usine_creee" : 0,
-    "desinformation_creee" : 789,
-    "guerre_declaree" : 0,
+    "desinformation_creee" : 0,
+    "guerre_declaree" : 56,
 }
