@@ -59,7 +59,7 @@ class Hub:
             "Retour3" : (0.562, 0.08, 0.12, 0.07, 0.215),
             "Rect_Aide" : (0.3, 0.05, 0.4, 0.9),
             "Rect_Aide_Bloc" : (0.335, 0.22, 0.33, 0.70),
-            "Text_aide" : (0.35, 0.07, 0.22),
+            "Text_aide" : (0.32, 0.075, 0.22),
             "Text_bloc_aide" : (0.35, 0.3, 0.06),
 
             # Plan 4
@@ -135,8 +135,8 @@ class Hub:
             },
             3:{
             "rect_aide" : UI_screen(self.screen, (235,199,21), (21,57,235), self.resp.resp(self.ratio_objet["Rect_Aide"][0], self.ratio_objet["Rect_Aide"][1], self.ratio_objet["Rect_Aide"][2], self.ratio_objet["Rect_Aide"][3]), taille_contour = 6, border_radius = 12),
-            "rect_aide_bloc" : UI_screen(self.screen, (237, 169, 33), (237, 169, 33), self.resp.resp(self.ratio_objet["Rect_Aide_Bloc"][0], self.ratio_objet["Settings"][1], self.ratio_objet["Rect_Aide_Bloc"][2], self.ratio_objet["Rect_Aide_Bloc"][3]), taille_contour= 5, border_radius = 12),
-            "Text_aide" : Texte(self.screen, self.resp.resp_text(self.ratio_objet["Text_aide"][0], self.ratio_objet["Text_aide"][1]), self.resp.resp_font(self.ratio_objet["Text_aide"][0], self.ratio_objet["Text_aide"][2]), (255,255,255), "AIDE", font_type = "font/font_retro.ttf"),
+            "rect_aide_bloc" : UI_screen(self.screen, (237, 169, 33), (237, 169, 33), self.resp.resp(self.ratio_objet["Rect_Aide_Bloc"][0], self.ratio_objet["Settings"][1], self.ratio_objet["Rect_Aide_Bloc"][2], self.ratio_objet["Rect_Aide_Bloc"][3]), taille_contour= 5, border_radius = 12, pulse = False),
+            "Text_aide" : Texte(self.screen, self.resp.resp_text(self.ratio_objet["Text_aide"][0], self.ratio_objet["Text_aide"][1]), self.resp.resp_font(self.ratio_objet["Text_aide"][0], self.ratio_objet["Text_aide"][2]), (255,255,255), "STATS", font_type = "font/font_retro.ttf"),
             "Text_bloc_aide" : Texte(self.screen, self.resp.resp_text(self.ratio_objet["Text_bloc_aide"][0], self.ratio_objet["Text_bloc_aide"][1]), self.resp.resp_font(self.ratio_objet["Text_bloc_aide"][0], self.ratio_objet["Text_bloc_aide"][2]), (255,255,255), "Voici un texte", font_type = "font/font_retro.ttf"),
             },
             4:{

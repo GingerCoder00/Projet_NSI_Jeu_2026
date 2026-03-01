@@ -29,12 +29,12 @@ class EndGame:
         self.GLITCH_SFX_PATH1 = os.path.join(self.BASE_DIR, "sound", "glitch1.mp3")
         self.flag_glitch1 = False
         self.glitch1 = pygame.mixer.Sound(self.GLITCH_SFX_PATH1)
-        self.glitch1.set_volume(0.03)
+        self.glitch1.set_volume(0.04)
 
         self.CLAP_SFX_PATH = os.path.join(self.BASE_DIR, "sound", "clap1.mp3")
         self.flag_clap = False
         self.clap = pygame.mixer.Sound(self.CLAP_SFX_PATH)
-        self.clap.set_volume(0.08)
+        self.clap.set_volume(0.1)
 
         self.EXPLOSION_SFX_PATH = [os.path.join(self.BASE_DIR, "sound", f"explosion{i}.wav") for i in range(5)]
         
@@ -51,7 +51,7 @@ class EndGame:
 
         self.ratio_objet = {
             "spawn_zone" : (0.2, 0.2, 0.6, 0.8),
-            "Texte_Temps" : (0.15, 0.15, 0.4),
+            "Texte_Temps" : (0.135, 0.07, 0.5),
             "Texte_Incendie" : (0.15, 0.3, 0.15),
             "Texte_Polluee" : (0.15, 0.4, 0.15),
             "Texte_Brulee" : (0.15, 0.5, 0.15),
@@ -140,6 +140,16 @@ class EndGame:
             "guerre_declaree": ("Texte_Guerre", "Best_Guerre"),
         }
 
+        dico_name = {
+            "temps": "temps",
+            "incendie_declaree": "incendie déclarés",
+            "case_polluees": "case polluées",
+            "arbre_brules": "arbre brulés",
+            "usine_creee": "usines créées",
+            "desinformation_creee": "désinformations divulguées",
+            "guerre_declaree": "guerre déclarées",
+        }
+
         index = 0
 
         for key, value in score.items():
@@ -160,7 +170,7 @@ class EndGame:
                 self.ratio_objet[text_ratio][2]
             )
 
-            self.dico_stats[index] = {"text": Texte(self.screen, position, size, (255,255,255), f"{key.upper()} : {value}",font_type="font/font_retro.ttf")
+            self.dico_stats[index] = {"text": Texte(self.screen, position, size, (255,255,255), f"{dico_name[key].capitalize()} : {value}",font_type="font/retro_notif.ttf")
             }
 
             # BEST SCORE responsive
@@ -360,7 +370,7 @@ class EndGame:
             for explosion in self.explosions:
                 img = self.explosion_images[explosion["frame"]]
                 rect = img.get_rect(center=explosion["pos"])
-                if randint(1,250) == 1:
+                if randint(1,300) == 1:
                     self.explosion = pygame.mixer.Sound(self.EXPLOSION_SFX_PATH[randint(0,2)])
                     if self.overlay_active:
                         self.explosion.set_volume(0.02) 
