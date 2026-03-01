@@ -38,26 +38,33 @@ PHRASES_POUVOIR = [
 
 PHRASES_METEO = [
 
-    # pluie
     "Une pluie battante s'abat sur la région.",
-    # canicule
     "Une chaleur étouffante envahit la région.",
-    # gel
     "Un froid glacial recouvre la région d'un voile de givre.",
-    # orage
     "Un violent orage éclate, le tonnerre gronde et les éclairs frappent le sol.",
-    # tornade
     "Une tornade dévastatrice traverse la région en arrachant tout sur son passage.",
-    # inondation
     "Une montée brutale des eaux submerge les terres les plus basses.",
-    # reforestation
     "Un vaste programme de reforestation redonne vie aux forêts.",
-    # intervention ecologiste
     "Des écologistes interviennent pour limiter les dégâts environnementaux...",
-    # sécheresse ciblée
     "Une sécheresse ciblée assèche certaines zones stratégiques.",
-    # epidemie
     "Une épidémie se propage rapidement et fragilise la population.",
-    # météorite
     "Une météorite s'écrase violemment, laissant un cratère fumant.",
+]
+
+PHRASES_FIN_DE_JEU = [
+    "Tu as détruit la Terre.",
+    "Pixel après pixel.",
+    "Ce n'était qu'un jeu… mais pourquoi ce plaisir ?",
+    "Chaque décision semblait naturelle.",
+    "Détruire est plus simple que construire.",
+    "Dans ce monde virtuel, personne ne souffre.",
+    "Mais toi… tu ressens quelque chose.",
+    "Un léger malaise. Un frisson.",
+    "Et si la vraie question n'était pas 'qui détruit la Terre'…",
+    "Mais 'pourquoi cela nous fascine ?'",
+    "Tu as gagné.",
+    "La Terre a perdu.",
+    "Éteins l'écran. Regarde autour de toi.",
+    "Respire… et demande-toi :",
+    "Dans quel monde joues-tu vraiment ?"
 ]

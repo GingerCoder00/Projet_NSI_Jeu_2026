@@ -3,10 +3,12 @@ from random import randint
 import os
 from resp_tools import *
 from save import score
-import math
-from ui_tools import Texte
+from ui_tools import Texte, UI_screen
+from notification import *
+from phrases_notif import PHRASES_FIN_DE_JEU
 
 pygame.init()
+pygame.mixer.init()
 
 class EndGame:
     """Classe pour gérer l'écran de fin du jeu."""
@@ -20,10 +22,32 @@ class EndGame:
         self.BASE_DIR = os.path.dirname(__file__)
         self.resp = Resp_tools(self.width, self.height)
 
+        self.MUSIC_END_PATH = os.path.join(self.BASE_DIR, "sound", "music_end.wav")
+        pygame.mixer.music.load(self.MUSIC_END_PATH)
+        pygame.mixer.music.set_volume(0.7)
+
+        self.GLITCH_SFX_PATH1 = os.path.join(self.BASE_DIR, "sound", "glitch1.mp3")
+        self.flag_glitch1 = False
+        self.glitch1 = pygame.mixer.Sound(self.GLITCH_SFX_PATH1)
+        self.glitch1.set_volume(0.02)
+
+        self.CLAP_SFX_PATH = os.path.join(self.BASE_DIR, "sound", "clap1.mp3")
+        self.flag_clap = False
+        self.clap = pygame.mixer.Sound(self.CLAP_SFX_PATH)
+        self.clap.set_volume(0.06)
+
+        self.EXPLOSION_SFX_PATH = [os.path.join(self.BASE_DIR, "sound", f"explosion{i}.wav") for i in range(5)]
+        
+        self.flag_music = False
+
         self.score_path = os.path.join(self.BASE_DIR, "best_score.txt")
 
         self.WALL_PATH = os.path.join(self.BASE_DIR, "sprite", "wallpaper5_v2", "wall2_0.png")
         self.EXPLOSION_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_explosion2", "sprite_explosion3_")
+
+        self.rect_notif_fin = UI_screen(self.screen, (0,0,0), (0,0,0), (0,0, self.width, self.height), pulse = False)
+
+        self.notification = Notification_gestion(self.screen, self.rect_notif_fin, (255, 255, 255), font_size_ratio = 0.08, diff_y = 25, volume_sound = 0)
 
         self.ratio_objet = {
             "spawn_zone" : (0.2, 0.2, 0.6, 0.8),
@@ -54,6 +78,8 @@ class EndGame:
         # Liste d'explosions
         self.explosions = []
 
+        self.flag_explosion = False
+
         # Préparer les explosions
         self.explosion_sprites_path = self.EXPLOSION_PATH
         self.explosion_frames = 23
@@ -83,6 +109,22 @@ class EndGame:
         # Boutons ou actions
         self.running = True
         self.return_to_menu = False
+
+        self.stats_timer = 0
+        self.glitch_active = False
+        self.glitch_timer = 0
+        self.notif_started = False
+
+        self.micro_glitch_timer = 0
+        self.micro_glitch_interval = 0.1  # intervalle moyen entre glitchs
+        self.micro_glitch_duration = 0.05  # durée d'un micro-glitch
+        self.micro_glitch_active = False
+
+        self.phrase_index = 0
+        self.phrase_timer = 0
+        self.phrase_duration = 4
+        self.sequence_started = False
+        self.sequence_finished = False
 
     def create_stat_ui(self):
 
@@ -256,6 +298,49 @@ class EndGame:
             self.create_stat_ui()
             self.score_saved = True
 
+        if self.overlay_done and self.score_saved and not self.glitch_active:
+            self.stats_timer += dt
+
+            if self.stats_timer >= 10:
+                self.glitch_active = True
+        
+        if self.glitch_active and not self.notif_started:
+            self.glitch_timer += dt
+
+            if self.glitch_timer >= 3.5:
+                self.notif_started = True
+
+        # Lancement de la séquence une seule fois
+        if self.notif_started and not self.sequence_started:
+            self.sequence_started = True
+            self.phrase_index = 0
+            self.phrase_timer = 0
+            self.notification.ajouter(PHRASES_FIN_DE_JEU[self.phrase_index])
+
+
+        # Gestion du timing des phrases
+        if self.sequence_started and not self.sequence_finished:
+
+            self.phrase_timer += dt
+
+            if self.phrase_timer >= self.phrase_duration:
+                self.phrase_timer = 0
+                self.phrase_index += 1
+
+                if self.phrase_index < len(PHRASES_FIN_DE_JEU):
+                    self.notification.ajouter(PHRASES_FIN_DE_JEU[self.phrase_index])
+                else:
+                    self.sequence_finished = True
+
+            # Micro-glitch aléatoire pendant les phrases
+            self.micro_glitch_timer += dt
+            if self.micro_glitch_timer >= self.micro_glitch_interval:
+                self.micro_glitch_timer = 0
+                # Tirage aléatoire pour savoir si on déclenche un glitch
+                if randint(0, 2) == 1:  # 50% de chance
+                    self.micro_glitch_active = True
+                    self.micro_glitch_end = self.total_time + self.micro_glitch_duration
+
         # Update des explosions
         for explosion in self.explosions:
             explosion["frame_timer"] += dt
@@ -269,23 +354,69 @@ class EndGame:
         self.explosions = [elt for elt in self.explosions if not elt["finished"]]
 
     def draw(self):
-        self.screen.blit(self.bg_image, (0, 0))
+        if not self.flag_explosion:
+            self.screen.blit(self.bg_image, (0, 0))
 
-        for explosion in self.explosions:
-            img = self.explosion_images[explosion["frame"]]
-            rect = img.get_rect(center=explosion["pos"])
-            self.screen.blit(img, rect)
+            for explosion in self.explosions:
+                img = self.explosion_images[explosion["frame"]]
+                rect = img.get_rect(center=explosion["pos"])
+                if randint(1,250) == 1:
+                    self.explosion = pygame.mixer.Sound(self.EXPLOSION_SFX_PATH[randint(0,2)])
+                    if self.overlay_active:
+                        self.explosion.set_volume(0.02) 
+                    else:
+                        self.explosion.set_volume(0.06) 
+                    self.explosion.play()
+                self.screen.blit(img, rect)
 
         # Overlay noir progressive
         if self.overlay_active:
             self.screen.blit(self.overlay, (0, 0))
 
             if self.overlay_done:
+                if not self.flag_clap:
+                    self.clap.play()
+                    self.flag_clap = True
                 for index in self.dico_stats:
                     self.dico_stats[index]["text"].update()
 
                     if "best" in self.dico_stats[index]:
                         self.dico_stats[index]["best"].update()
+
+        if self.glitch_active and not self.notif_started:
+            if not self.flag_glitch1:
+                self.glitch1.play()
+                self.flag_glitch1 = True
+            for _ in range(85):
+                x = randint(0, self.width)
+                y = randint(0, self.height)
+                w = randint(int(self.width * 0.02), int(self.width * 0.2))
+                h = randint(int(self.height * 0.005), int(self.height * 0.05))
+                color = (randint(150,255), randint(0,100), randint(0,100))
+                pygame.draw.rect(self.screen, color, (x,y,w,h))
+
+        if self.notif_started:
+            self.flag_explosion = True
+            if not self.flag_music:
+                pygame.mixer.music.play(-1)
+                self.flag_music = True
+            self.rect_notif_fin.update()
+            self.notification.update()
+            self.notification.draw()
+
+        # Micro-glitch pendant les phrases
+        if self.micro_glitch_active:
+            for _ in range(randint(5, 12)):  # nombre aléatoire de rectangles
+                x = randint(0, self.width)
+                y = randint(0, self.height)
+                w = randint(int(self.width * 0.01), int(self.width * 0.15))
+                h = randint(int(self.height * 0.003), int(self.height * 0.03))
+                color = (randint(100,255), randint(100,255), randint(100,255))
+                pygame.draw.rect(self.screen, color, (x, y, w, h))
+            
+            # Vérifier si le glitch doit s'arrêter
+            if self.total_time >= getattr(self, 'micro_glitch_end', 0):
+                self.micro_glitch_active = False
 
         pygame.display.flip()
 

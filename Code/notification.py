@@ -25,7 +25,7 @@ class Notification_gestion:
         self.active_message = ""  # Message en cours
         self.current_display = ""  # Texte affiché pour typing
         self.char_index = 0
-        self.typing_speed = 10
+        self.typing_speed = 20
         self.last_char_time = pygame.time.get_ticks()
         self.is_typing = False
 
