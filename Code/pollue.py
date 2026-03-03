@@ -70,7 +70,7 @@ class Pollue:
         base = 0.4
 
         # Influence température (0 → 100)
-        influence = self.data.eau / 100 
+        influence = self.data.eau / 240
 
         # Limite max
         return min(0.9, base - influence)
@@ -154,7 +154,6 @@ class Pollue:
             # Droite
             if colonne < self.grille.colonnes - 1 and random() < proba:
                 self.file_propagation.append((ligne, colonne + 1, puissance - 1))
-
 
     def update_propagation_pollue(self):
         now = pygame.time.get_ticks()

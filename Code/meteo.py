@@ -92,7 +92,7 @@ class Meteo:
 
         # ÉTATS
         self.current_event = None
-        self.event_duration = 12000
+        self.event_duration = 9500
 
         self.pluie_active = False
         self.canicule_active = False
@@ -111,24 +111,24 @@ class Meteo:
         self.flash_alpha = 0
 
         self.events = [
-                ["pluie", 0.8, PHRASES_METEO[0]],
-                ["canicule", 0.8, PHRASES_METEO[1]],
+                ["pluie", 0.4, PHRASES_METEO[0]],
+                ["canicule", 0.4, PHRASES_METEO[1]],
                 ["gel", 0.4, PHRASES_METEO[2]],
-                ["orage", 0.9, PHRASES_METEO[3]],
-                ["tornade", 0.8, PHRASES_METEO[4]],
-                ["inondation", 1, PHRASES_METEO[5]],
-                ["reforestation", 1, PHRASES_METEO[6]],
-                ["intervention ecologiste", 0.8, PHRASES_METEO[7]],
-                ["sécheresse ciblée", 1, PHRASES_METEO[8]],
-                ["epidemie", 0.6, PHRASES_METEO[9]],
+                ["orage", 0.5, PHRASES_METEO[3]],
+                ["tornade", 0.5, PHRASES_METEO[4]],
+                ["inondation", 0.4, PHRASES_METEO[5]],
+                ["reforestation", 0.6, PHRASES_METEO[6]],
+                ["intervention ecologiste", 0.4, PHRASES_METEO[7]],
+                ["sécheresse ciblée", 0.6, PHRASES_METEO[8]],
+                ["epidemie", 0.4, PHRASES_METEO[9]],
                 ["météorite", 0.15, PHRASES_METEO[10]],
                 [None, 1]
             ]
         
         # Coefficients par événement : +1 = augmente la probabilité, -1 = la diminue
         self.event_coeffs = {
-            "epidemie": {"pollution": 0.01, "biodiversite": -0.005},   # pollution ↑ → épidémie ↑
-            "intervention ecologiste": {"pollution": -0.01, "biodiversite": 0.01}, # pollution ↑ → intervention ↑
+            "epidemie": {"pollution": 0.01, "biodiversite": -0.005},   # pollution → épidémie
+            "intervention ecologiste": {"pollution": -0.01, "biodiversite": 0.01}, # pollution → intervention
             "canicule": {"temperature": 0.02, "eau": -0.01},
             "inondation": {"eau": 0.02},
             "sécheresse ciblée": {"eau": -0.02},
