@@ -141,16 +141,16 @@ class Meteo:
         }
 
         self.event_effects = {
-            "pluie": {"eau": 0.08, "biodiversite": 0.05, "pollution": -0.03},
-            "canicule": {"temperature": 0.05, "eau": -0.055, "biodiversite": -0.029},
-            "gel": {"temperature": -0.09, "eau": -0.055, "biodiversite": -0.029},
-            "orage": {"stabilite": -0.39},  # autres effets spéciaux gérés à part
+            "pluie": {"eau": 6, "biodiversite": 5, "pollution": -4},
+            "canicule": {"temperature": 5, "eau": -6, "biodiversite": -3},
+            "gel": {"temperature": -5, "eau": -4, "biodiversite": -3},
+            "orage": {"stabilite": -5},
             "tornade": {"stabilite": -5, "temperature": -2, "destruction": -3},
-            "inondation": {"temperature": -1.15, "stabilite": -2, "eau": 3},
+            "inondation": {"temperature": -1.5, "stabilite": -2, "eau": 3},
             "reforestation": {"biodiversite": 3, "stabilite": 2, "augmentation_profit": -3},
-            "intervention ecologiste": {"biodiversite": 0.15, "profit": -0.35, "augmentation_profit": -1.5},
-            "sécheresse ciblée": {"eau": -0.1},
-            "epidemie": {"pollution": 0.05, "eau": -0.05, "profit": -0.5, "augmentation_profit": -1},
+            "intervention ecologiste": {"biodiversite": 8, "profit": -5, "augmentation_profit": -10.5},
+            "sécheresse ciblée": {"eau": -5},
+            "epidemie": {"pollution": 3, "eau": -2, "profit": -8.5, "augmentation_profit": -5},
             "météorite": {"stabilite": -8, "destruction": -5, "pollution": -4, "profit": -10}
         }
         
