@@ -20,13 +20,7 @@ class CaseBrulee:
 
         x, y = self.grille.placement_grille(colonne, ligne)
 
-        self.img = UI_PNG(
-            self.screen,
-            self.dico_info.type_cases["Case brulee"][0],
-            (x, y, self.grille.case_Long, self.grille.case_larg),
-            1,
-            0
-        )
+        self.img = UI_PNG(self.screen, self.dico_info.type_cases["Case brulee"][randint(0, 1)], (x, y, self.grille.case_Long, self.grille.case_larg), 1, 0)
 
         self.img.ligne = ligne
         self.img.colonne = colonne
