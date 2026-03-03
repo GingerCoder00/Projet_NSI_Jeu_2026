@@ -173,7 +173,7 @@ class EndGame:
             self.dico_stats[index] = {"text": Texte(self.screen, position, size, (255,255,255), f"{dico_name[key].capitalize()} : {value}",font_type="font/retro_notif.ttf")
             }
 
-            # BEST SCORE responsive
+            # Responsive
             if key in self.new_records:
 
                 best_position = self.resp.resp_text(

@@ -3,6 +3,8 @@ import os
 from random import randint
 from ui_tools import *
 from resp_tools import *
+from notification import *
+from phrases_notif import PHRASES_HUB
 
 pygame.init()
 pygame.mixer.init()
@@ -53,6 +55,7 @@ class Hub:
             # Plan 2
             "Retour2" : (0.71, 0.22, 0.12, 0.07, 0.215),
             "Rect_Credit" : (0.15, 0.19, 0.7, 0.6),
+            "Rect_Notif_Credit" : (0.18, 0.36, 0.64, 0.4),
             "Text_credit" : (0.37, 0.23, 0.205),
 
             # Plan 3
@@ -131,16 +134,16 @@ class Hub:
             },
             2:{
             "rect_credit" : UI_screen(self.screen, (87,250,233), (250,87,103), self.resp.resp(self.ratio_objet["Rect_Credit"][0], self.ratio_objet["Rect_Credit"][1], self.ratio_objet["Rect_Credit"][2], self.ratio_objet["Rect_Credit"][3]), taille_contour = 6, border_radius = 12),
+            "rect_notif_credit" : UI_screen(self.screen, (87,250,233), (87,250,233), self.resp.resp(self.ratio_objet["Rect_Notif_Credit"][0], self.ratio_objet["Rect_Notif_Credit"][1], self.ratio_objet["Rect_Notif_Credit"][2], self.ratio_objet["Rect_Notif_Credit"][3]), pulse = False),
             "Text_credit" : Texte(self.screen, self.resp.resp_text(self.ratio_objet["Text_credit"][0], self.ratio_objet["Text_credit"][1]), self.resp.resp_font(self.ratio_objet["Text_credit"][0], self.ratio_objet["Text_credit"][2]), (255,255,255), "CREDIT", font_type = "font/font_retro.ttf"),
             },
             3:{
             "rect_aide" : UI_screen(self.screen, (235,199,21), (21,57,235), self.resp.resp(self.ratio_objet["Rect_Aide"][0], self.ratio_objet["Rect_Aide"][1], self.ratio_objet["Rect_Aide"][2], self.ratio_objet["Rect_Aide"][3]), taille_contour = 6, border_radius = 12),
             "rect_aide_bloc" : UI_screen(self.screen, (237, 169, 33), (237, 169, 33), self.resp.resp(self.ratio_objet["Rect_Aide_Bloc"][0], self.ratio_objet["Settings"][1], self.ratio_objet["Rect_Aide_Bloc"][2], self.ratio_objet["Rect_Aide_Bloc"][3]), taille_contour= 5, border_radius = 12, pulse = False),
             "Text_aide" : Texte(self.screen, self.resp.resp_text(self.ratio_objet["Text_aide"][0], self.ratio_objet["Text_aide"][1]), self.resp.resp_font(self.ratio_objet["Text_aide"][0], self.ratio_objet["Text_aide"][2]), (255,255,255), "STATS", font_type = "font/font_retro.ttf"),
-            "Text_bloc_aide" : Texte(self.screen, self.resp.resp_text(self.ratio_objet["Text_bloc_aide"][0], self.ratio_objet["Text_bloc_aide"][1]), self.resp.resp_font(self.ratio_objet["Text_bloc_aide"][0], self.ratio_objet["Text_bloc_aide"][2]), (255,255,255), "Voici un texte", font_type = "font/font_retro.ttf"),
             },
             4:{
-            "Texte_secret" : Texte(self.screen, self.resp.resp_text(self.ratio_objet["Text_secret"][0], self.ratio_objet["Text_secret"][1]), self.resp.resp_font(self.ratio_objet["Text_secret"][0], self.ratio_objet["Text_secret"][2]), (24, 255, 3), "Tu ne devrais pas etre ici...", font_type = "font/font_retro.ttf")
+            "rect_secret" : UI_screen(self.screen, (0,0,0), (0,0,0), (0,0, self.Long, self.larg), pulse = False)
             },
         }
 
@@ -163,6 +166,10 @@ class Hub:
         
         # Variable de démarrage de partie
         self.play_game = False
+
+        self.notification1 = Notification_gestion(self.screen, self.dico_UI[2]["rect_notif_credit"], font_size_ratio = 0.14, diff_y = 25, volume_sound = 0)
+        self.notification2 = Notification_gestion(self.screen, self.dico_UI[4]["rect_secret"], font_size_ratio = 0.1, color = (55, 227, 36), volume_sound = 0)
+        self.notification3 = Notification_gestion(self.screen, self.dico_UI[3]["rect_aide_bloc"], font_size_ratio = 0.038, volume_sound = 0)
 
     def exit(self):
         '''Gère la fermeture de la fenêtre'''
@@ -206,12 +213,15 @@ class Hub:
 
         if self.dico_UI_interact[0]["Credit"].mouse_is_click():
             self.plan = 2
+            self.notification1.ajouter(PHRASES_HUB[0])
 
-        if self.setting_UI[3]["Secret"].get_last_message().upper() == "HAPPY MEAL" and self.sous_plan == 3:
+        if self.setting_UI[3]["Secret"].get_last_message().upper() == "CAPITALISME" and self.sous_plan == 3:
             self.plan = 4
+            self.notification2.ajouter(PHRASES_HUB[1])
 
         if self.dico_UI_interact[0]["Aide"].mouse_is_click():
             self.plan = 3
+            self.notification3.ajouter(PHRASES_HUB[2])
 
         if self.plan in (1,2,3,4) and (self.keys[pygame.K_ESCAPE] or self.dico_UI_interact[1]["Retour1"].mouse_is_click() or self.dico_UI_interact[2]["Retour2"].mouse_is_click() or self.dico_UI_interact[3]["Retour3"].mouse_is_click()):
             self.plan = 0
@@ -311,6 +321,16 @@ class Hub:
             if self.plan == 1:
                 self.couper_son()  # On gère l'arrêt des bruitages
                 self.couper_musique()  # On gère l'arrêt de la musique
+
+            if self.plan == 2:
+                self.notification1.update()
+
+            if self.plan == 4:
+                self.notification2.update()
+
+            if self.plan == 3:
+                self.notification3.update()
+
             self.exit()  # On test si une condition d'arrêt est déclenchée
 
         pygame.mixer.music.stop()  # Si le programme s'arrête on stop la musique
@@ -339,6 +359,16 @@ class Hub:
         if self.plan == 1:
             for setting in self.setting_UI[self.sous_plan].values(): # Si on est dans les settings, on update les objets paramètriques
                 setting.update()
+
+        if self.plan == 2:
+            self.notification1.draw()
+
+        if self.plan == 4:
+            self.notification2.draw()
+
+        if self.plan == 3:
+            self.notification3.draw()
+
 
         self.stats()  # On gère l'affichage des stats
 

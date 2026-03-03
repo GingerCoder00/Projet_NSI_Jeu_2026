@@ -25,7 +25,7 @@ class Notification_gestion:
         self.active_message = ""  # Message en cours
         self.current_display = ""  # Texte affiché pour typing
         self.char_index = 0
-        self.typing_speed = 20
+        self.typing_speed = 10
         self.last_char_time = pygame.time.get_ticks()
         self.is_typing = False
 
@@ -80,22 +80,26 @@ class Notification_gestion:
         rect = self.rect_ui.rect
         max_width = rect.width * 0.9
 
-        words = self.current_display.split(" ")
-        lines = []
-        current_line = ""
+        self.rendered_lines = []
 
-        for word in words:
-            test_line = current_line + word + " "
-            if self.font.size(test_line)[0] <= max_width:
-                current_line = test_line
-            else:
-                lines.append(current_line)
-                current_line = word + " "
+        # On découpe d'abord par retour à la ligne
+        paragraphs = self.current_display.split("\n")
 
-        lines.append(current_line)
+        for paragraph in paragraphs:
+            words = paragraph.split(" ")
+            current_line = ""
 
-        # Pré-render
-        self.rendered_lines = [self.font.render(line, True, self.color) for line in lines]
+            for word in words:
+                test_line = current_line + word + " "
+                if self.font.size(test_line)[0] <= max_width:
+                    current_line = test_line
+                else:
+                    self.rendered_lines.append(self.font.render(current_line, True, self.color))
+                    current_line = word + " "
+
+            # Ajouter la dernière ligne du paragraphe
+            if current_line:
+                self.rendered_lines.append(self.font.render(current_line, True, self.color))
 
     def draw(self):
         """Affiche le texte à l'écran."""
