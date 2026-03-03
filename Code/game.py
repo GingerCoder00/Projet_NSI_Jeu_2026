@@ -79,6 +79,16 @@ class Game:
             "Bouton_Menu_Principal" : (0.375, 0.61, 0.25, 0.15, 0.1),
             "Bouton_Quitter" : (0.375, 0.79, 0.25, 0.15, 0.18),
             "Rect_Pause" : (0.3, 0.04, 0.4, 0.93),
+
+            # Plan 1
+            "Retour1" : (0.73, 0.22, 0.12, 0.07, 0.215),
+            "Settings" : (0.125, 0.19, 0.75, 0.65),
+            "Settings_select" : (0.14, 0.21, 0.20, 0.61),
+            "Settings_modif" : (0.36, 0.39, 0.5, 0.43),
+            "Son" : (0.165, 0.27, 0.15, 0.07, 0.215),
+            "Couper_Son": (0.4, 0.5, 0.1, 0.2),
+            "Couper_Music": (0.55, 0.5, 0.1, 0.2),
+            "Text_setting" : (0.37, 0.25, 0.1775),
         }
 
         self.dico_info = Dico_info_Game()
@@ -136,18 +146,22 @@ class Game:
 
         self.dico_UI_pause = {
             0:{ 
-                "Bouton" : {
-                },
             },
             1:{
-                "Bouton" : {
-                    "Rect_Pause" : UI_screen(self.screen, (0, 100, 127), (255,255,255), self.resp.resp(self.ratio_objet["Rect_Pause"][0], self.ratio_objet["Rect_Pause"][1], self.ratio_objet["Rect_Pause"][2], self.ratio_objet["Rect_Pause"][3]), taille_contour = 6, border_radius = 12, pulse = True),
-                    "Bouton_Continuer" : UI_Bouton(self.screen, (158, 253, 56), (0,0,0), self.resp.resp_font(self.ratio_objet["Bouton_Continuer"][2], self.ratio_objet["Bouton_Continuer"][4]), self.resp.resp(self.ratio_objet["Bouton_Continuer"][0], self.ratio_objet["Bouton_Continuer"][1], self.ratio_objet["Bouton_Continuer"][2], self.ratio_objet["Bouton_Continuer"][3]), "CONTINUER", 4, 12, 16, 0.05),
-                    "Bouton_Option" : UI_Bouton(self.screen, (158, 253, 56), (0,0,0), self.resp.resp_font(self.ratio_objet["Bouton_Option"][2], self.ratio_objet["Bouton_Option"][4]), self.resp.resp(self.ratio_objet["Bouton_Option"][0], self.ratio_objet["Bouton_Option"][1], self.ratio_objet["Bouton_Option"][2], self.ratio_objet["Bouton_Option"][3]), "OPTION", 4, 12, 16, 0.05),
-                    "Bouton_Succes" : UI_Bouton(self.screen, (158, 253, 56), (0,0,0), self.resp.resp_font(self.ratio_objet["Bouton_Succes"][2], self.ratio_objet["Bouton_Succes"][4]), self.resp.resp(self.ratio_objet["Bouton_Succes"][0], self.ratio_objet["Bouton_Succes"][1], self.ratio_objet["Bouton_Succes"][2], self.ratio_objet["Bouton_Succes"][3]), "SUCCES", 4, 12, 16, 0.05),
-                    "Bouton_Menu_Principal" : UI_Bouton(self.screen, (158, 253, 56), (0,0,0), self.resp.resp_font(self.ratio_objet["Bouton_Menu_Principal"][2], self.ratio_objet["Bouton_Menu_Principal"][4]), self.resp.resp(self.ratio_objet["Bouton_Menu_Principal"][0], self.ratio_objet["Bouton_Menu_Principal"][1], self.ratio_objet["Bouton_Menu_Principal"][2], self.ratio_objet["Bouton_Menu_Principal"][3]), "MENU PRINCIPAL", 4, 12, 16, 0.05),
-                    "Bouton_Quitter" : UI_Bouton(self.screen, (158, 253, 56), (0,0,0), self.resp.resp_font(self.ratio_objet["Bouton_Quitter"][2], self.ratio_objet["Bouton_Quitter"][4]), self.resp.resp(self.ratio_objet["Bouton_Quitter"][0], self.ratio_objet["Bouton_Quitter"][1], self.ratio_objet["Bouton_Quitter"][2], self.ratio_objet["Bouton_Quitter"][3]), "QUITTER", 4, 12, 16, 0.05),
-                },
+                "Rect_Pause" : UI_screen(self.screen, (0, 100, 127), (255,255,255), self.resp.resp(self.ratio_objet["Rect_Pause"][0], self.ratio_objet["Rect_Pause"][1], self.ratio_objet["Rect_Pause"][2], self.ratio_objet["Rect_Pause"][3]), taille_contour = 6, border_radius = 12, pulse = True),
+                "Bouton_Continuer" : UI_Bouton(self.screen, (158, 253, 56), (0,0,0), self.resp.resp_font(self.ratio_objet["Bouton_Continuer"][2], self.ratio_objet["Bouton_Continuer"][4]), self.resp.resp(self.ratio_objet["Bouton_Continuer"][0], self.ratio_objet["Bouton_Continuer"][1], self.ratio_objet["Bouton_Continuer"][2], self.ratio_objet["Bouton_Continuer"][3]), "CONTINUER", 4, 12, 16, 0.05),
+                "Bouton_Option" : UI_Bouton(self.screen, (158, 253, 56), (0,0,0), self.resp.resp_font(self.ratio_objet["Bouton_Option"][2], self.ratio_objet["Bouton_Option"][4]), self.resp.resp(self.ratio_objet["Bouton_Option"][0], self.ratio_objet["Bouton_Option"][1], self.ratio_objet["Bouton_Option"][2], self.ratio_objet["Bouton_Option"][3]), "OPTION", 4, 12, 16, 0.05),
+                "Bouton_Succes" : UI_Bouton(self.screen, (158, 253, 56), (0,0,0), self.resp.resp_font(self.ratio_objet["Bouton_Succes"][2], self.ratio_objet["Bouton_Succes"][4]), self.resp.resp(self.ratio_objet["Bouton_Succes"][0], self.ratio_objet["Bouton_Succes"][1], self.ratio_objet["Bouton_Succes"][2], self.ratio_objet["Bouton_Succes"][3]), "SUCCES", 4, 12, 16, 0.05),
+                "Bouton_Menu_Principal" : UI_Bouton(self.screen, (158, 253, 56), (0,0,0), self.resp.resp_font(self.ratio_objet["Bouton_Menu_Principal"][2], self.ratio_objet["Bouton_Menu_Principal"][4]), self.resp.resp(self.ratio_objet["Bouton_Menu_Principal"][0], self.ratio_objet["Bouton_Menu_Principal"][1], self.ratio_objet["Bouton_Menu_Principal"][2], self.ratio_objet["Bouton_Menu_Principal"][3]), "MENU PRINCIPAL", 4, 12, 16, 0.05),
+                "Bouton_Quitter" : UI_Bouton(self.screen, (158, 253, 56), (0,0,0), self.resp.resp_font(self.ratio_objet["Bouton_Quitter"][2], self.ratio_objet["Bouton_Quitter"][4]), self.resp.resp(self.ratio_objet["Bouton_Quitter"][0], self.ratio_objet["Bouton_Quitter"][1], self.ratio_objet["Bouton_Quitter"][2], self.ratio_objet["Bouton_Quitter"][3]), "QUITTER", 4, 12, 16, 0.05),
+            },
+            2:{
+                "rect_settings" : UI_screen(self.screen, (16,52,166), (255,255,255), self.resp.resp(self.ratio_objet["Settings"][0], self.ratio_objet["Settings"][1], self.ratio_objet["Settings"][2], self.ratio_objet["Settings"][3]), taille_contour = 6, border_radius = 12),
+                "rect_settings_select" : UI_screen(self.screen, (237,189,178), (0,0,0), self.resp.resp(self.ratio_objet["Settings_select"][0], self.ratio_objet["Settings_select"][1], self.ratio_objet["Settings_select"][2], self.ratio_objet["Settings_select"][3]), taille_contour = 4, border_radius = 12),
+                "rect_settings_modif" : UI_screen(self.screen, (237,189,178), (0,0,0), self.resp.resp(self.ratio_objet["Settings_modif"][0], self.ratio_objet["Settings_modif"][1], self.ratio_objet["Settings_modif"][2], self.ratio_objet["Settings_modif"][3]), taille_contour = 4, border_radius = 12),
+                "Text_setting" : Texte(self.screen, self.resp.resp_text(self.ratio_objet["Text_setting"][0], self.ratio_objet["Text_setting"][1]), self.resp.resp_font(self.ratio_objet["Text_setting"][0], self.ratio_objet["Text_setting"][2]), (255,255,255), "SETTINGS", font_type = "font/font_retro.ttf"),
+                "Retour1": UI_Bouton(self.screen, (4, 139, 154), (0,0,0), self.resp.resp_font(self.ratio_objet["Retour1"][2], self.ratio_objet["Retour1"][4]), self.resp.resp(self.ratio_objet["Retour1"][0], self.ratio_objet["Retour1"][1], self.ratio_objet["Retour1"][2], self.ratio_objet["Retour1"][3]), "RETOUR", 5, 12, 16, 0.05),
+                "Son": UI_Bouton(self.screen, (23, 167, 232), (0,0,0), self.resp.resp_font(self.ratio_objet["Son"][2], self.ratio_objet["Son"][4]), self.resp.resp(self.ratio_objet["Son"][0], self.ratio_objet["Son"][1], self.ratio_objet["Son"][2], self.ratio_objet["Son"][3]), "SON", 5, 12, 16, 0.05),
             }
         }
 
@@ -173,6 +187,14 @@ class Game:
                 "Rect_power" : UI_screen(self.screen, (0, 100, 127), (255,255,255), self.resp.resp(self.ratio_objet["Rect_power"][0], self.ratio_objet["Rect_power"][1], self.ratio_objet["Rect_power"][2], self.ratio_objet["Rect_power"][3]), taille_contour = 6, border_radius = 12, pulse = True),
                 "Texte_temps_chrono" : Texte(self.screen, self.resp.resp_text(self.ratio_objet["Texte_temps_chrono"][0], self.ratio_objet["Texte_temps_chrono"][1]), self.resp.resp_font(self.ratio_objet["Texte_temps_chrono"][0], self.ratio_objet["Texte_temps_chrono"][2]), (0,0,0), f"{self.temps_ecoule}", font_type = "font/pixellari.ttf"),
             },
+            2:{
+                "Rect_bouton" : UI_screen(self.screen, (88, 41, 0), (255,255,255), self.grille.rect_zone, taille_contour = 6, border_radius = 12, pulse = False),
+                "Rect_jauge" : UI_screen(self.screen, (0, 86, 27), (255,255,255), self.resp.resp(self.ratio_objet["Rect_jauge"][0], self.ratio_objet["Rect_jauge"][1], self.ratio_objet["Rect_jauge"][2], self.ratio_objet["Rect_jauge"][3]), taille_contour = 6, border_radius = 12, pulse = False),
+                "Rect_stats" : UI_screen(self.screen, (0, 86, 27), (255,255,255), self.resp.resp(self.ratio_objet["Rect_stats"][0], self.ratio_objet["Rect_stats"][1], self.ratio_objet["Rect_stats"][2], self.ratio_objet["Rect_stats"][3]), taille_contour = 6, border_radius = 12, pulse = False),
+                "Rect_notif" : UI_screen(self.screen, (0, 100, 127), (255,255,255), self.resp.resp(self.ratio_objet["Rect_notif"][0], self.ratio_objet["Rect_notif"][1], self.ratio_objet["Rect_notif"][2], self.ratio_objet["Rect_notif"][3]), taille_contour = 6, border_radius = 12, pulse = True),
+                "Rect_power" : UI_screen(self.screen, (0, 100, 127), (255,255,255), self.resp.resp(self.ratio_objet["Rect_power"][0], self.ratio_objet["Rect_power"][1], self.ratio_objet["Rect_power"][2], self.ratio_objet["Rect_power"][3]), taille_contour = 6, border_radius = 12, pulse = True),
+                "Texte_temps_chrono" : Texte(self.screen, self.resp.resp_text(self.ratio_objet["Texte_temps_chrono"][0], self.ratio_objet["Texte_temps_chrono"][1]), self.resp.resp_font(self.ratio_objet["Texte_temps_chrono"][0], self.ratio_objet["Texte_temps_chrono"][2]), (0,0,0), f"{self.temps_ecoule}", font_type = "font/pixellari.ttf"),
+            }
         }
 
         self.notification = Notification_gestion(self.screen, self.dico_UI[0]["Rect_notif"])
@@ -225,7 +247,26 @@ class Game:
                     "Jauge_nourriture" : Jauge(self.screen, self.JAUGE_NOURRITURE_PATH, "profit", lambda : self.data, self.resp.resp(self.ratio_objet["Jauge_nourriture"][0], self.ratio_objet["Jauge_nourriture"][1], self.ratio_objet["Jauge_nourriture"][2], self.ratio_objet["Jauge_nourriture"][3]), 7, 0.03, self.converte_data_into_frame(7, self.data.profit)),
                     "Jauge_total" : Jauge(self.screen, self.JAUGE_TOTAL_PATH, "destruction", lambda : self.data, self.resp.resp(self.ratio_objet["Jauge_total"][0], self.ratio_objet["Jauge_total"][1], self.ratio_objet["Jauge_total"][2], self.ratio_objet["Jauge_total"][3]), 7, 0.03, self.converte_data_into_frame(11, self.data.destruction), "0", nbr_frames = 11)
                 },
-            }
+            },
+            2:{
+                "Flamme" : {
+                },
+                "Poubelle" : {
+                },
+                "Croix" : {
+                },
+                "Usine" : {
+                },
+                "Jauge" : {
+                    "Jauge_pollution" : Jauge(self.screen, self.JAUGE_POLLUTION_PATH, "pollution", lambda: self.data, self.resp.resp(self.ratio_objet["Jauge_pollution"][0], self.ratio_objet["Jauge_pollution"][1], self.ratio_objet["Jauge_pollution"][2], self.ratio_objet["Jauge_pollution"][3]), 7, 0.01, self.converte_data_into_frame(7, self.data.pollution)),
+                    "Jauge_bio" : Jauge(self.screen, self.JAUGE_BIO_PATH, "biodiversite", lambda : self.data, self.resp.resp(self.ratio_objet["Jauge_bio"][0], self.ratio_objet["Jauge_bio"][1], self.ratio_objet["Jauge_bio"][2], self.ratio_objet["Jauge_bio"][3]), 7, 0.01, self.converte_data_into_frame(7, self.data.biodiversite)),
+                    "Jauge_niv_ocean" : Jauge(self.screen, self.JAUGE_NIV_OCEAN_PATH, "eau", lambda : self.data, self.resp.resp(self.ratio_objet["Jauge_niv_ocean"][0], self.ratio_objet["Jauge_niv_ocean"][1], self.ratio_objet["Jauge_niv_ocean"][2], self.ratio_objet["Jauge_niv_ocean"][3]), 7, 0.01, self.converte_data_into_frame(7, self.data.eau)),
+                    "Jauge_social" : Jauge(self.screen, self.JAUGE_SOCIAL_PATH, "stabilite", lambda : self.data, self.resp.resp(self.ratio_objet["Jauge_social"][0], self.ratio_objet["Jauge_social"][1], self.ratio_objet["Jauge_social"][2], self.ratio_objet["Jauge_social"][3]), 7, 0.01, self.converte_data_into_frame(7, self.data.stabilite)),
+                    "Jauge_temp" : Jauge(self.screen, self.JAUGE_TEMP_PATH, "temperature", lambda : self.data, self.resp.resp(self.ratio_objet["Jauge_temp"][0], self.ratio_objet["Jauge_temp"][1], self.ratio_objet["Jauge_temp"][2], self.ratio_objet["Jauge_temp"][3]), 7, 0.01, self.converte_data_into_frame(7, self.data.temperature)),
+                    "Jauge_nourriture" : Jauge(self.screen, self.JAUGE_NOURRITURE_PATH, "profit", lambda : self.data, self.resp.resp(self.ratio_objet["Jauge_nourriture"][0], self.ratio_objet["Jauge_nourriture"][1], self.ratio_objet["Jauge_nourriture"][2], self.ratio_objet["Jauge_nourriture"][3]), 7, 0.01, self.converte_data_into_frame(7, self.data.profit)),
+                    "Jauge_total" : Jauge(self.screen, self.JAUGE_TOTAL_PATH, "destruction", lambda : self.data, self.resp.resp(self.ratio_objet["Jauge_total"][0], self.ratio_objet["Jauge_total"][1], self.ratio_objet["Jauge_total"][2], self.ratio_objet["Jauge_total"][3]), 7, 0.01, self.converte_data_into_frame(11, self.data.destruction), "0", nbr_frames = 11)
+                },
+            },
         }
 
         self.flamme = Flamme(self.screen, self.grille, self.data, self.dico_UI_anim, self.dico_UI_interact, lambda: self.plan, self.notification) # On utilise lambda car le plan change dynamiquement
@@ -311,14 +352,6 @@ class Game:
         valeur_reel = max(0, min(100, valeur_reel))
         return round((valeur_reel / 100) * (nbr_frame - 1))
 
-    def move_plan(self):
-
-        if self.keys[pygame.K_ESCAPE]:
-            self.plan = 1  # Ceci arrête la boucle principal
-        
-        if self.dico_UI_pause[1]["Bouton"]["Bouton_Continuer"].mouse_is_click():
-            self.plan = 0
-
     def exit(self):
         '''Gère la fermeture de la fenêtre'''
         # On récupère tous les évènements pour vérifier si il y a un événement de type : pygame.QUIT
@@ -326,10 +359,10 @@ class Game:
                 if event.type == pygame.QUIT:
                     self.running = False  # Ceci arrête la boucle principal
 
-        if self.dico_UI_pause[1]["Bouton"]["Bouton_Quitter"].mouse_is_click():
+        if self.dico_UI_pause[1]["Bouton_Quitter"].mouse_is_click():
             self.running = False
 
-        if self.dico_UI_pause[1]["Bouton"]["Bouton_Menu_Principal"].mouse_is_click():
+        if self.dico_UI_pause[1]["Bouton_Menu_Principal"].mouse_is_click():
             self.return_main_menu = True
             self.running = False
             
@@ -361,7 +394,6 @@ class Game:
         
         for plan in [0, 1]:
             self.dico_UI[plan]["Texte_temps_chrono"].text = texte
-
 
     def modif_jauge(self):
         for plan in [0, 1]:
@@ -464,18 +496,30 @@ class Game:
                 self.notification.update()
                 self.modif_jauge()
                 self.modif_chrono()
+                if self.keys[pygame.K_ESCAPE]:
+                    self.plan = 1  # Ceci arrête la boucle principal
 
             elif self.plan == 1:
 
-                if self.dico_UI_pause[1]["Bouton"]["Bouton_Continuer"].mouse_is_click():
+                if self.dico_UI_pause[1]["Bouton_Continuer"].mouse_is_click():
                     self.plan = 0
 
-                if self.dico_UI_pause[1]["Bouton"]["Bouton_Quitter"].mouse_is_click():
+                if self.dico_UI_pause[1]["Bouton_Quitter"].mouse_is_click():
                     self.running = False
 
-                if self.dico_UI_pause[1]["Bouton"]["Bouton_Menu_Principal"].mouse_is_click():
+                if self.dico_UI_pause[1]["Bouton_Menu_Principal"].mouse_is_click():
                     self.return_main_menu = True
                     self.running = False
+
+                if self.dico_UI_pause[1]["Bouton_Option"].mouse_is_click():
+                    self.plan = 2
+
+                if self.plan in (2,3) and (self.keys[pygame.K_ESCAPE] or self.dico_UI_pause[2]["Retour1"].mouse_is_click()):
+                    self.plan = 1
+                    self.sous_plan = 0
+
+                if self.dico_UI_pause[2]["Son"].mouse_is_click():
+                    self.sous_plan = 1
 
             self.draw()
 
@@ -509,7 +553,7 @@ class Game:
             for case_brulee in self.dico_UI_interact[0]["CaseBrulee"].values():
                 case_brulee.img.update()
 
-        elif self.plan == 1:
+        elif self.plan in [1,2,3]:
             for case in self.dico_UI_interact[0]["Case"].values():
                 case.create()
 
@@ -574,14 +618,14 @@ class Game:
                 pouvoir.hover_info()
                 pouvoir.draw_info()
 
-        if self.plan == 1:
+        if self.plan in [1,2,3]:
 
             # Overlay grisé
             self.screen.blit(self.ecran_noir, (0, 0))
 
             # Boutons pause (les seuls interactifs)
-            for bouton in self.dico_UI_pause[1]["Bouton"].values():
-                bouton.update()
+            for objet in self.dico_UI_pause[self.plan].values():
+                objet.update()
 
         # Stats en dernier
         self.stats()
