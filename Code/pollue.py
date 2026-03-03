@@ -29,7 +29,7 @@ class Pollue:
         self.SOUND_POLLUE_PATH = [os.path.join(self.BASE_DIR, "sound", f"fire{i}") for i in range(1,4)]
         
 
-    def ajout_feu(self, ligne, colonne):
+    def ajout_pollue(self, ligne, colonne):
         x, y = self.grille.placement_grille(colonne, ligne)
 
         pollue = UI_PNG(self.screen, self.dico_info.type_cases["Case pollue"][0], (x, y, self.grille.case_Long, self.grille.case_larg), 5, 0)
@@ -79,7 +79,7 @@ class Pollue:
         '''
         Détermine la profondeur de propagation
         '''
-        return 4 - int(self.data.eau / 50)
+        return 4 - int(self.data.eau / 250)
     
     def case_polluable(self, ligne, colonne):
 
@@ -133,8 +133,9 @@ class Pollue:
                 self.pollue_sound = pygame.mixer.Sound(f"{self.SOUND_POLLUE_PATH[randint(0,2)]}.wav")
                 self.pollue_sound.set_volume(0.05)
                 self.pollue_sound.play()
+
             self.grille.grille[ligne][colonne] = "pollue"
-            self.ajout_feu(ligne, colonne)
+            self.ajout_pollue(ligne, colonne)
 
             proba = self.proba_propagation()
 
@@ -176,7 +177,7 @@ class Pollue:
 
         for key, pollue in list(self.dico_UI_anim[plan]["Poubelle"].items()):
 
-            # ================= VITESSE D'EXTINCTION =================
+            # VITESSE D'EXTINCTION
             perte = 0.9
 
             # L'eau ralentit la pollution
@@ -190,37 +191,31 @@ class Pollue:
 
             pollue.vie -= perte
 
-            # ================= EXTINCTION =================
+            # EXTINCTION
             if pollue.vie <= 0:
 
                 ligne = pollue.ligne
                 colonne = pollue.colonne
 
-                # --- Mise à jour logique ---
+                # Mise à jour logique
                 self.grille.grille[ligne][colonne] = (0,0,255)
 
-                # --- Suppression pollution ---
+                # Suppression pollution
                 del self.dico_UI_anim[plan]["Poubelle"][key]
 
-                # --- Suppression case visuelle existante ---
+                # Suppression case visuelle existante
                 for key_case, case in list(self.dico_UI_interact[plan]["Case"].items()):
                     if case.ligne == ligne and case.colonne == colonne:
                         del self.dico_UI_interact[plan]["Case"][key_case]
                         break
 
-                # --- Création nouvelle case eau ---
+                # Création nouvelle case eau
                 x, y = self.grille.placement_grille(colonne, ligne)
 
                 sprite = self.dico_info.type_cases[(0,0,255)]
                 img = sprite[randint(0, len(sprite) - 1)]
 
-                case_eau = UI_PNG(
-                    self.screen,
-                    img,
-                    (x, y, self.grille.case_Long, self.grille.case_larg),
-                    5,
-                    0.01
-                )
+                case_eau = UI_PNG(self.screen, img, (x, y, self.grille.case_Long, self.grille.case_larg), 5, 0.01)
 
                 case_eau.ligne = ligne
                 case_eau.colonne = colonne
@@ -228,7 +223,7 @@ class Pollue:
                 new_key = ligne * self.grille.colonnes + colonne
                 self.dico_UI_interact[plan]["Case"][new_key] = case_eau
 
-                # --- Ajustement stats ---
+                # Ajustement stats
                 self.data.eau += 1
                 self.data.biodiversite += 2
                 self.data.pollution -= 0.8

@@ -103,9 +103,11 @@ class Pouvoir:
 
                 if self.nom == "desinformation":
                     self.notif.ajouter(choice(PHRASES_DESINFORMATION))
+                    self.data.desinformation_creee += 1
 
                 if self.nom == "guerre":
                     self.notif.ajouter(PHRASES_POUVOIR[8])
+                    self.data.guerre_declaree += 1
 
                 if self.nom == "canicule":
                     self.notif.ajouter(PHRASES_POUVOIR[9])
@@ -129,12 +131,15 @@ class Pouvoir:
 
                         if self.nom == "incendie":
                             self.notif.ajouter(PHRASES_POUVOIR[5])
+                            self.data.incendie_declaree += 1
 
                         if self.nom == "usine":
                             self.notif.ajouter(PHRASES_POUVOIR[6])
+                            self.data.usine_creee += 1
 
                         if self.nom == "Maree Noire":
                             self.notif.ajouter(PHRASES_POUVOIR[7])
+                            self.data.case_polluees += 1
 
                     self.actif = False
                     return True

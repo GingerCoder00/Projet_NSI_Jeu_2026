@@ -58,7 +58,7 @@ class EndGame:
             "Texte_Usine" : (0.15, 0.6, 0.15),
             "Texte_Desinformation" : (0.15, 0.7, 0.15),
             "Texte_Guerre" : (0.15, 0.8, 0.15),
-            "Best_Temps": (0.7, 0.135, 0.08),
+            "Best_Temps": (0.78, 0.13, 0.08),
             "Best_Incendie": (0.7, 0.29, 0.08),
             "Best_Polluee": (0.7, 0.39, 0.08),
             "Best_Brulee": (0.7, 0.49, 0.08),
@@ -311,7 +311,7 @@ class EndGame:
         if self.overlay_done and self.score_saved and not self.glitch_active:
             self.stats_timer += dt
 
-            if self.stats_timer >= 10:
+            if self.stats_timer >= 7:
                 self.glitch_active = True
         
         if self.glitch_active and not self.notif_started:

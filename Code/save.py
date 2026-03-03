@@ -1,6 +1,6 @@
 
 score = {
-    "temps" : 20,
+    "temps" : 5,
     "incendie_declaree" : 50,
     "case_polluees" : 23,
     "arbre_brules" : 0,

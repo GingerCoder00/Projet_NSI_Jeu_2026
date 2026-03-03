@@ -242,7 +242,7 @@ class Game:
                     self.dico_UI_interact[0]["Bouton"]["Bouton_Feu"],
                     self.data,
                     self.grille,
-                    lambda l, c: self.flamme.propagation_feu(l, c, self.flamme.puissance_feu(), spawn_anim = True),
+                    lambda l, c: self.flamme.propagation_feu(l, c, self.flamme.puissance_feu(), spawn_anim = True, origine_joueur = True),
                     self.notification,
                     cursor_sprite_prefix=os.path.join(self.BASE_DIR, "sprite\sprite_bouton_feu\sprite_logo_feu_"),
                     cursor_frame_count=2,
@@ -349,6 +349,12 @@ class Game:
             self.screen.blit(self.font.render(f"Taux de profit : {self.data.profit}", True, (0,0,0)), (0,200)) # Taux de profit
             self.screen.blit(self.font.render(f"Taux de d'augmentation de profit : {self.data.augmentation_profit}", True, (0,0,0)), (0,225)) # Taux de d'augmentation de profit
             self.screen.blit(self.font.render(f"Taux de destruction : {self.data.destruction}", True, (0,0,0)), (0,250)) # Taux de destruction
+            self.screen.blit(self.font.render(f"Incendies declares : {self.data.incendie_declaree}", True, (0,0,0)), (0,275)) # Nombre d'incendies déclarés
+            self.screen.blit(self.font.render(f"Cases polluees : {self.data.case_polluees}", True, (0,0,0)), (0,300)) # Nombre d'incendies déclarés
+            self.screen.blit(self.font.render(f"Arbres brûles : {self.data.arbre_brules}", True, (0,0,0)), (0,325)) # Nombre d'incendies déclarés
+            self.screen.blit(self.font.render(f"Usines creees : {self.data.usine_creee}", True, (0,0,0)), (0,350)) # Nombre d'incendies déclarés
+            self.screen.blit(self.font.render(f"Desinformation creee : {self.data.desinformation_creee}", True, (0,0,0)), (0,375)) # Nombre d'incendies déclarés
+            self.screen.blit(self.font.render(f"Guerres declarees : {self.data.guerre_declaree}", True, (0,0,0)), (0,400)) # Nombre d'incendies déclarés
 
     def modif_chrono(self):
         texte = str(round(self.chrono, 1)).zfill(5)
@@ -587,7 +593,12 @@ if __name__ == "__main__":  # Permet de démarrer le programme dans de bonnes co
     Long = screen_taille.current_w # On récupère la longueur de l'écran
     larg = screen_taille.current_h # On récupère la hauteur de l'écran
 
-    screen = pygame.display.set_mode((Long, larg)) # On initialise l'écran avec les dimensions préalablement récupérer
+    BASE_DIR = os.path.dirname(__file__)
+    ICON_PATH = os.path.join(BASE_DIR, "sprite", "icon.png")
+    icon = pygame.image.load(ICON_PATH)
+
+    screen = pygame.display.set_mode((Long, larg), pygame.FULLSCREEN) # On initialise l'écran avec les dimensions préalablement récupérer
+    pygame.display.set_icon(icon)
     pygame.display.set_caption("Let's Smash Up The Earth") # On donne un nom à la fenêtre
 
     game = Game(screen)

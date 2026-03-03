@@ -16,7 +16,7 @@ class Data:
         self.biodiversite = 95
         self.stabilite = 95
         self.profit = 0
-        self.augmentation_profit = 40
+        self.augmentation_profit = 540
         self.destruction = 0
 
         # PARAMÈTRES MONDE

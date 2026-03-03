@@ -112,7 +112,7 @@ class Flamme:
 
         return True
 
-    def propagation_feu(self, ligne, colonne, puissance, spawn_anim=False):
+    def propagation_feu(self, ligne, colonne, puissance, spawn_anim = False, origine_joueur = False):
         
         if puissance <= 0:
             return
@@ -134,6 +134,10 @@ class Flamme:
                 self.fire_sound = pygame.mixer.Sound(f"{self.SOUND_FIRE_PATH[randint(0,2)]}.wav")
                 self.fire_sound.set_volume(0.05)
                 self.fire_sound.play()
+
+            if origine_joueur and self.grille.grille[ligne][colonne] == (0,50,0):
+                self.data.arbre_brules += 1
+
             self.grille.grille[ligne][colonne] = "feu"
             self.ajout_feu(ligne, colonne)
 
@@ -141,19 +145,19 @@ class Flamme:
 
             # Haut
             if ligne > 0 and random() < proba:
-                self.file_propagation.append((ligne - 1, colonne, puissance - 1))
+                self.file_propagation.append((ligne - 1, colonne, puissance - 1, origine_joueur))
 
             # Bas
             if ligne < self.grille.lignes - 1 and random() < proba:
-                self.file_propagation.append((ligne + 1, colonne, puissance - 1))
+                self.file_propagation.append((ligne + 1, colonne, puissance - 1, origine_joueur))
 
             # Gauche
             if colonne > 0 and random() < proba:
-                self.file_propagation.append((ligne, colonne - 1, puissance - 1))
+                self.file_propagation.append((ligne, colonne - 1, puissance - 1, origine_joueur))
 
             # Droite
             if colonne < self.grille.colonnes - 1 and random() < proba:
-                self.file_propagation.append((ligne, colonne + 1, puissance - 1))
+                self.file_propagation.append((ligne, colonne + 1, puissance - 1, origine_joueur))
 
 
     def update_propagation_feu(self):
@@ -168,8 +172,8 @@ class Flamme:
         vague = self.file_propagation.copy()
         self.file_propagation.clear()
 
-        for ligne, colonne, puissance in vague:
-            self.propagation_feu(ligne, colonne, puissance)
+        for ligne, colonne, puissance, origine_joueur in vague:
+            self.propagation_feu(ligne, colonne, puissance, origine_joueur = origine_joueur)
 
     def detruire_usine(self, ligne, colonne):
 
