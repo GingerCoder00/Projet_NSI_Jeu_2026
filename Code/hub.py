@@ -75,10 +75,10 @@ class Hub:
         self.sous_plan = 0
 
         # Importation des sprites complémentaires
-        WALL_PATH = os.path.join(self.BASE_DIR, "sprite", "wallpaper5_v2", "wall2_")
+        WALL_PATH = os.path.join(self.BASE_DIR, "sprite", "wallpaper_hub", "sprite_wallpaper_hub_")
         self.background = [pygame.image.load(f"{WALL_PATH}{i}.png").convert() for i in range(7)] # Importation des 7 frames
         self.background = [pygame.transform.scale(elt, (self.Long, self.larg)) for elt in self.background] # Convertion des frames pour l'écran
-        LOGO_PATH = os.path.join(self.BASE_DIR, "sprite", "logo_jeu1.png")
+        LOGO_PATH = os.path.join(self.BASE_DIR, "sprite", "logo_jeu.png")
         self.logo = pygame.image.load(LOGO_PATH).convert_alpha() # Importation du logo
         self.logo = pygame.transform.scale(self.logo, (int(self.Long * self.ratio_objet["Logo_jeu"][2]), int(self.Long * self.ratio_objet["Logo_jeu"][3])) )# Convertion du logo
 
