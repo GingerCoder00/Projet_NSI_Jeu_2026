@@ -76,17 +76,13 @@ PHRASES_METEO = [
 
 PHRASES_FIN_DE_JEU = [
     "Vous avez détruit la Terre.",
-    "Pixel après pixel.",
     "Ce n'était qu'un jeu… mais pourquoi ce plaisir ?",
     "Chaque décision semblait naturelle.",
     "Détruire est plus simple que construire.",
     "Dans ce monde virtuel, personne ne souffre.",
     "Mais vous… ressentez-vous quelque chose ?",
     "Un léger malaise. Un frisson.",
-    "Et si la vraie question n'était pas 'qui détruit la Terre'…",
-    "Mais 'pourquoi cela nous fascine ?'",
     "Vous avez gagné.",
-    "La Terre a perdu.",
     "Éteignez l'écran. Regardez autour de vous.",
     "Respirez… et demandez-vous :",
     "Dans quel monde jouez-vous vraiment ?"

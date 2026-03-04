@@ -71,6 +71,7 @@ class Hub:
 
         # Active et désactive la boucle de jeu
         self.running = True
+        self.next_scene = None
 
         # Variable affichage
         # num plan : {0:menu, 1:option, 2:credit, 3:aide, 4:secret}
@@ -172,22 +173,21 @@ class Hub:
         self.notification3 = Notification_gestion(self.screen, self.dico_UI[3]["rect_aide_bloc"], font_size_ratio = 0.038, volume_sound = 0)
 
     def exit(self):
-        '''Gère la fermeture de la fenêtre'''
-        # On récupère tous les évènements pour vérifier si il y a un événement de type : pygame.QUIT
+        """Gère les demandes de fermeture ou de changement de scène"""
         for event in pygame.event.get():
-                if event.type == pygame.QUIT or (self.dico_UI_interact[0]["Quitter"].mouse_is_click() and self.plan == 0):
-                    self.running = False  # Ceci arrête la boucle principal
+            if event.type == pygame.QUIT:
+                self.next_scene = "quit"
+                self.running = False
 
-    def is_play(self):
-        '''
-        Cette fonction renvoit un booleen qui déclenche une partie
-        '''
-        if self.dico_UI_interact[0]["Jouer"].mouse_is_click():  # On vérifie si le bouton "Jouer" est cliqué
+        # Bouton QUITTER (uniquement sur plan 0)
+        if self.plan == 0 and self.dico_UI_interact[0]["Quitter"].mouse_is_click():
+            self.next_scene = "quit"
             self.running = False
-            self.play_game = True
-            return True
-        else:
-            return False
+
+        # Bouton JOUER
+        if self.plan == 0 and self.dico_UI_interact[0]["Jouer"].mouse_is_click():
+            self.next_scene = "game"
+            self.running = False
 
     def play_music(self, fichier:str, volume:float = 0.7):
         '''
@@ -316,7 +316,6 @@ class Hub:
                 else:
                     self.play_music("sound/music2.mp3")
             self.draw()  # On affiche les éléments graphiques
-            self.is_play()  # On vérifie si une partie est lancée
             self.move_plan()  # On gère les changements de plans
             if self.plan == 1:
                 self.couper_son()  # On gère l'arrêt des bruitages
@@ -334,8 +333,8 @@ class Hub:
             self.exit()  # On test si une condition d'arrêt est déclenchée
 
         pygame.mixer.music.stop()  # Si le programme s'arrête on stop la musique
-        if not self.play_game:
-            pygame.quit() # On quitte proprement le jeu si aucune partie n'est déclenchée
+
+        return self.next_scene
 
     def draw(self):
         '''

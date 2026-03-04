@@ -29,12 +29,12 @@ class EndGame:
         self.GLITCH_SFX_PATH1 = os.path.join(self.BASE_DIR, "sound", "glitch1.mp3")
         self.flag_glitch1 = False
         self.glitch1 = pygame.mixer.Sound(self.GLITCH_SFX_PATH1)
-        self.glitch1.set_volume(0.04)
+        self.glitch1.set_volume(0.05)
 
         self.CLAP_SFX_PATH = os.path.join(self.BASE_DIR, "sound", "clap1.mp3")
         self.flag_clap = False
         self.clap = pygame.mixer.Sound(self.CLAP_SFX_PATH)
-        self.clap.set_volume(0.1)
+        self.clap.set_volume(0.14)
 
         self.EXPLOSION_SFX_PATH = [os.path.join(self.BASE_DIR, "sound", f"explosion{i}.wav") for i in range(5)]
         
@@ -42,7 +42,7 @@ class EndGame:
 
         self.score_path = os.path.join(self.BASE_DIR, "best_score.txt")
 
-        self.WALL_PATH = os.path.join(self.BASE_DIR, "sprite", "wallpaper5_v2", "wall2_0.png")
+        self.WALL_PATH = os.path.join(self.BASE_DIR, "sprite", "wallpaper_hub", "sprite_wallpaper_hub_0.png")
         self.EXPLOSION_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_explosion2", "sprite_explosion3_")
 
         self.rect_notif_fin = UI_screen(self.screen, (0,0,0), (0,0,0), (0,0, self.width, self.height), pulse = False)
@@ -271,15 +271,6 @@ class EndGame:
             }
             self.explosions.append(explosion)
 
-    def exit(self):
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                self.running = False
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    self.running = False
-                    self.return_to_menu = True
-
     def update(self, dt):
 
         # Temps total écoulé
@@ -435,7 +426,6 @@ class EndGame:
             dt = self.clock.tick(60) / 1000  # delta time en secondes
             self.update(dt)
             self.draw()
-            self.exit()
 
 if __name__ == "__main__":  # Permet de démarrer le programme dans de bonnes conditions
     screen_taille = pygame.display.Info() # On récupère la taille de l'écran du système

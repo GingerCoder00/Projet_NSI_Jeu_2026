@@ -538,13 +538,6 @@ class Game:
                 if event.type == pygame.QUIT:
                     self.running = False
 
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        if self.plan == 0:
-                            self.plan = 1
-                        elif self.plan == 1:
-                            self.plan = 0
-
             if self.plan == -1:
 
                 self.start_game.run()
@@ -572,11 +565,12 @@ class Game:
                 self.data.update_world(dt)
 
                 if self.data.destruction >= 100:
-                    self.save_score() 
+                    self.save_score()
                     self.end_game = EndGame(self.screen)
                     self.end_game.run()
-                    self.running = False  # quitte la boucle principale
-
+                    self.return_main_menu = True
+                    self.running = False
+                    
                 current_time = pygame.time.get_ticks() / 1000
 
                 for pouvoir in self.pouvoirs.values():
@@ -607,6 +601,7 @@ class Game:
                     self.plan = 0
 
                 if self.dico_UI_pause[1]["Bouton_Quitter"].mouse_is_click():
+                    self.return_main_menu = False
                     self.running = False
 
                 if self.dico_UI_pause[1]["Bouton_Menu_Principal"].mouse_is_click():
@@ -629,8 +624,7 @@ class Game:
 
             self.draw()
 
-        if not self.return_main_menu:
-            pygame.quit()
+        return "hub" if self.return_main_menu else "quit"
 
     def draw(self):
 
