@@ -73,11 +73,10 @@ class Game:
             "Bouton_Canicule" : (0.5875, 0.873, 0.047, 0.083),
             "Bouton_Maree_Noire" : (0.6389, 0.821, 0.047, 0.083),
             "Bouton_Desinformation" : (0.691, 0.873, 0.047, 0.083),
-            "Bouton_Continuer" : (0.375, 0.07, 0.25, 0.15, 0.15),
-            "Bouton_Option" : (0.375, 0.25, 0.25, 0.15, 0.18),
-            "Bouton_Succes" : (0.375, 0.43, 0.25, 0.15, 0.18),
-            "Bouton_Menu_Principal" : (0.375, 0.61, 0.25, 0.15, 0.1),
-            "Bouton_Quitter" : (0.375, 0.79, 0.25, 0.15, 0.18),
+            "Bouton_Continuer" : (0.375, 0.12, 0.25, 0.15, 0.15),
+            "Bouton_Option" : (0.375, 0.32, 0.25, 0.15, 0.18),
+            "Bouton_Menu_Principal" : (0.375, 0.52, 0.25, 0.15, 0.1),
+            "Bouton_Quitter" : (0.375, 0.72, 0.25, 0.15, 0.18),
             "Rect_Pause" : (0.3, 0.04, 0.4, 0.93),
 
             # Plan 1
@@ -160,7 +159,6 @@ class Game:
                 "Rect_Pause" : UI_screen(self.screen, (0, 100, 127), (255,255,255), self.resp.resp(self.ratio_objet["Rect_Pause"][0], self.ratio_objet["Rect_Pause"][1], self.ratio_objet["Rect_Pause"][2], self.ratio_objet["Rect_Pause"][3]), taille_contour = 6, border_radius = 12, pulse = True),
                 "Bouton_Continuer" : UI_Bouton(self.screen, (158, 253, 56), (0,0,0), self.resp.resp_font(self.ratio_objet["Bouton_Continuer"][2], self.ratio_objet["Bouton_Continuer"][4]), self.resp.resp(self.ratio_objet["Bouton_Continuer"][0], self.ratio_objet["Bouton_Continuer"][1], self.ratio_objet["Bouton_Continuer"][2], self.ratio_objet["Bouton_Continuer"][3]), "CONTINUER", 4, 12, 16, 0.05),
                 "Bouton_Option" : UI_Bouton(self.screen, (158, 253, 56), (0,0,0), self.resp.resp_font(self.ratio_objet["Bouton_Option"][2], self.ratio_objet["Bouton_Option"][4]), self.resp.resp(self.ratio_objet["Bouton_Option"][0], self.ratio_objet["Bouton_Option"][1], self.ratio_objet["Bouton_Option"][2], self.ratio_objet["Bouton_Option"][3]), "OPTION", 4, 12, 16, 0.05),
-                "Bouton_Succes" : UI_Bouton(self.screen, (158, 253, 56), (0,0,0), self.resp.resp_font(self.ratio_objet["Bouton_Succes"][2], self.ratio_objet["Bouton_Succes"][4]), self.resp.resp(self.ratio_objet["Bouton_Succes"][0], self.ratio_objet["Bouton_Succes"][1], self.ratio_objet["Bouton_Succes"][2], self.ratio_objet["Bouton_Succes"][3]), "SUCCES", 4, 12, 16, 0.05),
                 "Bouton_Menu_Principal" : UI_Bouton(self.screen, (158, 253, 56), (0,0,0), self.resp.resp_font(self.ratio_objet["Bouton_Menu_Principal"][2], self.ratio_objet["Bouton_Menu_Principal"][4]), self.resp.resp(self.ratio_objet["Bouton_Menu_Principal"][0], self.ratio_objet["Bouton_Menu_Principal"][1], self.ratio_objet["Bouton_Menu_Principal"][2], self.ratio_objet["Bouton_Menu_Principal"][3]), "MENU PRINCIPAL", 4, 12, 16, 0.05),
                 "Bouton_Quitter" : UI_Bouton(self.screen, (158, 253, 56), (0,0,0), self.resp.resp_font(self.ratio_objet["Bouton_Quitter"][2], self.ratio_objet["Bouton_Quitter"][4]), self.resp.resp(self.ratio_objet["Bouton_Quitter"][0], self.ratio_objet["Bouton_Quitter"][1], self.ratio_objet["Bouton_Quitter"][2], self.ratio_objet["Bouton_Quitter"][3]), "QUITTER", 4, 12, 16, 0.05),
             },
