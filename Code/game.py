@@ -93,9 +93,18 @@ class Game:
 
         self.dico_info = Dico_info_Game()
 
+        # Gestion des bruitages et de la musique
+        self.son_off_on = ["son_on_off/son_on.png", "son_on_off/son_off.png"]
+        self.son_actif = 0 # A comme rôle un indice dans le tableau self.son_off_on
+
+        self.music_off_on = ["music_on_off/music_on.png", "music_on_off/music_off.png"]
+        self.music_actif = 0 # A comme rôle un indice dans le tableau self.music_off_on
+        self.current_music = None
+
         # Variable affichage
         # Num plan : {-1:start game, 0:grille, 1:pause}
         self.plan = -1
+        self.sous_plan = 0
 
         self.BLACK_SCREEN_PATH =  os.path.join(self.BASE_DIR, "sprite", "sprite_ecran_noir")
         self.ecran_noir = pygame.image.load(f"{self.BLACK_SCREEN_PATH}.png").convert()  
@@ -195,6 +204,18 @@ class Game:
                 "Rect_power" : UI_screen(self.screen, (0, 100, 127), (255,255,255), self.resp.resp(self.ratio_objet["Rect_power"][0], self.ratio_objet["Rect_power"][1], self.ratio_objet["Rect_power"][2], self.ratio_objet["Rect_power"][3]), taille_contour = 6, border_radius = 12, pulse = True),
                 "Texte_temps_chrono" : Texte(self.screen, self.resp.resp_text(self.ratio_objet["Texte_temps_chrono"][0], self.ratio_objet["Texte_temps_chrono"][1]), self.resp.resp_font(self.ratio_objet["Texte_temps_chrono"][0], self.ratio_objet["Texte_temps_chrono"][2]), (0,0,0), f"{self.temps_ecoule}", font_type = "font/pixellari.ttf"),
             }
+        }
+
+        # Gestion des sprites ou surfaces des sous-plans
+        self.setting_UI = {
+            0:{
+            },
+            1:{
+            "Couper_Son": UI_PNG(self.screen, self.son_off_on[self.son_actif], self.resp.resp(self.ratio_objet["Couper_Son"][0], self.ratio_objet["Couper_Son"][1], self.ratio_objet["Couper_Son"][2], self.ratio_objet["Couper_Son"][3]), 15, 0.05),
+            "Couper_Music": UI_PNG(self.screen, self.music_off_on[self.music_actif], self.resp.resp(self.ratio_objet["Couper_Music"][0], self.ratio_objet["Couper_Music"][1], self.ratio_objet["Couper_Music"][2], self.ratio_objet["Couper_Music"][3]), 15, 0.05),
+            },
+            2:{
+            },
         }
 
         self.notification = Notification_gestion(self.screen, self.dico_UI[0]["Rect_notif"])
@@ -365,7 +386,87 @@ class Game:
         if self.dico_UI_pause[1]["Bouton_Menu_Principal"].mouse_is_click():
             self.return_main_menu = True
             self.running = False
-            
+    
+    def play_music(self, fichier:str, volume:float = 0.7):
+        '''
+        Cette fonction importe et lance la musique en boucle
+        '''
+        if self.current_music == fichier:
+            return  # La musique est déjà en train de jouer
+
+        MUSIC_PATH = os.path.join(self.BASE_DIR, fichier)
+        pygame.mixer.music.stop()
+        pygame.mixer.music.load(MUSIC_PATH)
+        pygame.mixer.music.set_volume(volume)
+        pygame.mixer.music.play(-1)
+
+        self.current_music = fichier
+
+    def couper_son(self):
+        '''
+        Cette méthode gère l'arrêt de tous bruitage dans les settings en cliquant sur le png correspondant
+        '''
+        if self.setting_UI[1]["Couper_Son"].mouse_is_click():  # On vérifie si le png de bruitage est bien cliqué
+            self.son_actif = (self.son_actif + 1) % 2  # On change l'indice de sprite (le modulo permet de rester entre 0 et 1)
+
+            IMG_PATH = os.path.join(self.BASE_DIR, "sprite", f"{self.son_off_on[self.son_actif]}")
+            self.setting_UI[1]["Couper_Son"].img_base = pygame.image.load(IMG_PATH).convert_alpha()  # On modifie le sprite dans la classe
+
+            if self.son_actif == 1:  # Ici si le son est coupé on réduit le volume pour tout les objets admettant des bruitages
+                for boutons in self.dico_UI_interact.values():
+                    for bouton in boutons.values():
+                        for b in bouton.values():
+                            b.volume = 0
+
+                for pngs in self.setting_UI.values():
+                    for png in pngs.values():
+                        png.volume = 0
+
+                for boutons in self.dico_UI_pause.values():
+                    for bouton in boutons.values():
+                        if isinstance(bouton, UI_Bouton):
+                            bouton.volume = 0
+
+                for boutons in self.dico_UI_anim.values():
+                    for bouton in boutons.values():
+                        for b in bouton.values():
+                            b.volume = 0
+
+            else: # Si le son est réactivé, on restaure les paramètres initiaux des objets concernant les bruitages
+                for boutons in self.dico_UI_interact.values():
+                    for bouton in boutons.values():
+                        for b in bouton.values():
+                            b.volume = 0.02
+
+                for pngs in self.setting_UI.values():
+                    for png in pngs.values():
+                        png.volume = 0.03
+
+                for boutons in self.dico_UI_pause.values():
+                    for bouton in boutons.values():
+                        if isinstance(bouton, UI_Bouton):
+                            bouton.volume = 0.02
+
+                for boutons in self.dico_UI_anim.values():
+                    for bouton in boutons.values():
+                        for b in bouton.values():
+                            b.volume = 0.02
+
+    def couper_musique(self):
+        '''
+        Cette méthode gère l'arrêt de la musique dans les settings en cliquant sur le png correspondant
+        '''
+        if self.setting_UI[1]["Couper_Music"].mouse_is_click(): # On vérifie si le png de la musique
+            self.music_actif = (self.music_actif + 1) % 2 # On change l'indice de sprite (le modulo permet de rester entre 0 et 1)
+
+            IMG_PATH = os.path.join(self.BASE_DIR, "sprite", f"{self.music_off_on[self.music_actif]}")
+            self.setting_UI[1]["Couper_Music"].img_base = pygame.image.load(IMG_PATH).convert_alpha()  # On modifie le sprite dans la classe
+
+            if self.music_actif == 1: # Ici si la musique est coupé on met en pause la musique
+                pygame.mixer.music.pause()
+            else: # Si la musique est réactivée, on reprend la musique
+                pygame.mixer.music.unpause()
+
     def stats(self):
         '''
         Cette méthode permet de gérer l'affichage des stats de performance et de test
@@ -458,6 +559,9 @@ class Game:
 
             elif self.plan == 0:
 
+                if self.music_actif == 0:  # musique autorisée
+                    self.play_music("sound\music6.mp3")
+
                 self.temps_ecoule += dt
                 self.chrono += dt
 
@@ -514,12 +618,16 @@ class Game:
                 if self.dico_UI_pause[1]["Bouton_Option"].mouse_is_click():
                     self.plan = 2
 
-                if self.plan in (2,3) and (self.keys[pygame.K_ESCAPE] or self.dico_UI_pause[2]["Retour1"].mouse_is_click()):
-                    self.plan = 1
-                    self.sous_plan = 0
+            if self.plan == 2:
+                self.couper_musique()
+                self.couper_son()
 
-                if self.dico_UI_pause[2]["Son"].mouse_is_click():
-                    self.sous_plan = 1
+            if self.plan in (2,3) and (self.keys[pygame.K_ESCAPE] or self.dico_UI_pause[2]["Retour1"].mouse_is_click()):
+                self.plan = 1
+                self.sous_plan = 0
+
+            if self.dico_UI_pause[2]["Son"].mouse_is_click():
+                self.sous_plan = 1
 
             self.draw()
 
@@ -626,6 +734,9 @@ class Game:
             # Boutons pause (les seuls interactifs)
             for objet in self.dico_UI_pause[self.plan].values():
                 objet.update()
+
+            for setting in self.setting_UI[self.sous_plan].values(): # Si on est dans les settings, on update les objets paramètriques
+                setting.update()
 
         # Stats en dernier
         self.stats()
