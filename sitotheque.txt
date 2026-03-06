@@ -1,0 +1,25 @@
+Sitotechque
+
+-pngwind : https://www.pngwing.com/
+
+description: libre d'acces pas besoin d'avoir de compte permet d'avoir des images sans fond ou des sprites 
+
+-jauge : https://plotly.com/python/gauge-charts/
+
+description : libre d'accès sans compte, permet d'avoir un code python de jauge et un visuel
+
+pixeliser.fr : 
+
+description : Pour le fond d'écran du menu
+
+https://sfxr.me : 
+
+description : bruitage retro
+
+https://www.beepbox.co:
+
+description : composition de musiques retro
+
+https://www.piskelapp.com : 
+
+description : Création de sprite et de background 

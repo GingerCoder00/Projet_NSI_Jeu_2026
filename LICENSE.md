@@ -1,8 +1,23 @@
-Copyright (c) 2026 Arthur Le GULUDEC
+GNU GENERAL PUBLIC LICENSE
+Version 3, 29 June 2007
 
-All rights reserved.
+Copyright (C) 2026 Let's Break Down The Earth / LE GULUDEC ARTHUR, DEBAILLEUX NOAH, ...
 
-This project and its source code are provided for viewing and evaluation purposes only.
-Any reproduction, modification, distribution, or commercial use of this project or its
-source code, in whole or in part, is strictly prohibited without prior written permission
-from the author.
+Everyone is permitted to copy and distribute verbatim copies
+of this license document, but changing it is not allowed.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see https://www.gnu.org/licenses/.
+
+For the full license text, see:
+https://www.gnu.org/licenses/gpl-3.0.txt

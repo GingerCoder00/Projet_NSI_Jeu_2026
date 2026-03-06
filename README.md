@@ -1,10 +1,14 @@
-# Projet_NSI_Jeu_2026
+Projet_NSI_Jeu_2026
 Repository pour la création du jeu vidéo Let's Break Up The Earth pour le projet de NSI de 2026.
 
+Information sur le démarage du jeu.
 
-## License
+Pour démarer le jeu en entier, il faut lancer le programme main.py
 
-© 2026 Arthur Le GULUDEC — All rights reserved.
+Si vous voulez lancer une partie du jeu vous pouvez lancer ces fichier : 
 
-This project is published for educational and evaluation purposes only.
-Any reuse, modification, or commercial use is strictly prohibited.
+* hub.py -> Pour le hub
+* intro.py -> Pour l'intro
+* game.py -> Pour le jeu
+* start_game.py -> Pour le menu de tuto et d'infos avant le jeu
+* endgame.py -> Pour la scène de fin de jeu
