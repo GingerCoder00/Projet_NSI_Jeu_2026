@@ -203,3 +203,26 @@ jeu. De plus, un système de responsive interface a été développé afin que l
 résolutions. Ces choix permettent à des joueurs ayant différents niveaux d’expérience avec les jeux vidéo de comprendre 
 et d’utiliser le jeu plus facilement. Nous avons aussi généralisé les chemins de fichier pour permettre d'éviter les bugs 
 de lecteur de chemins.
+
+VI - Modalités concernant l'intelligence artificielle et le code non original :
+
+Pour la réalisation de notre projet, nous avons utilisé à la fois l’intelligence artificielle et certaines sources externes 
+afin de nous assister dans la création du code.
+
+En ce qui concerne les sources externes, nous n’avons pas utilisé de code provenant de tiers, à l’exception des 
+bibliothèques Python standards comme pygame et Pillow. Ces sources nous ont surtout permis de mieux comprendre certains 
+concepts inconnus et de les appliquer correctement dans notre projet.
+
+L’intelligence artificielle a également été utilisée, principalement pour nous aider à déboguer certaines parties du code et 
+pour proposer des solutions dans la création de quelques fonctionnalités. Nous avons veillé à limiter son utilisation autant 
+que possible, et estimons que le code original représente environ 85 % du projet. Soit environ 15% de code aidé par 
+intelligence artificielle.
+
+Elle nous a aussi servi pour générer certains éléments graphiques, tels que le logo du jeu et du groupe. Bien entendu, nous 
+avons retravaillé ces éléments pour leur donner notre style propre.
+
+Nous avons utilisé quelques spritesheets provenant du site PNGWing, ainsi qu’une image libre de droit issue du site Freepik 
+(créée par "kjpargeter") que nous avons pixelisée pour l’adapter au style du jeu.
+Nous avons également intégré un sprite de tornade libre de droit, créé par CREASTA PIXEL.
+
+Enfin nous avons utilisé un SFX libre de droit provenant du site Pixabay. Il s'agit du bruitage d'applaudissement à la fin du jeu.
