@@ -1,5 +1,5 @@
 # Projet : Let's Break Down The Earth
-# Auteurs : ARTHUR LE GULUDEC, NOAH DEBAILLEUX, LEANA WEBER, LEWELINE
+# Auteurs : ARTHUR LE GULUDEC, NOAH DEBAILLEUX, LEANA WEBER, LEWELINE COLLIN--MONTRON
 
 import pygame
 from ui_tools import UI_PNG

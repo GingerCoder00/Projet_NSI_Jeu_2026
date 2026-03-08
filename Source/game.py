@@ -51,7 +51,7 @@ class Game:
 
         # Active et désactive la boucle de jeu
         self.running = True
-        self.return_main_menu = True
+        self.next_scene = None
 
         self.resp = Resp_tools(self.Long, self.larg)
 
@@ -381,12 +381,6 @@ class Game:
                 if event.type == pygame.QUIT:
                     self.running = False  # Ceci arrête la boucle principal
 
-        if self.dico_UI_pause[1]["Bouton_Quitter"].mouse_is_click():
-            self.running = False
-
-        if self.dico_UI_pause[1]["Bouton_Menu_Principal"].mouse_is_click():
-            self.return_main_menu = True
-            self.running = False
     
     def play_music(self, fichier:str, volume:float = 0.7):
         '''
@@ -528,7 +522,6 @@ class Game:
     def run(self):
 
         self.grille.crea_cases()
-        self.return_main_menu = False
 
         while self.running:
 
@@ -604,11 +597,11 @@ class Game:
                     self.plan = 0
 
                 if self.dico_UI_pause[1]["Bouton_Quitter"].mouse_is_click():
-                    self.return_main_menu = False
+                    self.next_scene = "quit"
                     self.running = False
 
                 if self.dico_UI_pause[1]["Bouton_Menu_Principal"].mouse_is_click():
-                    self.return_main_menu = True
+                    self.next_scene = "hub"
                     self.running = False
 
                 if self.dico_UI_pause[1]["Bouton_Option"].mouse_is_click():
@@ -626,8 +619,9 @@ class Game:
                 self.sous_plan = 1
 
             self.draw()
+            self.exit()
 
-        return "hub" if self.return_main_menu else "quit"
+        return self.next_scene
 
     def draw(self):
 

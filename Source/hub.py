@@ -167,9 +167,6 @@ class Hub:
             4:{
             },
         }
-        
-        # Variable de démarrage de partie
-        self.play_game = False
 
         self.notification1 = Notification_gestion(self.screen, self.dico_UI[2]["rect_notif_credit"], font_size_ratio = 0.14, diff_y = 25, volume_sound = 0)
         self.notification2 = Notification_gestion(self.screen, self.dico_UI[4]["rect_secret"], font_size_ratio = 0.1, color = (55, 227, 36), volume_sound = 0)

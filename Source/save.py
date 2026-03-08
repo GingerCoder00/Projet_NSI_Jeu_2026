@@ -2,11 +2,11 @@
 # Auteurs : ARTHUR LE GULUDEC, NOAH DEBAILLEUX, LEANA WEBER, LEWELINE COLLIN--MONTRON
 
 score = {
-    "temps" : 5,
-    "incendie_declaree" : 50,
-    "case_polluees" : 23,
+    "temps" : 0,
+    "incendie_declaree" : 0,
+    "case_polluees" : 0,
     "arbre_brules" : 0,
     "usine_creee" : 0,
     "desinformation_creee" : 0,
-    "guerre_declaree" : 56,
+    "guerre_declaree" : 0,
 }

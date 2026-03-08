@@ -1,3 +1,6 @@
+# Projet : Let's Break Down The Earth
+# Auteurs : ARTHUR LE GULUDEC, NOAH DEBAILLEUX, LEANA WEBER, LEWELINE COLLIN--MONTRON
+
 import pygame
 from intro import Intro
 from hub import Hub
@@ -28,12 +31,11 @@ if __name__ == "__main__":
     current_scene = "hub"
     running = True
     Intro(LOGO_PATH, screen).run()
-    game = Game(screen)
-    hub = Hub(screen)
 
     while running:
 
         if current_scene == "hub":
+            hub = Hub(screen)
             result = hub.run()
 
             if result == "game":
@@ -42,6 +44,7 @@ if __name__ == "__main__":
                 running = False
 
         elif current_scene == "game":
+            game = Game(screen)
             result = game.run()
 
             if result == "hub":
