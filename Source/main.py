@@ -21,7 +21,7 @@ if __name__ == "__main__":
     ICON_PATH = os.path.join(BASE_DIR, "sprite", "icon.png")
     icon = pygame.image.load(ICON_PATH)
     pygame.display.set_icon(icon)
-    pygame.display.set_caption("Let's Smash Up The Earth")
+    pygame.display.set_caption("Let's Break Down The Earth")
 
     LOGO_PATH = os.path.join(BASE_DIR, "sprite", "logo5.png")
 

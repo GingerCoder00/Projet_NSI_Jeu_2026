@@ -1,3 +1,6 @@
+# Projet : Let's Break Down The Earth
+# Auteurs : ARTHUR LE GULUDEC, NOAH DEBAILLEUX, LEANA WEBER, LEWELINE COLLIN--MONTRON
+
 import pygame
 from phrases_notif import PHRASES_DESINFORMATION, PHRASES_POUVOIR
 from random import choice

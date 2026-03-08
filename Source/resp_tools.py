@@ -1,3 +1,5 @@
+# Projet : Let's Break Down The Earth
+# Auteurs : ARTHUR LE GULUDEC, NOAH DEBAILLEUX, LEANA WEBER, LEWELINE COLLIN--MONTRON
 
 class Resp_tools:
     def __init__(self, long_screen:int, larg_screen:int):

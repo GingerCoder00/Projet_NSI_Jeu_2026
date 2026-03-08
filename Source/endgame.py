@@ -1,3 +1,6 @@
+# Projet : Let's Break Down The Earth
+# Auteurs : ARTHUR LE GULUDEC, NOAH DEBAILLEUX, LEANA WEBER, LEWELINE COLLIN--MONTRON
+
 import pygame
 from random import randint
 import os

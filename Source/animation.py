@@ -1,3 +1,6 @@
+# Projet : Let's Break Down The Earth
+# Auteurs : ARTHUR LE GULUDEC, NOAH DEBAILLEUX, LEANA WEBER, LEWELINE
+
 import pygame
 from ui_tools import UI_PNG
 from grille import *
@@ -15,11 +18,6 @@ class Animation:
         self.next_id = 0
 
     def ajouter_animation(self, frames_paths, position, taille, frame_delay=80):
-        """
-        frames_paths : liste de chemins d'images
-        position : (x, y)
-        taille : (largeur, hauteur)
-        """
 
         x, y = position
         w, h = taille
@@ -57,7 +55,7 @@ class Animation:
         for anim in self.animations.values():
             anim.create()
 
-    def scale(self, scale, ligne, colonne, from_top=0):
+    def scale(self, scale, ligne, colonne, from_top = 0):
         largeur_anim = self.grille.case_Long * scale
         hauteur_anim = self.grille.case_larg * scale
 

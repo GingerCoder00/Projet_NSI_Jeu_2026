@@ -1,3 +1,5 @@
+# Projet : Let's Break Down The Earth
+# Auteurs : ARTHUR LE GULUDEC, NOAH DEBAILLEUX, LEANA WEBER, LEWELINE COLLIN--MONTRON
 
 from grille import *
 from phrases_notif import PHRASES_POUVOIR
