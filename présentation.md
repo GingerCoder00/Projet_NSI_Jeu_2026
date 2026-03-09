@@ -32,8 +32,8 @@ Présentation de l'équipe :
 
 * Arthur Le Guludec
 * Noah Debailleux
-* Leana
-* Leweline
+* Leana Weber
+* Leweline Collin-Montron
 
 Rôle de chaque membre en répartition des tâches :
 
