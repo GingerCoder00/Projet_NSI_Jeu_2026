@@ -4,6 +4,10 @@
 import os
 
 class Dico_info_Game:
+    '''
+    Cette classe permet de gérer les sprites des types de cases ou des effets de cases. On charge les chemins de sprite dans le disque
+    une seule fois ce qui permet de ne pas surcharger le processeur
+    '''
     def __init__(self):
 
         self.BASE_DIR = os.path.dirname(__file__)
@@ -18,6 +22,7 @@ class Dico_info_Game:
         self.CASES_In_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_condamne", "sprite_condamne_")
         self.CASES_U_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_usine", "sprite_usine_")
 
+        # On charge les chemins à l'avance pour les réutiliser plus tard
         self.type_cases = {
             (0,0,255) : [f"{self.CASES_E_PATH}{i}.png" for i in range(4)],
             (0,255,0) : [f"{self.CASES_H_PATH}{i}.png" for i in range(4)],
