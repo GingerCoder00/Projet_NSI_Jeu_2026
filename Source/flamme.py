@@ -12,6 +12,9 @@ from random import randint
 from case_brulee import CaseBrulee
 
 class Flamme:
+    '''
+    Cette classe gère les flammes ainsi que leur propagation
+    '''
     def __init__(self, screen, grille, data, dico_UI_anim, dico_UI_interact, plan_ref, notif):
         self.screen = screen
         self.grille = grille
@@ -28,15 +31,19 @@ class Flamme:
 
         self.file_propagation = []
         self.last_fire_update = pygame.time.get_ticks()
-        self.fire_delay = 1200
+        self.fire_delay = 1200  # Vitesse de changement de frame pour les flammes
 
         self.nbr_flammes_spawn = 0
 
+        # Chargement des sons de spawn de flamme
         self.SOUND_EXPLOSION_PATH = [os.path.join(self.BASE_DIR, "sound", f"explosion{i}") for i in range(5)]
         self.SOUND_FIRE_PATH = [os.path.join(self.BASE_DIR, "sound", f"fire{i}") for i in range(1,4)]
         
 
     def ajout_feu(self, ligne, colonne):
+        '''
+        Cette méthode permet d'ajouter
+        '''
         x, y = self.grille.placement_grille(colonne, ligne)
 
         flamme = UI_PNG(self.screen, self.dico_info.type_cases["Case ETDB"][0], (x, y, self.grille.case_Long, self.grille.case_larg), 5, 0)

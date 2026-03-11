@@ -21,7 +21,7 @@ class Data:
         self.biodiversite = 95
         self.stabilite = 95
         self.profit = 0
-        self.augmentation_profit = 30
+        self.augmentation_profit = 65
         self.destruction = 0
 
         # Paramètrage des coefficients permettant de faire intéragir les jauges entre elles

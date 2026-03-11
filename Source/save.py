@@ -1,6 +1,8 @@
 # Projet : Let's Break Down The Earth
 # Auteurs : ARTHUR LE GULUDEC, NOAH DEBAILLEUX, LEANA WEBER, LEWELINE COLLIN--MONTRON
 
+# Sauvegarde des stats de la partie 
+
 score = {
     "temps" : 0,
     "incendie_declaree" : 0,

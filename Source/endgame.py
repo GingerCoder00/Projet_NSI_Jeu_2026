@@ -267,48 +267,58 @@ class EndGame:
             explosion = {"pos": (x, y), "frame": 0, "finished": False, "frame_timer": 0, "frame_delay": 0.12} # On créer des informations sur les explosions pour pouvoir en gérer beaucoup
             self.explosions.append(explosion)
 
-    def update(self, dt):
+    def exit(self):
+        """Gère les demandes de fermeture"""
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.next_scene = "quit"
+                self.running = False
+
+    def update(self, delta):
         ''' Cette méthode permet d'actualiser et de gérer les différents instant du plan ainsi que les effets visuels et auditifs'''
 
         # Temps total écoulé
-        self.total_time += dt
+        self.total_time += delta
 
         # Activation overlay après 5 secondes
         if self.total_time >= 5:
             self.overlay_active = True
         
+        # Fonsu progressif de l'overlay
         if self.overlay_active:
             if self.overlay_alpha < 200:
-                self.overlay_alpha += 60 * dt
-                if self.overlay_alpha >= 200:
-                    self.overlay_alpha = 200
-                    self.overlay_done = True
+                self.overlay_alpha += 60 * delta
+                self.overlay_alpha = 200
+                self.overlay_done = True
                 self.overlay.set_alpha(int(self.overlay_alpha))
 
         # Spawn automatique des explosions
-        self.spawn_timer += dt
+        self.spawn_timer += delta
         if self.spawn_timer >= self.spawn_interval:
             self.spawn_explosion()
             self.spawn_timer = 0
 
+        # Chargement des stats
         if self.overlay_done and not self.score_saved:
             self.update_best_score_file()
             self.create_stat_ui()
             self.score_saved = True
 
+        # Déclenchement de l'affichage des stats avec que l'overlay ai finit de se charger
         if self.overlay_done and self.score_saved and not self.glitch_active:
-            self.stats_timer += dt
+            self.stats_timer += delta
 
-            if self.stats_timer >= 7:
+            # On active l'effet de glitch après 6 secondes de stats
+            if self.stats_timer >= 6:
                 self.glitch_active = True
         
         if self.glitch_active and not self.notif_started:
-            self.glitch_timer += dt
+            self.glitch_timer += delta
 
             if self.glitch_timer >= 3.5:
                 self.notif_started = True
 
-        # Lancement de la séquence une seule fois
+        # Lancement de la séquence pour l'affiche des phrases de fin
         if self.notif_started and not self.sequence_started:
             self.sequence_started = True
             self.phrase_index = 0
@@ -319,7 +329,7 @@ class EndGame:
         # Gestion du timing des phrases
         if self.sequence_started and not self.sequence_finished:
 
-            self.phrase_timer += dt
+            self.phrase_timer += delta
 
             if self.phrase_timer >= self.phrase_duration:
                 self.phrase_timer = 0
@@ -331,7 +341,7 @@ class EndGame:
                     self.sequence_finished = True
 
             # Micro-glitch aléatoire pendant les phrases
-            self.micro_glitch_timer += dt
+            self.micro_glitch_timer += delta
             if self.micro_glitch_timer >= self.micro_glitch_interval:
                 self.micro_glitch_timer = 0
                 # Tirage aléatoire pour savoir si on déclenche un glitch
@@ -341,7 +351,7 @@ class EndGame:
 
         # Update des explosions
         for explosion in self.explosions:
-            explosion["frame_timer"] += dt
+            explosion["frame_timer"] += delta
             if explosion["frame_timer"] >= explosion["frame_delay"]:
                 explosion["frame_timer"] = 0
                 if explosion["frame"] < self.explosion_frames - 1:
@@ -351,10 +361,13 @@ class EndGame:
 
         self.explosions = [elt for elt in self.explosions if not elt["finished"]]
 
+        self.exit()
+
     def draw(self):
         if not self.flag_explosion:
             self.screen.blit(self.bg_image, (0, 0))
 
+            # On affiche les explosions
             for explosion in self.explosions:
                 img = self.explosion_images[explosion["frame"]]
                 rect = img.get_rect(center=explosion["pos"])
@@ -381,10 +394,13 @@ class EndGame:
                     if "best" in self.dico_stats[index]:
                         self.dico_stats[index]["best"].update()
 
+        # Création de l'effet de glitch
         if self.glitch_active and not self.notif_started:
             if not self.flag_glitch1:
                 self.glitch1.play()
                 self.flag_glitch1 = True
+
+            # Ici on créé des rectangles aléatoires de taille et de position aléatoire pour créer un effet de glitch
             for _ in range(85):
                 x = randint(0, self.width)
                 y = randint(0, self.height)
@@ -393,6 +409,7 @@ class EndGame:
                 color = (randint(150,255), randint(0,100), randint(0,100))
                 pygame.draw.rect(self.screen, color, (x,y,w,h))
 
+        # On démarre l'affiche des phrases de fin
         if self.notif_started:
             self.flag_explosion = True
             if not self.flag_music:
@@ -420,8 +437,8 @@ class EndGame:
 
     def run(self):
         while self.running:
-            dt = self.clock.tick(60) / 1000  # delta time en secondes
-            self.update(dt)
+            delta = self.clock.tick(60) / 1000  # delta en secondes
+            self.update(delta)
             self.draw()
 
 if __name__ == "__main__":  # Permet de démarrer le programme dans de bonnes conditions
