@@ -5,12 +5,15 @@ from grille import *
 from phrases_notif import PHRASES_POUVOIR
 
 class Data:
+    '''
+    Cette classe permet de référencer et de gérer les intéractions et effet de chaque jauges et pouvoir avec le monde
+    '''
     def __init__(self, grille, notif_manager):
 
         self.grille = grille
         self.notif = notif_manager
 
-        # JAUGES PRINCIPALES
+        # Paramètrage des taux de base des jauges
         
         self.pollution = 10
         self.temperature = 20
@@ -18,10 +21,10 @@ class Data:
         self.biodiversite = 95
         self.stabilite = 95
         self.profit = 0
-        self.augmentation_profit = 540
+        self.augmentation_profit = 30
         self.destruction = 0
 
-        # PARAMÈTRES MONDE
+        # Paramètrage des coefficients permettant de faire intéragir les jauges entre elles
         
         self.coeff_temp_from_pollution = 0.0002
         self.coeff_eau_from_temp = 0.00035
@@ -34,7 +37,7 @@ class Data:
         self.coeff_pollution_from_profit = 0.00015
         self.coeff_stab_from_stab = 0.00011
 
-        # POUVOIRS
+        # Gestion des pouvoirs et des effets
         
         self.pouvoirs = {
             "incendie": {
@@ -84,6 +87,7 @@ class Data:
             }
         }
 
+        # Attribut qui stocke les stats du joueur affiché à la fin de la partie
         self.incendie_declaree = 0
         self.case_polluees = 0
         self.arbre_brules = 0
@@ -91,7 +95,7 @@ class Data:
         self.desinformation_creee = 0
         self.guerre_declaree = 0
 
-    # UPDATE MONDE
+    # Mise à jour du monde 
     
     def update_world(self, temps):
 
@@ -107,22 +111,22 @@ class Data:
             self.temperature * self.coeff_biodiv_from_temp
         ) * temps
 
-        # Eau faible → instabilité
+        # Eau faible entraine instabilité
         if self.eau < 40:
             self.stabilite -= (40 - self.eau) * self.coeff_stab_from_eau * temps
 
-        # Biodiversité faible → instabilité
+        # Biodiversité faible entraine instabilité
         if self.biodiversite < 40:
             self.stabilite -= (40 - self.biodiversite) * self.coeff_stab_from_biodiv * temps
 
-        # Instabilité → pollution (chaos)
+        # Instabilité entraine pollution (chaos)
         if self.stabilite < 30:
             self.pollution += (30 - self.stabilite) * self.coeff_pollution_from_stab * temps
 
         # Augmentation des profits
         self.profit += self.augmentation_profit * self.coeff_profit_from_profit * temps
 
-        # Profit génère pollution passive
+        # Profit entraine pollution
         self.pollution += self.augmentation_profit * self.coeff_pollution_from_profit * temps
 
         # Plus le temps passe plus la stabilite augmente
@@ -131,16 +135,20 @@ class Data:
         # Clamp des valeurs
         self.clamp_values()
 
-        # Recalcul destruction
+        # Recalcul de la destruction
         self.update_destruction()
 
-    # ACTIVER UN POUVOIR
+    # Activation d'un pouvoir
     
     def utiliser_pouvoir(self, nom, ligne = 0, colonne = 0):
+        '''
+        Cette méthode permet d'activer un pouvoir en particulier et de pouvoir le placer sur la grille si il est prévu pour
+        '''
 
-        if nom not in self.pouvoirs:
+        if nom not in self.pouvoirs:  # On vérifie si le pouvoir existe
             return False
         
+        # Ice on va vérifier des conditions spéciale pour les pouvoirs plaçable sur la grille (on ne peut pas placer du feu sur de l'eau)
         if nom == "incendie" and self.grille.grille[ligne][colonne] in [(0,0,255), "feu", "pollue"]:
             return False
         
@@ -148,7 +156,6 @@ class Data:
             phrase = PHRASES_POUVOIR[1]
             self.notif.ajouter(phrase)
             return False
-        
         
         if nom == "Maree Noire" and self.grille.grille[ligne][colonne] in [(0,255,0), (0,50,0), "pollue"]:
             phrase = PHRASES_POUVOIR[2]
@@ -169,26 +176,27 @@ class Data:
 
         return True
 
-    # CALCUL DESTRUCTION
+    # Calcul de la destruction
 
     def update_destruction(self):
-        base = (
-            self.pollution * 0.1 +
-            self.temperature * 0.1 +
-            (100 - self.eau) * 0.1 +
-            (100 - self.biodiversite) * 0.1 +
-            (100 - self.stabilite) * 0.1
-        )
+        '''
+        Cette méthode permet de calculer la destuction totale de la planète
+        '''
+        # Calcul de destruction prenant en compte chaque jauges
+        base = (self.pollution * 0.1 + self.temperature * 0.1 + (100 - self.eau) * 0.1 + (100 - self.biodiversite) * 0.1 + (100 - self.stabilite) * 0.1)
+
         # Effet d'emballement climatique
-        chaos = (self.pollution * self.temperature) / 135
+        chaos = (self.pollution * self.temperature) / 140
         self.destruction = base + chaos
+
+        # On clamp la valeur pour qu'elle ne dépasse pas 100 et reste au dessus de 0
         self.destruction = max(0, min(100, self.destruction))
 
-
-
-    # CLAMP 0-100
-
     def clamp_values(self):
+        '''
+        Cette méthode permet de gérer le clamp des valeurs des jauges, c'est à dire d'empécher ces valeurs de dépasser une certaine limite
+        Ici on les bloque entre 0 et 100
+        '''
 
         self.pollution = max(0, min(100, self.pollution))
         self.temperature = max(0, min(100, self.temperature))
@@ -198,7 +206,8 @@ class Data:
         self.profit = max(0, min(100, self.profit))
         self.destruction = max(0, min(100, self.destruction))
 
-    # VICTOIRE
-
     def victoire(self):
+        '''
+        Cette méthode teste si la victoire est atteinte
+        '''
         return self.destruction >= 100
