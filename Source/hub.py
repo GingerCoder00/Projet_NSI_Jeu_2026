@@ -104,9 +104,9 @@ class Hub:
         # Gestion des éléments intéractifs
         self.dico_UI_interact = {
             0:{
-                "Jouer" : UI_Bouton(self.screen, (58, 137, 35), (190, 245, 116), self.resp.resp_font(self.ratio_objet["Jouer"][2], self.ratio_objet["Jouer"][4]), self.resp.resp(self.ratio_objet["Jouer"][0], self.ratio_objet["Jouer"][1], self.ratio_objet["Jouer"][2], self.ratio_objet["Jouer"][3]), "JOUER", 4, 12, 16, 0.05),
-                "Option": UI_Bouton(self.screen, (158, 253, 56), (190, 245, 116), self.resp.resp_font(self.ratio_objet["Option"][2], self.ratio_objet["Option"][4]), self.resp.resp(self.ratio_objet["Option"][0], self.ratio_objet["Option"][1], self.ratio_objet["Option"][2], self.ratio_objet["Option"][3]), "OPTION", 4, 12, 16, 0.05),
-                "Quitter": UI_Bouton(self.screen, (158, 253, 56), (190, 245, 116), self.resp.resp_font(self.ratio_objet["Quitter"][2], self.ratio_objet["Quitter"][4]), self.resp.resp(self.ratio_objet["Quitter"][0], self.ratio_objet["Quitter"][1], self.ratio_objet["Quitter"][2], self.ratio_objet["Quitter"][3]), "QUITTER", 4, 12, 16, 0.05),
+                "Jouer" : UI_Bouton(self.screen, (56, 232, 235), (0,0,0), self.resp.resp_font(self.ratio_objet["Jouer"][2], self.ratio_objet["Jouer"][4]), self.resp.resp(self.ratio_objet["Jouer"][0], self.ratio_objet["Jouer"][1], self.ratio_objet["Jouer"][2], self.ratio_objet["Jouer"][3]), "JOUER", 4, 12, 16, 0.05),
+                "Option": UI_Bouton(self.screen, (56, 99, 235), (0,0,0), self.resp.resp_font(self.ratio_objet["Option"][2], self.ratio_objet["Option"][4]), self.resp.resp(self.ratio_objet["Option"][0], self.ratio_objet["Option"][1], self.ratio_objet["Option"][2], self.ratio_objet["Option"][3]), "OPTION", 4, 12, 16, 0.05),
+                "Quitter": UI_Bouton(self.screen, (56, 99, 235), (0,0,0), self.resp.resp_font(self.ratio_objet["Quitter"][2], self.ratio_objet["Quitter"][4]), self.resp.resp(self.ratio_objet["Quitter"][0], self.ratio_objet["Quitter"][1], self.ratio_objet["Quitter"][2], self.ratio_objet["Quitter"][3]), "QUITTER", 4, 12, 16, 0.05),
                 "Credit": UI_Bouton(self.screen, (212, 115, 212), (0,0,0), self.resp.resp_font(self.ratio_objet["Credit"][2], self.ratio_objet["Credit"][4]), self.resp.resp(self.ratio_objet["Credit"][0], self.ratio_objet["Credit"][1], self.ratio_objet["Credit"][2], self.ratio_objet["Credit"][3]), "CREDIT", 5, 12, 16, 0.05),
                 "Aide": UI_Bouton(self.screen, (255, 215, 0), (0,0,0), self.resp.resp_font(self.ratio_objet["Aide"][2], self.ratio_objet["Aide"][4]), self.resp.resp(self.ratio_objet["Aide"][0], self.ratio_objet["Aide"][1], self.ratio_objet["Aide"][2], self.ratio_objet["Aide"][3]), "?", 5, 12, 16, 0.05)
             },
@@ -137,8 +137,8 @@ class Hub:
             "Text_setting" : Texte(self.screen, self.resp.resp_text(self.ratio_objet["Text_setting"][0], self.ratio_objet["Text_setting"][1]), self.resp.resp_font(self.ratio_objet["Text_setting"][0], self.ratio_objet["Text_setting"][2]), (255,255,255), "SETTINGS", font_type = "font/font_retro.ttf")
             },
             2:{
-            "rect_credit" : UI_screen(self.screen, (87,250,233), (250,87,103), self.resp.resp(self.ratio_objet["Rect_Credit"][0], self.ratio_objet["Rect_Credit"][1], self.ratio_objet["Rect_Credit"][2], self.ratio_objet["Rect_Credit"][3]), taille_contour = 6, border_radius = 12),
-            "rect_notif_credit" : UI_screen(self.screen, (87,250,233), (87,250,233), self.resp.resp(self.ratio_objet["Rect_Notif_Credit"][0], self.ratio_objet["Rect_Notif_Credit"][1], self.ratio_objet["Rect_Notif_Credit"][2], self.ratio_objet["Rect_Notif_Credit"][3]), pulse = False),
+            "rect_credit" : UI_screen(self.screen, (6, 198, 201), (31, 42, 105), self.resp.resp(self.ratio_objet["Rect_Credit"][0], self.ratio_objet["Rect_Credit"][1], self.ratio_objet["Rect_Credit"][2], self.ratio_objet["Rect_Credit"][3]), taille_contour = 6, border_radius = 12),
+            "rect_notif_credit" : UI_screen(self.screen, (6, 198, 201), (6, 198, 201), self.resp.resp(self.ratio_objet["Rect_Notif_Credit"][0], self.ratio_objet["Rect_Notif_Credit"][1], self.ratio_objet["Rect_Notif_Credit"][2], self.ratio_objet["Rect_Notif_Credit"][3]), pulse = False),
             "Text_credit" : Texte(self.screen, self.resp.resp_text(self.ratio_objet["Text_credit"][0], self.ratio_objet["Text_credit"][1]), self.resp.resp_font(self.ratio_objet["Text_credit"][0], self.ratio_objet["Text_credit"][2]), (255,255,255), "CREDIT", font_type = "font/font_retro.ttf"),
             },
             3:{

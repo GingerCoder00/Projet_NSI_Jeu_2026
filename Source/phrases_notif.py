@@ -122,17 +122,11 @@ PHRASES_HUB = [
     "Le saviez-vous ? Ce jeu n'est qu'une critique des méga-corporations !",
 
     # Affichage des meilleurs scores récupérés dans le fichier
-    f"""Meilleur Temps : {best_score[0]} 
-        \n 
-        Meilleur Nombre d'incendies déclarés : {best_score[1]} 
-        \n 
-        Meilleur Nombre de cases polluées : {best_score[2]} 
-        \n 
-        Meilleur Nombre d'arbres brûlés : {best_score[3]} 
-        \n 
-        Meilleur Nombre d'usines créées : {best_score[4]} 
-        \n 
-        Meilleur Nombre de désinformations créées : {best_score[5]} 
-        \n 
+    f"""Meilleur Temps : {best_score[0]} \n 
+        Meilleur Nombre d'incendies déclarés : {best_score[1]} \n 
+        Meilleur Nombre de cases polluées : {best_score[2]} \n 
+        Meilleur Nombre d'arbres brûlés : {best_score[3]} \n 
+        Meilleur Nombre d'usines créées : {best_score[4]} \n 
+        Meilleur Nombre de désinformations créées : {best_score[5]} \n 
         Meilleur Nombre de guerres déclarées : {best_score[6]}"""
         ]
