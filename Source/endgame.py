@@ -14,7 +14,7 @@ pygame.init()
 pygame.mixer.init()
 
 class EndGame:
-    """Classe pour gérer l'écran de fin du jeu."""
+    '''Cette classe permet de gérer l'écran de fin de jeu'''
 
     def __init__(self, screen):
 
@@ -24,6 +24,8 @@ class EndGame:
 
         self.BASE_DIR = os.path.dirname(__file__)
         self.resp = Resp_tools(self.width, self.height)
+
+        # On importe les médias une fois au début
 
         self.MUSIC_END_PATH = os.path.join(self.BASE_DIR, "sound", "music_end.wav")
         pygame.mixer.music.load(self.MUSIC_END_PATH)
@@ -40,18 +42,20 @@ class EndGame:
         self.clap.set_volume(0.14)
 
         self.EXPLOSION_SFX_PATH = [os.path.join(self.BASE_DIR, "sound", f"explosion{i}.wav") for i in range(5)]
-        
-        self.flag_music = False
-
-        self.score_path = os.path.join(self.BASE_DIR, "best_score.txt")
 
         self.WALL_PATH = os.path.join(self.BASE_DIR, "sprite", "wallpaper_hub", "sprite_wallpaper_hub_0.png")
         self.EXPLOSION_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_explosion2", "sprite_explosion3_")
+        
+        self.flag_music = False
 
-        self.rect_notif_fin = UI_screen(self.screen, (0,0,0), (0,0,0), (0,0, self.width, self.height), pulse = False)
+        # Importation du fichier qui sauvegarde les meilleurs scores
+        self.score_path = os.path.join(self.BASE_DIR, "best_score.txt")
 
-        self.notification = Notification_gestion(self.screen, self.rect_notif_fin, (255, 255, 255), font_size_ratio = 0.08, diff_y = 25, volume_sound = 0)
+        self.rect_notif_fin = UI_screen(self.screen, (0,0,0), (0,0,0), (0,0, self.width, self.height), pulse = False)  # Création d'un zone de notif
 
+        self.notification = Notification_gestion(self.screen, self.rect_notif_fin, (255, 255, 255), font_size_ratio = 0.08, diff_y = 25, volume_sound = 0) # Création du gestionnaire de Notification
+
+        # Dictionnaire sauvegardant les ratios de tous les objets graphique présent dans le EndGame
         self.ratio_objet = {
             "spawn_zone" : (0.2, 0.2, 0.6, 0.8),
             "Texte_Temps" : (0.135, 0.07, 0.5),
@@ -70,8 +74,10 @@ class EndGame:
             "Best_Guerre": (0.7, 0.79, 0.08),
         }
 
+        # On remplira ce dico pour stocker les insatnce de UI_PNG qui permettront d'afficher chaque stats de la partie
         self.dico_stats = {}
 
+        # On créé une zone de spawn pour les explosions de la terre
         self.spawn_zone = self.resp.resp(self.ratio_objet["spawn_zone"][0], self.ratio_objet["spawn_zone"][1], self.ratio_objet["spawn_zone"][2], self.ratio_objet["spawn_zone"][3])
         
         # Arrière-plan
@@ -93,7 +99,7 @@ class EndGame:
         # Horloge pour gérer les spawn
         self.clock = pygame.time.Clock()
         self.spawn_timer = 0
-        self.spawn_interval = 0.3  # secondes entre les explosions
+        self.spawn_interval = 0.3  # Secondes entre les explosions
 
         # Timer global
         self.total_time = 0
@@ -119,19 +125,20 @@ class EndGame:
         self.notif_started = False
 
         self.micro_glitch_timer = 0
-        self.micro_glitch_interval = 0.1  # intervalle moyen entre glitchs
-        self.micro_glitch_duration = 0.05  # durée d'un micro-glitch
+        self.micro_glitch_interval = 0.1  # Intervalle moyen entre glitchs
+        self.micro_glitch_duration = 0.05  # Durée d'un micro-glitch
         self.micro_glitch_active = False
 
         self.phrase_index = 0
         self.phrase_timer = 0
-        self.phrase_duration = 4
+        self.phrase_duration = 4 # Durée d'une phrase
         self.sequence_started = False
         self.sequence_finished = False
 
     def create_stat_ui(self):
-
-        self.dico_stats = {}
+        '''
+        Cette méthode permet de créer les instances d'affichage des stats de la partie
+        '''
 
         mapping = {
             "temps": ("Texte_Temps", "Best_Temps"),
@@ -162,51 +169,34 @@ class EndGame:
 
             text_ratio, best_ratio = mapping[key]
 
-            # Position texte principal
-            position = self.resp.resp_text(
-                self.ratio_objet[text_ratio][0],
-                self.ratio_objet[text_ratio][1]
-            )
+            # Positionnement et création des texte de stats
+            position = self.resp.resp_text(self.ratio_objet[text_ratio][0], self.ratio_objet[text_ratio][1])
 
-            size = self.resp.resp_font(
-                self.ratio_objet[text_ratio][0],
-                self.ratio_objet[text_ratio][2]
-            )
+            size = self.resp.resp_font(self.ratio_objet[text_ratio][0], self.ratio_objet[text_ratio][2])
 
-            self.dico_stats[index] = {"text": Texte(self.screen, position, size, (255,255,255), f"{dico_name[key].capitalize()} : {value}",font_type="font/retro_notif.ttf")
-            }
+            self.dico_stats[index] = {"text": Texte(self.screen, position, size, (255,255,255), f"{dico_name[key].capitalize()} : {value}",font_type="font/retro_notif.ttf")}
 
-            # Responsive
+            # Positionnement et création des texte "BEST SCORE"
             if key in self.new_records:
 
-                best_position = self.resp.resp_text(
-                    self.ratio_objet[best_ratio][0],
-                    self.ratio_objet[best_ratio][1]
-                )
+                best_position = self.resp.resp_text(self.ratio_objet[best_ratio][0], self.ratio_objet[best_ratio][1])
 
-                best_size = self.resp.resp_font(
-                    self.ratio_objet[best_ratio][0],
-                    self.ratio_objet[best_ratio][2]
-                )
+                best_size = self.resp.resp_font(self.ratio_objet[best_ratio][0], self.ratio_objet[best_ratio][2])
 
-                self.dico_stats[index]["best"] = Texte(
-                    self.screen,
-                    best_position,
-                    best_size,
-                    [255,215,0],
-                    "BEST !",
-                    sin_effect=True,
-                    font_type="font/font_retro.ttf"
-                )
+                self.dico_stats[index]["best"] = Texte(self.screen, best_position, best_size, [255,215,0], "BEST !", sin_effect=True, font_type="font/font_retro.ttf")
 
             index += 1
 
     def load_best_score_from_file(self):
+        '''
+        Cette méthode permet de lire et de stocker les informations présente dans le fichier texte best_score
+        '''
         best_score_file = {}
 
-        if not os.path.exists(self.score_path):
+        if not os.path.exists(self.score_path):  # On vérifie que le fichier existe pour ne pas créer de bug le cas échéant
             return None
 
+        # Boncle de lecture du fichier texte
         with open(self.score_path, "r") as f:
             for line in f:
                 if "=" in line:
@@ -218,63 +208,67 @@ class EndGame:
                             best_score_file[key] = float(value)
                         else:
                             best_score_file[key] = int(value)
+
                     except ValueError:
-                        best_score_file[key] = 0  # valeur par défaut en cas de problème
+                        best_score_file[key] = 0  # Valeur par défaut en cas de problème
 
         return best_score_file
     
     def write_best_score_file(self):
-
-        with open(self.score_path, "w") as f:
+        '''
+        Cette méthode permet de mettre à jour le fichier texte avec les nouvelles meilleures stats si elles ont battus les précédentes
+        '''
+        # Boucle d'écriture du fichier texte
+        with open(self.score_path, "w") as f: 
             for key, value in score.items():
                 f.write(f"{key}={value}\n")
 
     def update_best_score_file(self):
+        '''
+        Cette méthode permet d'actualisé les meilleurs records si ils ont battus les précédents
+        '''
 
         current_best = self.load_best_score_from_file()
 
-        # Si aucun fichier → tout est record
+        # Si aucun fichier alors par défault tout est un record
         if current_best is None:
             self.new_records = {k: True for k in score}
             self.write_best_score_file()
             return
 
         updated = False
-        self.new_records = {}
-
         for key in score:
 
             old_value = current_best.get(key, 0)
             new_value = score[key]
 
-            if key == "temps":
+            if key == "temps":  # Pour la stat de temps il faut faire une conparaison inverse en effet on cherche à avoir le plus petit temps possible pas le plus grand
                 if new_value < old_value:
                     updated = True
                     self.new_records[key] = True
-            elif new_value > old_value:
+            elif new_value > old_value: # On test les anciennes et nouvelles valeurs
                 updated = True
                 self.new_records[key] = True
 
-        if updated:
+        if updated:  # On vérifie bien que le fichier a bien changé pour ne pas avoir à le modifier à chaque fois
             self.write_best_score_file()
 
     def spawn_explosion(self, count = 3):
-        """Fait apparaître plusieurs explosions à un endroit aléatoire dans la zone."""
+        '''
+        Cette méthode fait apparaître plusieurs explosions à un endroit aléatoire dans la zone prédéfie
+        '''
         x_min, y_min, x_max, y_max = self.spawn_zone
+
+        # On créé un nombre donné d'explosion à des coordonnées aléatoire dans la zone d'explosion
         for _ in range(count):
             x = randint(int(x_min), int(x_max))
             y = randint(int(y_min), int(y_max))
 
-            explosion = {
-                "pos": (x, y),
-                "frame": 0,
-                "finished": False,
-                "frame_timer": 0,  # Pour contrôler la vitesse d'animation
-                "frame_delay": 0.12  # secondes entre chaque frame (plus lent)
-            }
+            explosion = {"pos": (x, y), "frame": 0, "finished": False, "frame_timer": 0, "frame_delay": 0.12} # On créer des informations sur les explosions pour pouvoir en gérer beaucoup
             self.explosions.append(explosion)
 
     def update(self, dt):
+        ''' Cette méthode permet d'actualiser et de gérer les différents instant du plan ainsi que les effets visuels et auditifs'''
 
         # Temps total écoulé
         self.total_time += dt
