@@ -6,6 +6,9 @@ from dico_info_game import *
 from ui_tools import UI_PNG
 
 class Condamne:
+    '''
+    Cette classe gère les cases dites condamnées+
+    '''
     def __init__(self, screen, grille, data, dico_UI_anim, plan_ref):
         self.screen = screen
         self.grille = grille
@@ -14,38 +17,41 @@ class Condamne:
         self.plan_ref = plan_ref  # référence vers le plan du jeu
 
         self.dico_info = Dico_info_Game()
-        self.croix_frames = [pygame.image.load(path).convert_alpha() for path in self.dico_info.type_cases["Terre inutilisable"]]
+        self.croix_frames = [pygame.image.load(path).convert_alpha() for path in self.dico_info.type_cases["Terre inutilisable"]]  # On importe les frames au préalable pour ne pas surcharger le processeur
 
         self.nbr_croix_spawn = 0
 
     def ajout_condamne(self, ligne, colonne):
+        '''
+        Cette méthode permet d'ajouter une case condamnée sur une ligne et un colonne donnée
+        '''
 
-        # Vérification des bornes (sécurité)
+        # Vérification des bornes, donc si la case est bien présente dans la grille
         if not (0 <= ligne < self.grille.lignes and 0 <= colonne < self.grille.colonnes):
             return
 
-    # Empêche de condamner une case déjà condamnée
+        # Empêche de condamner une case déjà condamnée
         if self.grille.grille[ligne][colonne] == "condamne":
             return
 
         x, y = self.grille.placement_grille(colonne, ligne)
 
-        croix = UI_PNG(
-            self.screen,
-            self.dico_info.type_cases["Terre inutilisable"][0],
-            (x, y, self.grille.case_Long, self.grille.case_larg),
-            5, 0
-        )
+        # On ajoute le sprite à l'écran
+        croix = UI_PNG(self.screen, self.dico_info.type_cases["Terre inutilisable"][0], (x, y, self.grille.case_Long, self.grille.case_larg), 5, 0)
         croix.case_originel = self.grille.grille[ligne][colonne]
 
+        # Ajout d'attributs pour la case condamnée, ils permettront de mieux animer celle ci
         croix.frame = 0
         croix.last_update = pygame.time.get_ticks()
         croix.ligne = ligne
         croix.colonne = colonne
 
+        # On modifie le type de case dans la grille
         self.grille.grille[ligne][colonne] = "condamne"
 
         plan = self.plan_ref()
+
+        # On ajoute la case au dictionnaire graphique du jeu principal pour qu'il puisse l'afficher
         self.dico_UI_anim[plan]["Croix"][len(self.dico_UI_anim[plan]["Croix"])] = croix
         self.nbr_croix_spawn += 1
 
