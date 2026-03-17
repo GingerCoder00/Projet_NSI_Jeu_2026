@@ -2,6 +2,9 @@
 # Auteurs : ARTHUR LE GULUDEC, NOAH DEBAILLEUX, LEANA WEBER, LEWELINE COLLIN--MONTRON
 
 class Resp_tools:
+    '''
+    Classe qui gère la responsive du jeu
+    '''
     def __init__(self, long_screen:int, larg_screen:int):
         self.Long = long_screen
         self.larg = larg_screen

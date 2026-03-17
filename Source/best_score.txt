@@ -1,7 +1,7 @@
-temps=0
-incendie_declaree=0
-case_polluees=0
-arbre_brules=0
-usine_creee=0
-desinformation_creee=0
-guerre_declaree=0
+temps=191.774
+incendie_declaree=4
+case_polluees=5
+arbre_brules=14
+usine_creee=6
+desinformation_creee=1
+guerre_declaree=4

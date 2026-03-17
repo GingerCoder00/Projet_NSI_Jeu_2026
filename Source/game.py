@@ -155,6 +155,7 @@ class Game:
             }
         }
 
+        # Gestion des éléments graphiques du menu de pause
         self.dico_UI_pause = {
             0:{ 
             },
@@ -382,7 +383,7 @@ class Game:
                     self.running = False  # Ceci arrête la boucle principal
 
     
-    def play_music(self, fichier:str, volume:float = 0.7):
+    def play_music(self, fichier:str, volume:float = 0.24):
         '''
         Cette fonction importe et lance la musique en boucle
         '''

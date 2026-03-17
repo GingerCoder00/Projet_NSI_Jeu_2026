@@ -3,31 +3,50 @@
 
 import os
 
+# Fonction qui charge les meilleurs scores depuis un fichier texte
 def load_best_score_from_file():
+
+        # Chemin vers le fichier contenant les meilleurs scores
         score_PATH = os.path.join(os.path.dirname(__file__), "best_score.txt")
+
+        # Liste qui va stocker les valeurs récupérées
         best_score_file = []
 
+        # Si le fichier n'existe pas, on retourne None
         if not os.path.exists(score_PATH):
             return None
 
+        # Ouverture du fichier en lecture
         with open(score_PATH, "r") as f:
+
+            # Lecture ligne par ligne
             for line in f:
+
+                # On vérifie que la ligne contient bien une donnée du type "clé=valeur"
                 if "=" in line:
+
+                    # On récupère la valeur après le "="
                     value = line.strip().split("=")[1]
 
-                    # Convertir en float si c'est un nombre décimal, sinon en int
+                    # Conversion de la valeur en nombre
+                    # Si la valeur contient un ".", on suppose que c'est un float
                     try:
                         if "." in value:
                             best_score_file.append(float(value))
                         else:
                             best_score_file.append(int(value))
-                    except ValueError:
-                        best_score_file.append(0)  # valeur par défaut en cas de problème
 
+                    # En cas d'erreur de conversion, on ajoute 0 par défaut
+                    except ValueError:
+                        best_score_file.append(0)
+
+        # Retour de la liste contenant tous les scores
         return best_score_file
 
+# Chargement des meilleurs scores au lancement du programme
 best_score = load_best_score_from_file()
 
+# Liste des phrases affichées au début du jeu pour expliquer les règles
 PHRASES_AIDE_START = [
     "RÈGLE DU JEU : Vous incarnez une méga corporation n'ayant que pour seul but d'engranger plus de profit, même si cela détruit la planète ! Vous devez être le plus rapide pour faire régner le capitalisme !",
     "Vous trouverez des jauges représentant plusieurs caractéristiques de la planète en temps réel ! Chaque taux sera compris entre 1 et 100.",
@@ -35,6 +54,7 @@ PHRASES_AIDE_START = [
     "Tandis que d'autres, comme par exemple la guerre commerciale, sont des pouvoirs immédiats qui n'ont pas besoin d'être posés sur la grille."
 ]
 
+# Liste de phrases de désinformation affichées aléatoirement
 PHRASES_DESINFORMATION = [
     "Les scientifiques confirment que tout va bien.",
     "Les feux actuels sont totalement naturels.",
@@ -50,6 +70,7 @@ PHRASES_DESINFORMATION = [
     "Les scientifiques disent tous que notre planète se porte à merveille."
 ]
 
+# Liste de messages affichés lorsque le joueur utilise un pouvoir
 PHRASES_POUVOIR = [
     "Vous ne pouvez pas incendier ici...",
     "Vous ne pouvez pas construire une usine ici...",
@@ -63,6 +84,7 @@ PHRASES_POUVOIR = [
     "Une grande vague de chaleur s'abat sur la région."
 ]
 
+# Liste d'événements météorologiques pouvant apparaître dans le jeu
 PHRASES_METEO = [
     "Une pluie battante s'abat sur la région.",
     "Une chaleur étouffante envahit la région.",
@@ -77,6 +99,7 @@ PHRASES_METEO = [
     "Une météorite s'écrase violemment, laissant un cratère fumant."
 ]
 
+# Messages affichés à la fin du jeu
 PHRASES_FIN_DE_JEU = [
     "Vous avez détruit la Terre.",
     "Ce n'était qu'un jeu… mais pourquoi ce plaisir ?",
@@ -91,8 +114,19 @@ PHRASES_FIN_DE_JEU = [
     "Dans quel monde jouez-vous vraiment ?"
 ]
 
+# Messages affichés dans le hub (menu principal du jeu)
 PHRASES_HUB = [
     "Jeu développé par le groupe NATURE.EXE, constitué d'Arthur, Noah, Léana et Lewiline dans le cadre des Trophées de NSI 2026 !",
+
+    # Message informatif sur le sens du jeu
     "Le saviez-vous ? Ce jeu n'est qu'une critique des méga-corporations !",
-    f"""Meilleur Temps : {best_score[0]} \n \n Meilleur Nombre d'incendies déclarés : {best_score[1]} \n \n Meilleur Nombre de cases polluées : {best_score[2]} \n \n Meilleur Nombre d'arbres brûlés : {best_score[3]} \n \n Meilleur Nombre d'usines créées : {best_score[4]} \n \n Meilleur Nombre de désinformations créées : {best_score[5]} \n \n Meilleur Nombre de guerres déclarées : {best_score[6]}"""
-]
+
+    # Affichage des meilleurs scores récupérés dans le fichier
+    f"""Meilleur Temps : {best_score[0]} \n 
+        Meilleur Nombre d'incendies déclarés : {best_score[1]} \n 
+        Meilleur Nombre de cases polluées : {best_score[2]} \n 
+        Meilleur Nombre d'arbres brûlés : {best_score[3]} \n 
+        Meilleur Nombre d'usines créées : {best_score[4]} \n 
+        Meilleur Nombre de désinformations créées : {best_score[5]} \n 
+        Meilleur Nombre de guerres déclarées : {best_score[6]}"""
+        ]
