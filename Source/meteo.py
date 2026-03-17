@@ -114,16 +114,16 @@ class Meteo:
         self.flash_alpha = 0
 
         self.events = [
-                ["pluie", 0.4, PHRASES_METEO[0]],
+                ["pluie", 0.5, PHRASES_METEO[0]],
                 ["canicule", 0.4, PHRASES_METEO[1]],
                 ["gel", 0.4, PHRASES_METEO[2]],
                 ["orage", 0.5, PHRASES_METEO[3]],
-                ["tornade", 0.5, PHRASES_METEO[4]],
+                ["tornade", 0.3, PHRASES_METEO[4]],
                 ["inondation", 0.4, PHRASES_METEO[5]],
-                ["reforestation", 0.6, PHRASES_METEO[6]],
-                ["intervention ecologiste", 0.4, PHRASES_METEO[7]],
-                ["sécheresse ciblée", 0.6, PHRASES_METEO[8]],
-                ["epidemie", 0.4, PHRASES_METEO[9]],
+                ["reforestation", 0.4, PHRASES_METEO[6]],
+                ["intervention ecologiste", 0.3, PHRASES_METEO[7]],
+                ["sécheresse ciblée", 0.4, PHRASES_METEO[8]],
+                ["epidemie", 0.3, PHRASES_METEO[9]],
                 ["météorite", 0.15, PHRASES_METEO[10]],
                 [None, 1]
             ]
