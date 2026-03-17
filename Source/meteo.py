@@ -60,7 +60,7 @@ class Meteo:
         self.meteorite_anim_id = None
 
         # TORNADE SPRITES
-        self.sprite_tornade = [os.path.join(self.BASE_DIR, "sprite", "sprite_tornade", f"sprite_tornade_{str(i).zfill(2)}.png") for i in range(14)]
+        self.sprite_tornade = [os.path.join(self.BASE_DIR, "sprite", "sprite_tornade", f"sprite_tornade_{str(i).zfill(2)}.png") for i in range(6)]
         self.tornade_spawn = False
 
         # Tornade mouvement
