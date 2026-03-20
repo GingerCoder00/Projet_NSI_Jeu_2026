@@ -1,7 +1,7 @@
 GNU GENERAL PUBLIC LICENSE
 Version 3, 29 June 2007
 
-Copyright (C) 2026 Let's Break Down The Earth / LE GULUDEC ARTHUR, DEBAILLEUX NOAH, ...
+Copyright (C) 2026 Let's Break Down The Earth / LE GULUDEC ARTHUR, DEBAILLEUX NOAH, WEBER LÉANA, COLLIN--MONTRON LEWELINE
 
 Everyone is permitted to copy and distribute verbatim copies
 of this license document, but changing it is not allowed.
