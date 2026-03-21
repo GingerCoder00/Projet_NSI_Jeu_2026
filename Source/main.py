@@ -78,7 +78,6 @@ if __name__ == "__main__":
 
             # Lancement de la partie
             result = game.run()
-
             # Retour au hub si demandé
             if result == "hub":
                 current_scene = "hub"

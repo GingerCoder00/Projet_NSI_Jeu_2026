@@ -25,6 +25,8 @@ class EndGame:
         self.BASE_DIR = os.path.dirname(__file__)
         self.resp = Resp_tools(self.width, self.height)
 
+        self.next_scene = "hub"
+
         # On importe les médias une fois au début
 
         self.MUSIC_END_PATH = os.path.join(self.BASE_DIR, "sound", "music_end.wav")
@@ -273,6 +275,10 @@ class EndGame:
             if event.type == pygame.QUIT:
                 self.next_scene = "quit"
                 self.running = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:  # optionnel : quitter avec Échap
+                    self.next_scene = "quit"
+                    self.running = False
 
     def update(self, delta):
         ''' Cette méthode permet d'actualiser et de gérer les différents instant du plan ainsi que les effets visuels et auditifs'''
@@ -339,6 +345,7 @@ class EndGame:
                     self.notification.ajouter(PHRASES_FIN_DE_JEU[self.phrase_index])
                 else:
                     self.sequence_finished = True
+                    self.running = False
 
             # Micro-glitch aléatoire pendant les phrases
             self.micro_glitch_timer += delta

@@ -526,7 +526,7 @@ class Game:
 
         while self.running:
 
-            dt = self.clock.tick(120) / 1000
+            temps = self.clock.tick(120) / 1000
             self.keys = pygame.key.get_pressed()
             self.fps = int(self.clock.get_fps())
 
@@ -550,8 +550,8 @@ class Game:
                 if self.music_actif == 0:  # musique autorisée
                     self.play_music("sound\music6.mp3")
 
-                self.temps_ecoule += dt
-                self.chrono += dt
+                self.temps_ecoule += temps
+                self.chrono += temps
 
                 self.flamme.update_propagation_feu()
                 self.flamme.update_extinction(self.meteo)
@@ -559,22 +559,19 @@ class Game:
                 self.pollue.update_extinction(self.meteo)
                 self.update_cases_brulees()
 
-                self.data.update_world(dt)
+                self.data.update_world(temps)
 
                 if self.data.destruction >= 100:
                     self.save_score()
                     self.end_game = EndGame(self.screen)
                     self.end_game.run()
-                    self.return_main_menu = True
-                    self.running = False
+                    self.next_scene = self.end_game.next_scene
+                    return self.end_game.next_scene 
                     
                 current_time = pygame.time.get_ticks() / 1000
 
                 for pouvoir in self.pouvoirs.values():
-                    result = pouvoir.update(
-                        self.dico_UI_interact[0]["Case"],
-                        current_time
-                    )
+                    result = pouvoir.update(self.dico_UI_interact[0]["Case"], current_time)
 
                     if result == "activate":
                         if self.pouvoir_actif:
