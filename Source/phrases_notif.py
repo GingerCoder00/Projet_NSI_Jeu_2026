@@ -43,9 +43,6 @@ def load_best_score_from_file():
         # Retour de la liste contenant tous les scores
         return best_score_file
 
-# Chargement des meilleurs scores au lancement du programme
-best_score = load_best_score_from_file()
-
 # Liste des phrases affichées au début du jeu pour expliquer les règles
 PHRASES_AIDE_START = [
     "RÈGLE DU JEU : Vous incarnez une méga corporation n'ayant que pour seul but d'engranger plus de profit, même si cela détruit la planète ! Vous devez être le plus rapide pour faire régner le capitalisme !",
@@ -115,18 +112,25 @@ PHRASES_FIN_DE_JEU = [
 ]
 
 # Messages affichés dans le hub (menu principal du jeu)
-PHRASES_HUB = [
-    "Jeu développé par le groupe NATURE.EXE, constitué d'Arthur, Noah, Léana et Lewiline dans le cadre des Trophées de NSI 2026 !",
+def get_phrases_hub():
+    '''Recharge les scores depuis le fichier à chaque appel'''
+    best_score = load_best_score_from_file()
 
-    # Message informatif sur le sens du jeu
-    "Le saviez-vous ? Ce jeu n'est qu'une critique des méga-corporations !",
+    if best_score is None:
+        score_texte = "Aucun score enregistré pour le moment."
+    else:
+        score_texte = (
+            f"Meilleur Temps : {best_score[0]}\n\n",
+            f"Meilleur Nombre d'incendies déclarés : {best_score[1]}\n\n",
+            f"Meilleur Nombre de cases polluées : {best_score[2]}\n\n",
+            f"Meilleur Nombre d'arbres brûlés : {best_score[3]}\n\n",
+            f"Meilleur Nombre d'usines créées : {best_score[4]}\n\n",
+            f"Meilleur Nombre de désinformations créées : {best_score[5]}\n\n",
+            f"Meilleur Nombre de guerres déclarées : {best_score[6]}",
+        )
 
-    # Affichage des meilleurs scores récupérés dans le fichier
-    f"""Meilleur Temps : {best_score[0]} \n 
-        Meilleur Nombre d'incendies déclarés : {best_score[1]} \n 
-        Meilleur Nombre de cases polluées : {best_score[2]} \n 
-        Meilleur Nombre d'arbres brûlés : {best_score[3]} \n 
-        Meilleur Nombre d'usines créées : {best_score[4]} \n 
-        Meilleur Nombre de désinformations créées : {best_score[5]} \n 
-        Meilleur Nombre de guerres déclarées : {best_score[6]}"""
-        ]
+    return [
+        "Jeu développé par le groupe NATURE.EXE, constitué d'Arthur, Noah, Léana et Lewiline dans le cadre des Trophées de NSI 2026 !",
+        "Le saviez-vous ? Ce jeu n'est qu'une critique des méga-corporations !",
+        score_texte
+    ]

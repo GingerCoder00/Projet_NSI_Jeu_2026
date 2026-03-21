@@ -7,8 +7,7 @@ from random import randint
 from ui_tools import *
 from resp_tools import *
 from notification import *
-from phrases_notif import PHRASES_HUB
-
+from phrases_notif import get_phrases_hub
 pygame.init()
 pygame.mixer.init()
 pygame.font.init()
@@ -170,7 +169,7 @@ class Hub:
 
         self.notification1 = Notification_gestion(self.screen, self.dico_UI[2]["rect_notif_credit"], font_size_ratio = 0.14, diff_y = 25, volume_sound = 0)
         self.notification2 = Notification_gestion(self.screen, self.dico_UI[4]["rect_secret"], font_size_ratio = 0.1, color = (55, 227, 36), volume_sound = 0)
-        self.notification3 = Notification_gestion(self.screen, self.dico_UI[3]["rect_aide_bloc"], font_size_ratio = 0.038, volume_sound = 0)
+        self.notification3 = Notification_gestion(self.screen, self.dico_UI[3]["rect_aide_bloc"], font_size_ratio = 0.034, volume_sound = 0)
 
     def exit(self):
         """Gère les demandes de fermeture ou de changement de scène"""
@@ -213,15 +212,15 @@ class Hub:
 
         if self.dico_UI_interact[0]["Credit"].mouse_is_click():
             self.plan = 2
-            self.notification1.ajouter(PHRASES_HUB[0])
+            self.notification1.ajouter(get_phrases_hub()[0])
 
         if self.setting_UI[3]["Secret"].get_last_message().upper() == "CAPITALISME" and self.sous_plan == 3:
             self.plan = 4
-            self.notification2.ajouter(PHRASES_HUB[1])
+            self.notification2.ajouter(get_phrases_hub()[1])
 
         if self.dico_UI_interact[0]["Aide"].mouse_is_click():
             self.plan = 3
-            self.notification3.ajouter(PHRASES_HUB[2])
+            self.notification3.ajouter(get_phrases_hub()[2])
 
         if self.plan in (1,2,3,4) and (self.keys[pygame.K_ESCAPE] or self.dico_UI_interact[1]["Retour1"].mouse_is_click() or self.dico_UI_interact[2]["Retour2"].mouse_is_click() or self.dico_UI_interact[3]["Retour3"].mouse_is_click()):
             self.plan = 0
