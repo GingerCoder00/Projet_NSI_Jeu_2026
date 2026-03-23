@@ -276,8 +276,8 @@ class EndGame:
                 self.next_scene = "quit"
                 self.running = False
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:  # optionnel : quitter avec Échap
-                    self.next_scene = "quit"
+                if event.key == pygame.K_ESCAPE:  # passer les phrases
+                    self.next_scene = "hub"
                     self.running = False
 
     def update(self, delta):
