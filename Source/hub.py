@@ -379,6 +379,6 @@ if __name__ == "__main__":  # Permet de démarrer le programme dans de bonnes co
     larg = screen_taille.current_h # On récupère la hauteur de l'écran
 
     screen = pygame.display.set_mode((Long, larg)) # On initialise l'écran avec les dimensions préalablement récupérer
-    pygame.display.set_caption("Let's Smash Up The Earth") # On donne un nom à la fenêtre
+    pygame.display.set_caption("Let's Break Down The Earth") # On donne un nom à la fenêtre
     hub = Hub(screen)
     hub.run()
