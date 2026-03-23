@@ -1,25 +1,47 @@
-Sitotechque
+# 🗂️ Sitothèque — Ressources pour le développement de jeu
 
--pngwind : https://www.pngwing.com/
+---
 
-description: libre d'acces pas besoin d'avoir de compte permet d'avoir des images sans fond ou des sprites 
+## 🖼️ Images & Sprites
 
--jauge : https://plotly.com/python/gauge-charts/
+### [PNGWing](https://www.pngwing.com/)
+- **Accès** : Libre, sans compte
+- **Description** : Bibliothèque d'images PNG avec fond transparent (images découpées / sans fond) et sprites prêts à l'emploi. Idéal pour intégrer des visuels directement dans un projet sans retouche.
 
-description : libre d'accès sans compte, permet d'avoir un code python de jauge et un visuel
+---
 
-pixeliser.fr : 
+### [Piskel App](https://www.piskelapp.com/)
+- **Accès** : Libre, sans compte
+- **Description** : Outil en ligne de création de sprites animés et de backgrounds pixel art. Permet d'exporter en PNG, GIF ou spritesheet. Parfait pour concevoir les assets graphiques d'un jeu.
 
-description : Pour le fond d'écran du menu
+---
 
-https://sfxr.me : 
+### [Pixeliser.fr](https://pixeliser.fr/)
+- **Accès** : Libre
+- **Description** : Outil permettant de pixeliser une image. Utilisé notamment pour créer des fonds d'écran stylisés pour le menu du jeu.
 
-description : bruitage retro
+---
 
-https://www.beepbox.co:
+## 📊 Visualisation de données
 
-description : composition de musiques retro
+### [Plotly — Gauge Charts](https://plotly.com/python/gauge-charts/)
+- **Accès** : Libre, sans compte
+- **Description** : Documentation officielle Plotly Python pour la création de jauges (gauge charts). Fournit un code Python clé en main et un aperçu visuel du rendu. Utile pour afficher des indicateurs (vie, énergie, score…).
 
-https://www.piskelapp.com : 
+---
 
-description : Création de sprite et de background 
+## 🔊 Audio & Musique
+
+### [SFXR](https://sfxr.me/)
+- **Accès** : Libre, sans compte
+- **Description** : Générateur de bruitages rétro en ligne. Permet de créer des effets sonores style 8-bit (tirs, sauts, explosions, power-ups…) et de les exporter en fichier audio.
+
+---
+
+### [BeepBox](https://www.beepbox.co/)
+- **Accès** : Libre, sans compte
+- **Description** : Compositeur de musiques rétro en ligne. Interface intuitive pour créer des mélodies et boucles musicales au style chiptune / 8-bit, exportables en fichier audio.
+
+---
+
+> 💡 **Toutes ces ressources sont gratuites et accessibles sans création de compte.**
