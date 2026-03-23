@@ -1,13 +1,13 @@
-🎮 CONCEPT DU JEU
+CONCEPT DU JEU
 
 Jeu pixel art satirique arcade (~10 minutes).
 
 Tu incarnes une méga-corporation qui accélère volontairement l’effondrement climatique.
 
-🎯 Objectif : remplir la 🌍 Jauge de destruction globale le plus vite possible.
+Objectif : remplir la Jauge de destruction globale le plus vite possible.
 
-📊 LES JAUGES PRINCIPALES (0 → 100)
-1️⃣ 🌫 Pollution
+LES JAUGES PRINCIPALES (0 → 100)
+Pollution
 
 Moteur principal de destruction.
 
@@ -17,7 +17,7 @@ Fait monter la température
 
 Fait baisser biodiversité
 
-2️⃣ 🌡 Température
+Température
 
 Dépend directement de la pollution.
 
@@ -27,7 +27,7 @@ Fait baisser eau disponible
 
 Fait baisser biodiversité
 
-3️⃣ 💧 Eau disponible
+Eau disponible
 
 Représente les ressources en eau potable.
 
@@ -35,7 +35,7 @@ Baisse avec température
 
 Si trop basse → stabilité chute
 
-4️⃣ 🌳 Biodiversité
+Biodiversité
 
 Représente écosystèmes / faune / flore.
 
@@ -43,7 +43,7 @@ Baisse avec pollution + température
 
 Si trop basse → stabilité chute plus vite
 
-5️⃣ 👥 Stabilité sociale
+Stabilité sociale
 
 Représente paix mondiale / gouvernements.
 
@@ -51,9 +51,9 @@ Baisse si eau ou biodiversité faibles
 
 Si très basse → augmente pollution (guerres, chaos)
 
-🔥 Effet boule de neige.
+Effet boule de neige.
 
-6️⃣ 🏭 Profit / Coût
+Profit / Coût
 
 Jauge stratégique.
 
@@ -67,10 +67,9 @@ Exemple :
 
 pollution += profit * 0.04 * dt
 
+Plus tu gagnes d’argent, plus tu détruis vite.
 
-👉 Plus tu gagnes d’argent, plus tu détruis vite.
-
-🌍 Jauge de destruction globale
+Jauge de destruction globale
 
 Elle dépend de toutes les autres.
 
@@ -88,7 +87,7 @@ destruction = (
 
 Quand destruction ≥ 100 → victoire.
 
-🔁 SYSTÈME D’ÉVOLUTION AUTOMATIQUE (update_world)
+SYSTÈME D’ÉVOLUTION AUTOMATIQUE (update_world)
 
 Chaque frame / seconde :
 
@@ -110,60 +109,53 @@ if stabilite < 30:
 pollution += profit * 0.001 * dt
 
 
-🔥 Ça crée une réaction en chaîne progressive.
+Ça crée une réaction en chaîne progressive.
 
-⚡ LES POUVOIRS (6–8 max)
+LES POUVOIRS (6–8 max)
 
 Chaque pouvoir coûte du profit.
 
-🔥 Incendie massif
+Incendie massif
 
 pollution
 
 biodiversité
 Coût : 10
 
-🏭 Méga Usine
+Méga Usine
 
 +++ pollution
 
 profit
 Coût : 15
 
-💣 Guerre des ressources
+Guerre des ressources
 
 stabilité
 
 pollution
 Coût : 20
 
-🌡 Vague de chaleur
+Vague de chaleur
 
 température instantanée
 Coût : 12
 
-🛢 Marée noire
+Marée noire
 
 biodiversité
 
 pollution
 Coût : 18
 
-📺 Désinformation climatique
+Désinformation climatique
 
 stabilité
 
 Boost temporaire profit
 Coût : 25
 
-🎮 RYTHME DES 10 MINUTES
-
-0–2 min : montée lente
-2–5 min : premières chutes de stabilité
-5–8 min : effet boule de neige
-8–10 min : chaos automatique
-
-🎨 ÉVOLUTION VISUELLE
+ÉVOLUTION VISUELLE
 
 Destruction > 70 :
 
@@ -177,7 +169,7 @@ Tremblements
 
 Feux aléatoires
 
-🧠 STRUCTURE DE CODE SIMPLE
+STRUCTURE DE CODE SIMPLE
 
 Dans ta classe Game :
 
@@ -199,11 +191,3 @@ update_destruction()
 appliquer_pouvoir(type)
 
 check_victoire()
-
-🎯 Pourquoi cette version est bonne
-
-✔ Pas trop de jauges
-✔ Interactions claires
-✔ Effet boule de neige
-✔ Satire via le profit
-✔ Parfait pour 10 minutes
