@@ -137,7 +137,7 @@ if __name__ == "__main__":
 
     # Création de la fenêtre
     screen = pygame.display.set_mode((Long, larg))
-    pygame.display.set_caption("Let's Smash Up The Earth") # Titre de la fenêtre
+    pygame.display.set_caption("Let's Break Down The Earth") # Titre de la fenêtre
 
     # Création de l'objet Intro et lancement de l'intro
     intro = Intro("logo5.png", screen)
