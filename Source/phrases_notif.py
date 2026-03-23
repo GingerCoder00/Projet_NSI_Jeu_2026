@@ -108,7 +108,8 @@ PHRASES_FIN_DE_JEU = [
     "Vous avez gagné.",
     "Éteignez l'écran. Regardez autour de vous.",
     "Respirez… et demandez-vous :",
-    "Dans quel monde jouez-vous vraiment ?"
+    "Dans quel monde jouez-vous vraiment ?",
+    "D'ailleurs, le secret et le : 'capitalisme'"
 ]
 
 # Messages affichés dans le hub (menu principal du jeu)
