@@ -741,7 +741,7 @@ if __name__ == "__main__":  # Permet de démarrer le programme dans de bonnes co
 
     screen = pygame.display.set_mode((Long, larg), pygame.FULLSCREEN) # On initialise l'écran avec les dimensions préalablement récupérer
     pygame.display.set_icon(icon)
-    pygame.display.set_caption("Let's Smash Up The Earth") # On donne un nom à la fenêtre
+    pygame.display.set_caption("Let's Break Down The Earth") # On donne un nom à la fenêtre
 
     game = Game(screen)
     game.run()
