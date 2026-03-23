@@ -1,5 +1,5 @@
 Projet_NSI_Jeu_2026
-Repository pour la création du jeu vidéo Let's Break Up The Earth pour le projet de NSI de 2026.
+Repository pour la création du jeu vidéo Let's Break Down The Earth pour le projet de NSI de 2026.
 
 Information sur le démarage du jeu.
 
