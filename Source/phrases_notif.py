@@ -130,7 +130,7 @@ def get_phrases_hub():
         )
 
     return [
-        "Jeu développé par le groupe NATURE.EXE, constitué d'Arthur, Noah, Léana et Lewiline dans le cadre des Trophées de NSI 2026 !",
+        "Jeu développé par le groupe NATURE.EXE, constitué d'Arthur, Noah, Léana et Leweline dans le cadre des Trophées de NSI 2026 !",
         "Le saviez-vous ? Ce jeu n'est qu'une critique des méga-corporations !",
         score_texte
     ]
