@@ -84,7 +84,7 @@ Leweline — Programmeuse interface et graphiste
 
 Temps passé sur le projet :
 
-Environ 3 semaines, soit à peu près 265 heures de travail en comptant le développement du programme ainsi que l’ensemble 
+Environ 5 semaines, soit à peu près 320 heures de travail en comptant le développement du programme ainsi que l’ensemble 
 des fichiers et ressources associés.
 
 III - Présentation des étapes du projet
@@ -215,7 +215,7 @@ concepts inconnus et de les appliquer correctement dans notre projet.
 
 L’intelligence artificielle a également été utilisée, principalement pour nous aider à déboguer certaines parties du code et 
 pour proposer des solutions dans la création de quelques fonctionnalités. Nous avons veillé à limiter son utilisation autant 
-que possible, et estimons que le code original représente environ 85 % du projet. Soit environ 15% de code aidé par 
+que possible, et estimons que le code original représente environ 90 % du projet. Soit environ 10% de code aidé par 
 intelligence artificielle.
 
 Elle nous a aussi servi pour générer certains éléments graphiques, tels que le logo du jeu et du groupe. Bien entendu, nous 
