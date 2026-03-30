@@ -1,5 +1,5 @@
 
-   # 💀 Let's Break Down The Earth
+   # Let's Break Down The Earth
 ### *Projet NSI 2026 — Nature.EXE*
 
 > Création d'un jeu vidéo pour le concours NSI 2026 sur le thème de la **biodiversité**.  
@@ -7,7 +7,7 @@
 
 ---
 
-## 🚀 Lancement du jeu
+## Lancement du jeu
 
 ### Prérequis
 
@@ -78,7 +78,7 @@ python main.py
 
 ---
 
-## 📖 Description
+## Description
 
 **Let's Break Down The Earth** est un jeu vidéo **pixel art** développé en Python avec Pygame.  
 Le joueur incarne le destructeur de la planète : polluez, brûlez, déchaînez des catastrophes météorologiques...  
@@ -88,25 +88,25 @@ Un message moral vous attend à la fin.
 
 ---
 
-## ✨ Fonctionnalités
+## Fonctionnalités
 
 | Fonctionnalité | Fichier(s) |
 |----------------|-----------|
-| 🔥 Grille interactive avec propagation des flammes | `flamme.py` |
-| ☠️ Cases polluées et condamnées | `pollue.py` · `condamne.py` · `case_brulee.py` |
-| 📊 Jauges avec dégradation continue | `jauge.py` |
-| ⚡ Pouvoirs du joueur avec effets visuels | `pouvoir.py` |
-| 🌩️ Effets météorologiques dynamiques | `meteo.py` |
-| 🔔 Système de notifications en jeu | `notification.py` · `phrases_notif.py` |
-| 💾 Sauvegarde des données de partie | `save.py` · `best_score.txt` |
-| 📐 Interface responsive multi-résolutions | `resp_tools.py` |
-| 🎞️ Animations optimisées | `animation.py` |
-| 🎵 Musique et effets sonores | `sound/` |
-| 🎨 Sprites pixel art | `sprite/` |
+| Grille interactive avec propagation des flammes | `flamme.py` |
+| Cases polluées et condamnées | `pollue.py` · `condamne.py` · `case_brulee.py` |
+| Jauges avec dégradation continue | `jauge.py` |
+| Pouvoirs du joueur avec effets visuels | `pouvoir.py` |
+| Effets météorologiques dynamiques | `meteo.py` |
+| Système de notifications en jeu | `notification.py` · `phrases_notif.py` |
+| Sauvegarde des données de partie | `save.py` · `best_score.txt` |
+| Interface responsive multi-résolutions | `resp_tools.py` |
+| Animations optimisées | `animation.py` |
+| Musique et effets sonores | `sound/` |
+| Sprites pixel art | `sprite/` |
 
 ---
 
-## 👥 Équipe
+## Équipe
 
 | Membre | Rôle |
 |--------|------|
@@ -117,7 +117,7 @@ Un message moral vous attend à la fin.
 
 ---
 
-## 🐍 Compatibilité Python
+## Compatibilité Python
 
 | Version | Statut |
 |---------|--------|
@@ -130,9 +130,9 @@ Un message moral vous attend à la fin.
 
 ## 🏆 Crédits
 
-- 🖼️ **Sprites** — PNGWing · Freepik (*kjpargeter*) · CREASTA PIXEL
-- 🔊 **SFX applaudissement** — Pixabay
-- 🤖 **Logo** — Généré par IA, retravaillé par l'équipe
+- **Sprites** — PNGWing · Freepik (*kjpargeter*) · CREASTA PIXEL
+- **SFX applaudissement** — Pixabay
+- **Logo** — Généré par IA, retravaillé par l'équipe
 
 ---
 
