@@ -104,19 +104,6 @@ Un message moral vous attend à la fin.
 | Musique et effets sonores | `sound/` |
 | Sprites pixel art | `sprite/` |
 
----
-
-## Équipe
-
-| Membre | Rôle |
-|--------|------|
-| **Arthur Le Guludec** | Programmeur principal · Compositeur · Admin GitHub |
-| **Noah Debailleux** | Programmeur gameplay · Graphiste · Sound designer |
-| **Léana Weber** | Programmeuse gameplay · Graphiste · Directrice artistique |
-| **Leweline Collin-Montron** | Programmeuse interface · Graphiste · Compositrice |
-
----
-
 ## Compatibilité Python
 
 | Version | Statut |
