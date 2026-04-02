@@ -84,7 +84,7 @@ python main.py
 Le joueur incarne le destructeur de la planète : polluez, brûlez, déchaînez des catastrophes météorologiques...  
 Un message moral vous attend à la fin.
 
-> *« Et si on faisait un jeu sarcastique sur le réchauffement climatique ? »*
+> *« Et si je faisais un jeu sarcastique sur le réchauffement climatique ? »*
 
 ---
 
