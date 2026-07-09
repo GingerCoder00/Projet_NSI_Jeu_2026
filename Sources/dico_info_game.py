@@ -13,9 +13,9 @@ class Dico_info_Game:
         self.BASE_DIR = os.path.dirname(__file__)
         
         # Gestion des types de cases
-        self.CASES_E_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_eau\\v2", "sprite_eau_")
-        self.CASES_H_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_herbe\\v2", "sprite_herbe_")
-        self.CASES_Fo_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_foret\\v4", "sprite_foret_")
+        self.CASES_E_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_eau/v2", "sprite_eau_")
+        self.CASES_H_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_herbe/v2", "sprite_herbe_")
+        self.CASES_Fo_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_foret/v4", "sprite_foret_")
         self.CASES_Fe_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_feu", "sprite_feu_")
         self.CASES_P_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_pollue", "sprite_pollue_")
         self.CASES_B_PATH = os.path.join(self.BASE_DIR, "sprite", "sprite_case_brulee", "sprite_case_brulee_")

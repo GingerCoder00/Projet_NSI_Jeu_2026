@@ -308,7 +308,7 @@ class Game:
                     self.grille,
                     lambda l, c: self.flamme.propagation_feu(l, c, self.flamme.puissance_feu(), spawn_anim = True, origine_joueur = True),
                     self.notification,
-                    cursor_sprite_prefix=os.path.join(self.BASE_DIR, "sprite\sprite_bouton_feu\sprite_logo_feu_"),
+                    cursor_sprite_prefix=os.path.join(self.BASE_DIR, "sprite/sprite_bouton_feu/sprite_logo_feu_"),
                     cursor_frame_count=2,
                     cooldown = 7,
                     frame_delay = 105,
@@ -321,7 +321,7 @@ class Game:
                     self.grille,
                     lambda l, c: self.usine.ajout_usine(l, c),
                     self.notification,
-                    cursor_sprite_prefix=os.path.join(self.BASE_DIR, "sprite\sprite_bouton_usine\sprite_logo_usine_"),
+                    cursor_sprite_prefix=os.path.join(self.BASE_DIR, "sprite/sprite_bouton_usine/sprite_logo_usine_"),
                     cursor_frame_count=3,
                     cooldown = 15,
                     frame_delay = 115,
@@ -353,7 +353,7 @@ class Game:
                     self.grille,
                     lambda l, c: self.pollue.propagation_pollue(l, c, self.pollue.puissance_pollue(), spawn_anim = True),
                     self.notification,
-                    cursor_sprite_prefix=os.path.join(self.BASE_DIR, "sprite\sprite_bouton_maree_noire\sprite_logo_maree_noire_"),
+                    cursor_sprite_prefix=os.path.join(self.BASE_DIR, "sprite/sprite_bouton_maree_noire/sprite_logo_maree_noire_"),
                     cursor_frame_count=1,
                     cooldown = 8,
                     frame_delay = 105,
@@ -548,7 +548,7 @@ class Game:
             elif self.plan == 0:
 
                 if self.music_actif == 0:  # musique autorisée
-                    self.play_music("sound\music6.mp3")
+                    self.play_music("sound/music6.mp3")
 
                 self.temps_ecoule += temps
                 self.chrono += temps
