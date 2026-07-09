@@ -36,7 +36,6 @@ python main.py
 ```
 📁 Projet_NSI_Jeu_2026/
 │
-├── main.py
 ├── presentation.md
 ├── sitotheque.txt
 ├── LICENSE.md
