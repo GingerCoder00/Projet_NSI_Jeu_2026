@@ -36,8 +36,9 @@ python main.py
 ```
 📁 Projet_NSI_Jeu_2026/
 │
-├── main.py
 ├── presentation.md
+├── Let's Break Down The Earth.exe
+├── logo_jeu.ico
 ├── sitotheque.txt
 ├── LICENSE.md
 ├── README.md
