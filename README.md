@@ -47,12 +47,11 @@ python main.py
 ├── sitotheque.txt
 ├── LICENSE.md
 ├── README.md
-├── Resume Projet.txt
+├── résumé_Projet.txt
 ├── requirements.txt
 ├── .gitignore
-├── .vscode/
 │
-└── 📁 Source/
+└── 📁 Sources/
     ├── animation.py
     ├── best_score.txt
     ├── case_brulee.py
