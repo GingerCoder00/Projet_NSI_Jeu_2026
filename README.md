@@ -1,13 +1,14 @@
-
-   # Let's Break Down The Earth
+# Let's Break Down The Earth
 ### *Projet NSI 2026 — Nature.EXE*
 
-> Création d'un jeu vidéo pour le concours NSI 2026 sur le thème de la **biodiversité**.  
+> Création d'un jeu vidéo pour le concours Trophées NSI 2026 sur le thème de la **biodiversité**.  
 > 📁 Repository : `Projet_NSI_Jeu_2026`
 
 ---
 
 ## Lancement du jeu
+
+Dans le dossier, vous pouvez soit lancer le jeu via l'exécutable, ce qui permet de tester le jeu sans rien avoir à installer. Si vous voulez tester des parties **distinctes** du programme, il faudra installer la bonne version de Python ainsi que les bonnes dépendances.
 
 ### Prérequis
 
@@ -18,12 +19,16 @@
 
 ### Lancement
 ```bash
-# Lancement complet
+# Lancement complet via un fichier Python (depuis le dossier Source/)
+cd Source
 python main.py
+
+# Lancement complet via l'exécutable
+"Let's Break Down The Earth.exe"
 ```
 
 | Module | Fichier | Description |
-|--------|---------|-------------|
+|--------|---------|--------------|
 | Hub | `hub.py` | Écran d'accueil principal |
 | Intro | `intro.py` | Séquence d'introduction |
 | Jeu | `game.py` | Partie principale |
@@ -124,4 +129,4 @@ Un message moral vous attend à la fin.
 
 ---
 
-*Projet réalisé en ~**5 semaines** — **320 heures** de travail — NSI 2026* 🏅
+*Projet réalisé en ~**8 semaines** — **320 heures** de travail — NSI 2026* 🏅
