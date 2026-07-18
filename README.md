@@ -1,8 +1,8 @@
 # Let's Break Down The Earth
-### *Projet NSI 2026 — Nature.EXE*
+### *Projet Trophées NSI 2026 — Nature.EXE*
 
 > Création d'un jeu vidéo pour le concours Trophées NSI 2026 sur le thème de la **biodiversité**.  
-> 📁 Repository : `Projet_NSI_Jeu_2026`
+> 📁 Repository : `Projet_Trophees_NSI_2026`
 
 ---
 
